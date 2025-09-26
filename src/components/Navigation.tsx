@@ -2,10 +2,10 @@ import Link from 'next/link'
 
 export default function Navigation() {
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50">
-      <div className="w-full px-8">
+    <nav className="absolute top-0 left-0 right-0 z-50 pt-6">
+      <div className="w-full px-12">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center ml-4">
             <svg width="176" height="41" viewBox="0 0 176 41" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_2_215)">
                 <path d="M56.2263 26.7946V8.9356L49.1821 24.108H45.2821L38.2378 8.9356V26.7946H32.8223V0.308594H39.5255L47.2512 16.5027L54.9387 0.308594H61.6042V26.7946H56.2263Z" fill="white"/>

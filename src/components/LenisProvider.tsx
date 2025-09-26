@@ -13,10 +13,15 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.8,
       touchMultiplier: 2,
       infinite: false,
     })
+
+    // Make Lenis instance globally available for other components
+    if (typeof window !== 'undefined') {
+      (window as any).lenis = lenisRef.current
+    }
 
     return () => {
       lenisRef.current?.destroy()

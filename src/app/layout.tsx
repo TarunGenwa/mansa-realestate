@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${playfairDisplay.variable} antialiased m-2`}
+        className={`${montserrat.variable} ${playfairDisplay.variable} antialiased`}
       >
         <LenisProvider>
           <Navigation />

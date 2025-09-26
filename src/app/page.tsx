@@ -3,6 +3,10 @@ import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import SimpleCarousel from '@/src/components/SimpleCarousel'
+import FAQSection from '@/src/components/FAQSection'
+import ContactFormSection from '@/src/components/ContactFormSection'
+import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -60,7 +64,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
-  const recentPosts = await wpApi.posts.getAll({ per_page: 3 }).catch(() => [])
   const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
 
   // Fetch hero image by slug
@@ -70,10 +73,10 @@ export default async function Home() {
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
       {heroImage && (
-        <div className="relative w-full h-[90vh]">
+        <div className="relative h-[90vh] m-2" style={{ width: 'calc(100% - 16px)' }}>
           <Image
             src={heroImage.source_url}
             alt={heroImage.alt_text || 'Hero Image'}
@@ -119,156 +122,26 @@ export default async function Home() {
       </section>
 
       {/* Project Cards Section */}
-      {projectTileImage && (
-        <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-          <div className="flex gap-6 overflow-x-auto">
-            {[1, 2, 3, 4, 5].map((index) => (
-              <div
-                key={index}
-                className="relative flex-shrink-0 rounded-xl overflow-hidden group cursor-pointer"
-                style={{ width: '360px', height: '577px' }}
-              >
-                <Image
-                  src={projectTileImage.source_url}
-                  alt={`Project ${index}`}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  sizes="360px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-white text-xl font-semibold">Projet {index}</h3>
-                    <p className="text-white/80 text-sm mt-2">Découvrir le projet</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {projectTileImage && <SimpleCarousel projectTileImage={projectTileImage} />}
+
+      {/* Image Showcase Section */}
+      <ImageShowcaseSection mediaImages={mediaImages} />
+
+      {/* FAQ Section */}
+      <FAQSection />
+
+      {/* Contact Form Section */}
+      <ContactFormSection />
 
       {homePage ? (
         <main className="max-w-7xl mx-auto px-4 py-8">
-
           <div
             className="prose prose-lg max-w-none mb-12"
             dangerouslySetInnerHTML={{ __html: homePage.content.rendered }}
           />
-
-          {mediaImages.length > 0 && (
-            <section className="mt-12">
-              <h2 className="text-3xl font-bold mb-6">Media Gallery</h2>
-              <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {mediaImages.map((image) => (
-                  <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer group">
-                    <Image
-                      src={image.source_url}
-                      alt={image.alt_text || image.title.rendered}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                    />
-                    {image.caption.rendered && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                        <p
-                          className="text-white text-xs truncate"
-                          dangerouslySetInnerHTML={{ __html: image.caption.rendered }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {recentPosts.length > 0 && (
-            <section className="mt-12">
-              <h2 className="text-3xl font-bold mb-6">Recent Posts</h2>
-              <div className="grid gap-6 md:grid-cols-3">
-                {recentPosts.map((post) => (
-                  <article key={post.id} className="border rounded-lg p-6">
-                    <h3 className="text-xl font-semibold mb-2">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="hover:text-blue-600"
-                        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                      />
-                    </h3>
-                    <div
-                      className="text-gray-600 mb-4 line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
-                    />
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Read more →
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </section>
-          )}
         </main>
       ) : (
         <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-
-          {mediaImages.length > 0 && (
-            <section className="mt-16">
-              <h2 className="text-3xl font-bold mb-6">Media Gallery</h2>
-              <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {mediaImages.map((image) => (
-                  <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer group">
-                    <Image
-                      src={image.source_url}
-                      alt={image.alt_text || image.title.rendered}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                    />
-                    {image.caption.rendered && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                        <p
-                          className="text-white text-xs truncate"
-                          dangerouslySetInnerHTML={{ __html: image.caption.rendered }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {recentPosts.length > 0 && (
-            <section className="mt-16">
-              <h2 className="text-3xl font-bold mb-6">Recent Posts</h2>
-              <div className="grid gap-6 md:grid-cols-3">
-                {recentPosts.map((post) => (
-                  <article key={post.id} className="border rounded-lg p-6 text-left">
-                    <h3 className="text-xl font-semibold mb-2">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="hover:text-blue-600"
-                        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                      />
-                    </h3>
-                    <div
-                      className="text-gray-600 mb-4 line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
-                    />
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Read more →
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </section>
-          )}
         </main>
       )}
     </div>
