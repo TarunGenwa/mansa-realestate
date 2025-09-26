@@ -66,6 +66,9 @@ export default async function Home() {
   // Fetch hero image by slug
   const heroImage = await wpApi.media.getBySlug('fc52ba8aedbbfe413f98241d1568a6cc96c2dec61').catch(() => null)
 
+  // Fetch project tile image
+  const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -114,6 +117,35 @@ export default async function Home() {
           </p>
         </div>
       </section>
+
+      {/* Project Cards Section */}
+      {projectTileImage && (
+        <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+          <div className="flex gap-6 overflow-x-auto">
+            {[1, 2, 3, 4, 5].map((index) => (
+              <div
+                key={index}
+                className="relative flex-shrink-0 rounded-xl overflow-hidden group cursor-pointer"
+                style={{ width: '360px', height: '577px' }}
+              >
+                <Image
+                  src={projectTileImage.source_url}
+                  alt={`Project ${index}`}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  sizes="360px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-white text-xl font-semibold">Projet {index}</h3>
+                    <p className="text-white/80 text-sm mt-2">Découvrir le projet</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {homePage ? (
         <main className="max-w-7xl mx-auto px-4 py-8">

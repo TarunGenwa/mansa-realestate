@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Playfair_Display } from "next/font/google";
 import Navigation from "@/src/components/Navigation";
+import LenisProvider from "@/src/components/LenisProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -28,10 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${montserrat.variable} ${playfairDisplay.variable} antialiased m-2`}
       >
-        <Navigation />
-        {children}
+        <LenisProvider>
+          <Navigation />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
