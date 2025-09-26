@@ -79,18 +79,41 @@ export default async function Home() {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
             <div className="text-center text-white px-4">
-              {/* <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
-                {homePage ? homePage.title.rendered.replace(/<[^>]*>/g, '') : 'Welcome to Mansa'}
-              </h1> */}
-              {/* <p className="text-xl md:text-2xl">
-                Your marketing website powered by WordPress CMS
-              </p> */}
+              <h1 style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', lineHeight: '1' }}>
+                <span className="block font-normal" style={{ fontSize: '48px', lineHeight: '1' }}>Entrez dans une</span>
+                <span className="block italic" style={{ fontWeight: 900, fontSize: '64px', lineHeight: '0.9' }}>nouvelle</span>
+                <span className="block italic" style={{ fontWeight: 400, fontSize: '64px', lineHeight: '0.9' }}>réalité</span>
+              </h1>
+              <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
+                Contact
+              </Link>
             </div>
           </div>
         </div>
       )}
+
+      {/* Text Section */}
+      <section className="px-8 py-16">
+        <div className="w-[40%]" style={{ marginLeft: '100px' }}>
+          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
+            Découvrez une
+          </p>
+          <p style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', fontWeight: 900, fontSize: '48px', lineHeight: '1.2' }} className="italic">
+            architecture
+          </p>
+          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
+            innovante qui
+          </p>
+          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
+            transforme vos rêves
+          </p>
+          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
+            en réalité
+          </p>
+        </div>
+      </section>
 
       {homePage ? (
         <main className="max-w-7xl mx-auto px-4 py-8">

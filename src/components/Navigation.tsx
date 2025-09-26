@@ -45,14 +45,20 @@ export default function Navigation() {
           </Link>
 
           <div className="flex items-center space-x-8">
-            <Link href="/projects" className="text-white hover:text-gray-300 transition">
-              Projects
+            <Link href="/proprietes" className="text-white hover:text-gray-300 transition">
+              Propriétés
             </Link>
-            <Link href="/about" className="text-white hover:text-gray-300 transition">
-              About Us
+            <Link href="/investir-dubai" className="text-white hover:text-gray-300 transition">
+              Investir à Dubaï
             </Link>
-            <Link href="/contact" className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition">
-              Contact 
+            <Link href="/services-expertise" className="text-white hover:text-gray-300 transition">
+              Services et Expertise
+            </Link>
+            <Link href="/actualites-guides" className="text-white hover:text-gray-300 transition">
+              Actualités et Guides
+            </Link>
+            <Link href="/contact" className="text-white hover:text-gray-300 transition">
+              Contact
             </Link>
           </div>
         </div>
