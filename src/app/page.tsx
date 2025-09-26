@@ -63,14 +63,37 @@ export default async function Home() {
   const recentPosts = await wpApi.posts.getAll({ per_page: 3 }).catch(() => [])
   const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
 
+  // Fetch hero image by slug
+  const heroImage = await wpApi.media.getBySlug('fc52ba8aedbbfe413f98241d1568a6cc96c2dec61').catch(() => null)
+
   return (
     <div className="min-h-screen">
+      {/* Hero Section */}
+      {heroImage && (
+        <div className="relative w-full h-[90vh]">
+          <Image
+            src={heroImage.source_url}
+            alt={heroImage.alt_text || 'Hero Image'}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="text-center text-white px-4">
+              {/* <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
+                {homePage ? homePage.title.rendered.replace(/<[^>]*>/g, '') : 'Welcome to Mansa'}
+              </h1> */}
+              {/* <p className="text-xl md:text-2xl">
+                Your marketing website powered by WordPress CMS
+              </p> */}
+            </div>
+          </div>
+        </div>
+      )}
+
       {homePage ? (
         <main className="max-w-7xl mx-auto px-4 py-8">
-          <h1
-            className="text-5xl font-bold mb-8"
-            dangerouslySetInnerHTML={{ __html: homePage.title.rendered }}
-          />
 
           <div
             className="prose prose-lg max-w-none mb-12"
@@ -135,19 +158,6 @@ export default async function Home() {
         </main>
       ) : (
         <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-5xl font-bold mb-4">Welcome to Mansa</h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Your marketing website powered by WordPress CMS
-          </p>
-
-          <div className="flex gap-4 justify-center">
-            <Link
-              href="/blog"
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              View Blog
-            </Link>
-          </div>
 
           {mediaImages.length > 0 && (
             <section className="mt-16">

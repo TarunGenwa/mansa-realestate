@@ -80,6 +80,13 @@ export const wpApi = {
       return data
     },
 
+    async getBySlug(slug: string): Promise<WPMedia | null> {
+      const { data } = await api.get<WPMedia[]>(getApiUrl('/media'), {
+        params: { slug }
+      })
+      return data[0] || null
+    },
+
     async getAll(params?: {
       page?: number
       per_page?: number
