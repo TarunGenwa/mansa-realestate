@@ -32,9 +32,9 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
 
   return (
     <section style={{ backgroundColor: '#ECE8DD' }} className="relative overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 min-h-[600px]">
         {/* Left Side - Contact Form */}
-        <div className="py-16 lg:py-20" style={{ paddingLeft: '87px', paddingRight: '40px' }}>
+        <div className="py-16 lg:py-20" style={{ paddingLeft: '87px', paddingRight: '60px' }}>
           <div className="max-w-lg">
             <h2
               style={{
@@ -60,7 +60,7 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
               Envoyez-nous un message et commençons la conversation — sans pression, juste un véritable soutien.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5 p-6 bg-white/70 rounded-lg border border-gray-200">
               <div>
                 <input
                   type="text"
@@ -126,30 +126,32 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
             </form>
 
             {/* Office Address */}
-            <div className="mt-10">
-              <h3
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontWeight: 500,
-                  fontSize: '18px',
-                  lineHeight: '120%'
-                }}
-                className="mb-2"
-              >
-                Adresse du bureau
-              </h3>
-              <p
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontWeight: 400,
-                  fontSize: '14px',
-                  lineHeight: '140%'
-                }}
-                className="text-gray-600"
-              >
-                Office 1007, 10th Floor, Iris Bay Tower,<br />
-                Business Bay, Dubai, U.A.E
-              </p>
+            <div className="mt-12 pt-8 border-t border-gray-300">
+              <div className="p-6 bg-white/50 rounded-lg border border-gray-200">
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 500,
+                    fontSize: '18px',
+                    lineHeight: '120%'
+                  }}
+                  className="mb-3"
+                >
+                  Adresse du bureau
+                </h3>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '140%'
+                  }}
+                  className="text-gray-600"
+                >
+                  Office 1007, 10th Floor, Iris Bay Tower,<br />
+                  Business Bay, Dubai, U.A.E
+                </p>
+              </div>
             </div>
           </div>
         </div>

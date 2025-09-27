@@ -8,6 +8,7 @@ import FAQSection from '@/src/components/FAQSection'
 import ContactFormSection from '@/src/components/ContactFormSection'
 import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
 import DirectorSection from '@/src/components/DirectorSection'
+import HeroCarousel from '@/src/components/HeroCarousel'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -65,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
+  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
 
   // First, get the properties category
   const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
@@ -91,13 +92,20 @@ export default async function Home() {
     })
   }
 
-  // Fetch hero image from WordPress media
-  const heroImageFromWP = mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_image_landing'))
+  // Fetch hero carousel images from WordPress media
+  const heroImages = [
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_1')),
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_2')),
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_3'))
+  ].filter(Boolean) // Remove any undefined images
 
-  const heroImage = heroImageFromWP || {
+  // Fallback if no hero images found
+  const fallbackHeroImage = {
     source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
     alt_text: 'Hero Image'
   }
+
+  const finalHeroImages = heroImages.length > 0 ? heroImages : [fallbackHeroImage]
 
   // Fetch fallback image for posts without featured image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
@@ -111,31 +119,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      <div className="relative h-screen m-2" style={{ width: 'calc(100% - 16px)' }}>
-        <Image
-          src={heroImage.source_url}
-          alt={heroImage.alt_text || 'Hero Image'}
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 flex items-start justify-center pt-32" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
-          <div className="text-center text-white px-4 mt-16">
-            <h1 style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', lineHeight: '1' }}>
-              <span className="block font-normal" style={{ fontSize: '48px', lineHeight: '1' }}>Entrez dans une</span>
-              <span className="block" style={{ fontSize: '64px', lineHeight: '0.9' }}>
-                <span className="italic" style={{ fontWeight: 900 }}>nouvelle</span>
-                {' '}
-                <span className="italic" style={{ fontWeight: 200 }}>réalité</span>
-              </span>
-            </h1>
-            <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
-              Contact
-            </Link>
-          </div>
-        </div>
-      </div>
+      <HeroCarousel images={finalHeroImages} />
 
       {/* Text Section */}
       <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>

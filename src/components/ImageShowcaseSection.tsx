@@ -37,6 +37,15 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
       return a.col - b.col
     })
 
+  console.log('ImageShowcaseSection - All media images:', mediaImages)
+  console.log('ImageShowcaseSection - Filtered GI_ images:', gridImages)
+  console.log('ImageShowcaseSection - Grid images details:', gridImages.map(img => ({
+    title: img.title.rendered,
+    row: img.row,
+    col: img.col,
+    source_url: img.source_url
+  })))
+
   return (
     <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
       <div>
