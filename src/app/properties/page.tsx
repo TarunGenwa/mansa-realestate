@@ -83,7 +83,7 @@ export default function PropertiesPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section with Banner */}
-      <section className="relative h-screen pt-24">
+      <section className="relative mt-24" style={{ height: 'calc(100vh - 96px)' }}>
         {heroBannerImage ? (
           <Image
             src={heroBannerImage.source_url}

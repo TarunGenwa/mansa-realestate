@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const pathname = usePathname()
-  const isInvestPage = pathname === '/investir-dubai'
-  const linkColor = isInvestPage ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
-  const logoSrc = isInvestPage ? '/logo_black.svg' : '/logo_white.svg'
+  const isLightBackground = pathname !== '/' && pathname !== '/contact'
+  const linkColor = isLightBackground ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
+  const logoSrc = isLightBackground ? '/logo_black.svg' : '/logo_white.svg'
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 pt-6">
