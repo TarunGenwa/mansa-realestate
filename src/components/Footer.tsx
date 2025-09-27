@@ -224,7 +224,7 @@ export default function Footer() {
             alt="Mansa"
             fill
             className="object-contain opacity-30 grayscale brightness-150"
-            style={{ filter: 'grayscale(100%) brightness(1.5)' }}
+            style={{ filter: 'grayscale(100%) brightness(4.5)' }}
           />
         </div>
       </div>

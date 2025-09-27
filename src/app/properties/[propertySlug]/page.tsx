@@ -4,14 +4,26 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+interface PropertyACF {
+  location?: string
+  price?: string
+  price_from?: string
+  status?: string
+}
+
+interface PropertyWithACF {
+  acf?: PropertyACF
+}
+
 interface PropertyPageProps {
-  params: {
+  params: Promise<{
     propertySlug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
-  const property = await wpApi.posts.getBySlug(params.propertySlug).catch(() => null)
+  const { propertySlug } = await params
+  const property = await wpApi.posts.getBySlug(propertySlug).catch(() => null)
 
   if (!property) {
     return {
@@ -27,11 +39,13 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
+  const { propertySlug } = await params
+
   // Get properties category to verify this is a property
   const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
 
-  const property = await wpApi.posts.getBySlug(params.propertySlug).catch(() => null)
-
+  const property = await wpApi.posts.getBySlug(propertySlug).catch(() => null)
+  console.log('Fetched property:', property)
   if (!property || !propertiesCategory) {
     notFound()
   }
@@ -44,48 +58,119 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const featuredImage = property._embedded?.['wp:featuredmedia']?.[0]
 
+  // Fetch media attached to this specific post
+  const postMedia = await wpApi.media.getAll({
+    parent: property.id,
+    media_type: 'image',
+    per_page: 100
+  }).catch(() => [])
+
+  // Look for property-specific images using alt text from attached media
+  const heroImageLeft = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_left'))
+  const heroImageRight = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_right'))
+  const overviewImage = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_overview'))
+
+  // Debug logging for images
+  console.log('Property Slug:', propertySlug)
+  console.log('Post ID:', property.id)
+  console.log('Attached Media Count:', postMedia.length)
+  console.log('Found Hero Left:', heroImageLeft?.alt_text, heroImageLeft?.source_url)
+  console.log('Found Hero Right:', heroImageRight?.alt_text, heroImageRight?.source_url)
+  console.log('Found Overview Image:', overviewImage?.alt_text, overviewImage?.source_url)
+  console.log('Featured Image:', featuredImage?.source_url)
+  console.log('All attached media alt texts:', postMedia.map(img => ({ id: img.id, alt: img.alt_text, title: img.title.rendered })))
+
   return (
     <div className="min-h-screen pt-24">
-      {/* Back to Properties */}
-      <section className="py-8" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <Link
-          href="/properties"
-          className="inline-flex items-center text-gray-600 hover:text-black transition-colors"
-          style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px' }}
-        >
-          ← Back to Properties
-        </Link>
+
+      {/* Property Title and Subtitle */}
+      <section className="pb-8" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+        <div className="max-w-7xl mx-auto">
+          <h1
+            className="text-4xl lg:text-5xl mb-4"
+            style={{
+              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+              fontWeight: 700,
+              lineHeight: '1.2'
+            }}
+            dangerouslySetInnerHTML={{ __html: property.title.rendered }}
+          />
+          {property.excerpt && (
+            <div
+              className="text-lg text-gray-600"
+              style={{
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                fontWeight: 400,
+                lineHeight: '1.5'
+              }}
+              dangerouslySetInnerHTML={{ __html: property.excerpt.rendered }}
+            />
+          )}
+        </div>
       </section>
 
-      {/* Property Hero */}
-      <section style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      {/* Property Hero Images */}
+      <section className="pb-12" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
         <div className="max-w-7xl mx-auto">
-          {featuredImage && (
-            <div className="relative h-96 lg:h-[500px] mb-8 rounded-lg overflow-hidden">
-              <Image
-                src={featuredImage.source_url}
-                alt={featuredImage.alt_text || property.title.rendered}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-              />
+          {(heroImageLeft || heroImageRight || featuredImage) && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left Hero Image */}
+              <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden">
+                <Image
+                  src={heroImageLeft?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
+                  alt={heroImageLeft?.alt_text || featuredImage?.alt_text || property.title.rendered}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+
+              {/* Right Hero Image */}
+              <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden">
+                <Image
+                  src={heroImageRight?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
+                  alt={heroImageRight?.alt_text || property.title.rendered}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
           )}
+        </div>
+      </section>
 
+      {/* Property Content and Overview */}
+      <section style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Main Content */}
+            {/* Main Content with Overview Image */}
             <div className="lg:col-span-2">
-              <h1
-                className="text-4xl lg:text-5xl mb-6"
+              <h2
+                className="text-2xl lg:text-3xl mb-6"
                 style={{
                   fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   lineHeight: '1.2'
                 }}
               >
-                {property.title.rendered}
-              </h1>
+                Property Overview
+              </h2>
+
+              {/* Overview Image */}
+              {overviewImage && (
+                <div className="relative h-80 lg:h-[400px] mb-8 rounded-lg overflow-hidden">
+                  <Image
+                    src={overviewImage.source_url}
+                    alt={overviewImage.alt_text || `${property.title.rendered} Overview`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                  />
+                </div>
+              )}
 
               <div
                 className="prose prose-lg max-w-none mb-8"
@@ -104,34 +189,34 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   Property Details
                 </h3>
 
-                {property.acf && (
+                {(property as any).acf && (
                   <div className="space-y-4">
-                    {property.acf.location && (
+                    {(property as any).acf.location && (
                       <div>
                         <span className="font-semibold text-gray-700">Location:</span>
-                        <p className="text-gray-600">{property.acf.location}</p>
+                        <p className="text-gray-600">{(property as any).acf.location}</p>
                       </div>
                     )}
 
-                    {(property.acf.price || property.acf.price_from) && (
+                    {((property as any).acf.price || (property as any).acf.price_from) && (
                       <div>
                         <span className="font-semibold text-gray-700">Price:</span>
                         <p className="text-lg font-bold text-black">
-                          {property.acf.price || `From ${property.acf.price_from}`}
+                          {(property as any).acf.price || `From ${(property as any).acf.price_from}`}
                         </p>
                       </div>
                     )}
 
-                    {property.acf.status && (
+                    {(property as any).acf.status && (
                       <div>
                         <span className="font-semibold text-gray-700">Status:</span>
                         <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ml-2 ${
-                          property.acf.status === 'available' ? 'bg-green-100 text-green-800' :
-                          property.acf.status === 'sold' ? 'bg-red-100 text-red-800' :
-                          property.acf.status === 'under-construction' ? 'bg-yellow-100 text-yellow-800' :
+                          (property as any).acf.status === 'available' ? 'bg-green-100 text-green-800' :
+                          (property as any).acf.status === 'sold' ? 'bg-red-100 text-red-800' :
+                          (property as any).acf.status === 'under-construction' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-blue-100 text-blue-800'
                         }`}>
-                          {property.acf.status.replace('-', ' ').toUpperCase()}
+                          {(property as any).acf.status.replace('-', ' ').toUpperCase()}
                         </span>
                       </div>
                     )}
