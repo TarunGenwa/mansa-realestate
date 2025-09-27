@@ -43,8 +43,8 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="py-20 px-8">
-      <div className="max-w-4xl mx-auto">
+    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      <div>
         <h2
           style={{
             fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',

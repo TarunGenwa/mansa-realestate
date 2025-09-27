@@ -23,8 +23,8 @@ export default function ContactFormSection() {
   }
 
   return (
-    <section style={{ backgroundColor: '#ECE8DD' }} className="py-20">
-      <div className="max-w-7xl mx-auto px-8">
+    <section style={{ backgroundColor: '#ECE8DD', paddingLeft: '87px', paddingRight: '87px' }} className="py-20">
+      <div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left Column - Text Content */}
           <div className="space-y-6">

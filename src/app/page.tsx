@@ -126,8 +126,8 @@ export default async function Home() {
       </div>
 
       {/* Text Section */}
-      <section className="px-8 py-16">
-        <div className="w-[40%]" style={{ marginLeft: '100px' }}>
+      <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+        <div className="w-[40%]">
           <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
             Découvrez une
           </p>
@@ -159,14 +159,14 @@ export default async function Home() {
       <ContactFormSection />
 
       {homePage ? (
-        <main className="max-w-7xl mx-auto px-4 py-8">
+        <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-8">
           <div
             className="prose prose-lg max-w-none mb-12"
             dangerouslySetInnerHTML={{ __html: homePage.content.rendered }}
           />
         </main>
       ) : (
-        <main className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-16 text-center">
         </main>
       )}
     </div>

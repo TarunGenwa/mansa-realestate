@@ -38,8 +38,8 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
     })
 
   return (
-    <section className="py-20 px-8">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      <div>
         {/* Heading */}
         <div className="w-[40%] mb-16">
           <h2
