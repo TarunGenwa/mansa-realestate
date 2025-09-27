@@ -30,21 +30,21 @@ export default function Navigation() {
               className={`${linkColor} transition`}
               style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
             >
-              Properties
+              Propriétés
             </Link>
             <Link
               href="/investir-dubai"
               className={`${linkColor} transition`}
               style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
             >
-              Invest in Dubai
+              Investir à Dubaï
             </Link>
             <Link
-              href="/about"
+              href="/guides"
               className={`${linkColor} transition`}
               style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
             >
-              About
+              Actualités et Guides
             </Link>
             <Link
               href="/contact"
