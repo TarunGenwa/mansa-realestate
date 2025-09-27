@@ -66,13 +66,31 @@ export default async function Home() {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
   const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
 
+  // Fetch posts with featured media for carousel
+  const posts = await wpApi.posts.getAll({
+    per_page: 10,
+    _embed: true
+  }).catch(() => [])
+
+  console.log('Fetched posts:', posts)
+  console.log('Number of posts:', posts.length)
+  if (posts.length > 0) {
+    console.log('First post details:', {
+      title: posts[0].title?.rendered,
+      slug: posts[0].slug,
+      hasEmbedded: !!posts[0]._embedded,
+      hasFeaturedMedia: !!posts[0]._embedded?.['wp:featuredmedia'],
+      featuredMediaUrl: posts[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url
+    })
+  }
+
   // Use direct hero image URL
   const heroImage = {
     source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
     alt_text: 'Hero Image'
   }
 
-  // Fetch project tile image
+  // Fetch fallback image for posts without featured image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
 
   return (
@@ -123,7 +141,7 @@ export default async function Home() {
       </section>
 
       {/* Project Cards Section */}
-      {projectTileImage && <SimpleCarousel projectTileImage={projectTileImage} />}
+      {posts.length > 0 && <SimpleCarousel posts={posts} fallbackImage={projectTileImage || undefined} />}
 
       {/* Image Showcase Section */}
       <ImageShowcaseSection mediaImages={mediaImages} />

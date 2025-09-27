@@ -26,6 +26,7 @@ export const wpApi = {
       tags?: number[]
       orderby?: string
       order?: 'asc' | 'desc'
+      _embed?: boolean
     }): Promise<WPPost[]> {
       const { data } = await api.get<WPPost[]>(getApiUrl('/posts'), { params })
       return data

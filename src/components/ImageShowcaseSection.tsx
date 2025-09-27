@@ -55,25 +55,30 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
           </h2>
         </div>
 
-        {/* Image Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[280px]">
-          {gridImages.map((image) => {
-            // Determine grid positioning and spanning based on row/col values
-            const gridColumn = `${image.col} / span 1`
-            const gridRow = `${image.row} / span 1`
+        {/* Image Grid - 5 columns, 3 rows */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 auto-rows-[280px]">
+          {gridImages.map((image, index) => {
+            // Special cases for specific positions
+            const isRow1Col1 = image.row === 1 && image.col === 1  // GI_1_1
+            const isRow1Col2 = image.row === 1 && image.col === 2  // GI_1_2 - spans cols 2-5 and rows 1-2
 
-            // Special cases for larger images (you can adjust these rules)
-            const isLarge = (image.row === 1 && image.col === 1) || (image.row === 2 && image.col === 1)
-            const colSpan = isLarge ? 'lg:col-span-2' : ''
-            const rowSpan = isLarge ? 'lg:row-span-2' : ''
+            // Find if this is the last image in row 3
+            const row3Images = gridImages.filter(img => img.row === 3)
+            const isLastInRow3 = image.row === 3 && row3Images[row3Images.length - 1]?.id === image.id
+
+            // GI_1_1 spans 1 column, 1 row (normal)
+            // GI_1_2 spans columns 2-5 (4 columns) and rows 1-2 (2 rows)
+            // Last image in row 3 spans from its column to the end
+            const colSpan = isRow1Col2 ? 'lg:col-span-4' : ''
+            const rowSpan = isRow1Col2 ? 'lg:row-span-2' : ''
 
             return (
               <div
                 key={image.id}
                 className={`relative overflow-hidden group cursor-pointer ${colSpan} ${rowSpan}`}
                 style={{
-                  gridColumn: `${image.col}`,
-                  gridRow: `${image.row}`
+                  gridColumn: isRow1Col2 ? '2 / -1' : isLastInRow3 ? `${image.col} / -1` : `${image.col}`,
+                  gridRow: isRow1Col2 ? '1 / 3' : `${image.row}`
                 }}
               >
                 <Image
@@ -106,30 +111,37 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
 
         {/* Fallback if no images */}
         {gridImages.length === 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((index) => (
-              <div
-                key={index}
-                className={`relative bg-gray-200 overflow-hidden group cursor-pointer ${
-                  index === 1 ? 'md:col-span-2 md:row-span-2' : ''
-                }`}
-                style={{
-                  height: index === 1 ? '600px' : '280px'
-                }}
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p
-                    className="text-gray-500"
-                    style={{
-                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                      fontWeight: 300
-                    }}
-                  >
-                    Image {index}
-                  </p>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 auto-rows-[280px]">
+            {/* Row 1 */}
+            <div className="relative bg-gray-200 overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-gray-500">GI_1_1</p>
               </div>
-            ))}
+            </div>
+            <div className="relative bg-gray-200 overflow-hidden lg:col-span-4 lg:row-span-2">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-gray-500">GI_1_2 (spans 4 cols, 2 rows)</p>
+              </div>
+            </div>
+            {/* Row 3 - Example with 2 images, last one fills remaining space */}
+            <div className="relative bg-gray-200 overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-gray-500">GI_3_1</p>
+              </div>
+            </div>
+            <div className="relative bg-gray-200 overflow-hidden lg:col-span-4">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p
+                  className="text-gray-500"
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 300
+                  }}
+                >
+                  GI_3_2 (fills remaining cols)
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>

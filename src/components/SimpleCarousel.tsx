@@ -4,22 +4,34 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 
 interface SimpleCarouselProps {
-  projectTileImage: {
-    source_url: string
-    alt_text?: string
-    title?: {
+  posts: Array<{
+    id: number
+    title: {
       rendered: string
     }
+    excerpt: {
+      rendered: string
+    }
+    slug: string
+    _embedded?: {
+      'wp:featuredmedia'?: Array<{
+        source_url: string
+        alt_text?: string
+      }>
+    }
+  }>
+  fallbackImage?: {
+    source_url: string
+    alt_text?: string
   }
 }
 
-export default function SimpleCarousel({ projectTileImage }: SimpleCarouselProps) {
+export default function SimpleCarousel({ posts, fallbackImage }: SimpleCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const cards = [1, 2, 3, 4, 5, 6, 7, 8]
   const cardsToShow = 3 // Number of cards visible at once
-  const maxIndex = Math.max(0, cards.length - cardsToShow)
+  const maxIndex = Math.max(0, posts.length - cardsToShow)
 
   const nextSlide = () => {
     setCurrentIndex(prev => Math.min(prev + 1, maxIndex))
@@ -45,27 +57,36 @@ export default function SimpleCarousel({ projectTileImage }: SimpleCarouselProps
               transform: `translateX(-${currentIndex * (360 + 24)}px)` // 360px card width + 24px gap
             }}
           >
-            {cards.map((index) => (
-              <div
-                key={index}
-                className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
-                style={{ width: '360px', height: '577px' }}
-              >
-                <Image
-                  src={projectTileImage.source_url}
-                  alt={`Project ${index}`}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  sizes="360px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-white text-xl font-semibold">Projet {index}</h3>
-                    <p className="text-white/80 text-sm mt-2">Découvrir le projet</p>
+            {posts.map((post) => {
+              const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]
+              const imageUrl = featuredImage?.source_url || fallbackImage?.source_url || '/placeholder.jpg'
+              const imageAlt = featuredImage?.alt_text || post.title.rendered
+
+              // Strip HTML tags from excerpt
+              const cleanExcerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
+
+              return (
+                <div
+                  key={post.id}
+                  className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
+                  style={{ width: '360px', height: '577px' }}
+                >
+                  <Image
+                    src={imageUrl}
+                    alt={imageAlt}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    sizes="360px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <h3 className="text-white text-xl font-semibold">{post.title.rendered}</h3>
+                      <p className="text-white/80 text-sm mt-2">{cleanExcerpt}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
