@@ -160,7 +160,7 @@ export default async function Home() {
       {/* Contact Form Section */}
       <ContactFormSection contactImage={contactUsImage} />
 
-      {homePage ? (
+      {/* {homePage ? (
         <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-8">
           <div
             className="prose prose-lg max-w-none mb-12"
@@ -170,7 +170,7 @@ export default async function Home() {
       ) : (
         <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-16 text-center">
         </main>
-      )}
+      )} */}
     </div>
   )
 }
