@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
+import PropertyMap from '../../../components/PropertyMap'
 
 interface PropertyPageProps {
   params: Promise<{
@@ -80,7 +81,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       <section className="pb-8" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
         <div className="max-w-7xl mx-auto">
           <h1
-            className="text-4xl lg:text-5xl mb-4"
+            className="text-4xl lg:text-5xl mb-6"
             style={{
               fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
               fontWeight: 700,
@@ -88,16 +89,19 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             }}
             dangerouslySetInnerHTML={{ __html: property.title.rendered }}
           />
-          {property.excerpt && (
+
+          {/* Subtitle - First Description Element */}
+          {parsedContent.description.length > 0 && (
             <div
-              className="text-lg text-gray-600"
+              className="text-lg text-gray-600 max-w-4xl"
               style={{
                 fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                 fontWeight: 400,
-                lineHeight: '1.5'
+                lineHeight: '1.6'
               }}
-              dangerouslySetInnerHTML={{ __html: property.excerpt.rendered }}
-            />
+            >
+              {parsedContent.description[0]}
+            </div>
           )}
         </div>
       </section>
@@ -135,6 +139,24 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         </div>
       </section>
 
+      {/* Second Description Element - Bottom of Hero */}
+      {parsedContent.description.length > 1 && (
+        <section className="pb-12" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+          <div className="max-w-7xl mx-auto">
+            <div
+              className="text-lg text-gray-700 max-w-4xl"
+              style={{
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                fontWeight: 400,
+                lineHeight: '1.6'
+              }}
+            >
+              {parsedContent.description[1]}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Property Content and Overview */}
       <section style={{ paddingLeft: '87px', paddingRight: '87px' }}>
         <div className="max-w-7xl mx-auto">
@@ -167,12 +189,12 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
               {/* Structured Content Display */}
               <div className="space-y-6 mb-8">
-                {/* Description Paragraphs */}
-                {parsedContent.description.length > 0 && (
+                {/* Additional Description Paragraphs (starting from third element) */}
+                {parsedContent.description.length > 2 && (
                   <div className="space-y-4">
-                    {parsedContent.description.map((paragraph: string, index: number) => (
+                    {parsedContent.description.slice(2).map((paragraph: string, index: number) => (
                       <p
-                        key={index}
+                        key={index + 2}
                         className="text-lg leading-relaxed text-gray-700"
                         style={{
                           fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -298,6 +320,67 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
         </div>
       </section>
+
+      {/* Location Map Section */}
+      {parsedContent.details.location && (
+        <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+          <div className="max-w-7xl mx-auto">
+            <h2
+              className="text-3xl font-semibold mb-8"
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+            >
+              Property Location
+            </h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Map */}
+              <div className="h-[400px] bg-gray-200 rounded-lg overflow-hidden shadow-lg">
+                <PropertyMap coordinates={parsedContent.details.location} />
+              </div>
+
+              {/* Location Details */}
+              <div className="flex flex-col justify-center">
+                <h3
+                  className="text-xl font-semibold mb-4"
+                  style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                >
+                  Location Details
+                </h3>
+
+                <div className="space-y-4">
+                  <div className="border-l-4 border-black pl-4">
+                    <span className="font-semibold text-gray-700">Coordinates:</span>
+                    <p className="text-gray-600">{parsedContent.details.location}</p>
+                  </div>
+
+                  {parsedContent.details.type && (
+                    <div className="border-l-4 border-gray-300 pl-4">
+                      <span className="font-semibold text-gray-700">Property Type:</span>
+                      <p className="text-gray-600">{parsedContent.details.type}</p>
+                    </div>
+                  )}
+
+                  <div className="pt-4">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(parsedContent.details.location)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+                      style={{
+                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '16px'
+                      }}
+                    >
+                      View on Google Maps
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Related Properties */}
       <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
