@@ -51,15 +51,14 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
               letterSpacing: '0%'
             }}
           >
-            Embrassez des espaces d'exception conçus pour votre style de vie
+            Embrassez des espaces d&apos;exception conçus pour votre style de vie
           </h2>
         </div>
 
         {/* Image Grid - 5 columns, 3 rows */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 auto-rows-[280px]">
-          {gridImages.map((image, index) => {
+          {gridImages.map((image) => {
             // Special cases for specific positions
-            const isRow1Col1 = image.row === 1 && image.col === 1  // GI_1_1
             const isRow1Col2 = image.row === 1 && image.col === 2  // GI_1_2 - spans cols 2-5 and rows 1-2
 
             // Find if this is the last image in row 3

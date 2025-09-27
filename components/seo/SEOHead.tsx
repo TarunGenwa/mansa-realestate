@@ -31,16 +31,8 @@ export default function SEOHead({ seoData, additionalMetaTags, additionalLinkTag
       site: seoData.twitter.site,
       cardType: seoData.twitter.cardType as any,
     },
-    robotsProps: seoData.robots ? {
-      noindex: !seoData.robots.index,
-      nofollow: !seoData.robots.follow,
-      noarchive: seoData.robots.noarchive,
-      nosnippet: seoData.robots.nosnippet,
-      noimageindex: seoData.robots.noimageindex,
-      maxSnippet: seoData.robots.maxSnippet,
-      maxImagePreview: seoData.robots.maxImagePreview,
-      maxVideoPreview: seoData.robots.maxVideoPreview,
-    } : undefined,
+    noindex: seoData.robots ? !seoData.robots.index : undefined,
+    nofollow: seoData.robots ? !seoData.robots.follow : undefined,
     additionalMetaTags,
     additionalLinkTags,
   }

@@ -48,7 +48,7 @@ export default function ContactFormSection() {
               }}
               className="text-gray-700"
             >
-              Vous cherchez à acheter, vendre ou investir dans l'immobilier ? Nous sommes là pour vous guider à chaque étape. Envoyez-nous un message et commençons la conversation — sans pression, juste un véritable soutien de vraies personnes qui se soucient de vos objectifs.
+              Vous cherchez à acheter, vendre ou investir dans l&apos;immobilier ? Nous sommes là pour vous guider à chaque étape. Envoyez-nous un message et commençons la conversation — sans pression, juste un véritable soutien de vraies personnes qui se soucient de vos objectifs.
             </p>
 
             <div className="mt-8">

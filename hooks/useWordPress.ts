@@ -54,7 +54,7 @@ export function usePosts(options?: { per_page?: number; categories?: number[] })
 
 export function usePost(slugOrId: string | number) {
   const key = typeof slugOrId === 'string' ? `posts:slug:${slugOrId}` : `posts:${slugOrId}`
-  return useSWR<WPPost | null>(key, fetcher)
+  return useSWR<WPPost | null>(key, () => fetcher(key) as Promise<WPPost | null>)
 }
 
 export function usePages(options?: { per_page?: number; parent?: number }) {
@@ -64,23 +64,23 @@ export function usePages(options?: { per_page?: number; parent?: number }) {
 
 export function usePage(slugOrId: string | number) {
   const key = typeof slugOrId === 'string' ? `pages:slug:${slugOrId}` : `pages:${slugOrId}`
-  return useSWR<WPPage | null>(key, fetcher)
+  return useSWR<WPPage | null>(key, () => fetcher(key) as Promise<WPPage | null>)
 }
 
 export function useCategories() {
-  return useSWR<WPCategory[]>('categories:all', fetcher)
+  return useSWR<WPCategory[]>('categories:all', () => fetcher('categories:all') as Promise<WPCategory[]>)
 }
 
 export function useCategory(slugOrId: string | number) {
   const key = typeof slugOrId === 'string' ? `categories:slug:${slugOrId}` : `categories:${slugOrId}`
-  return useSWR<WPCategory | null>(key, fetcher)
+  return useSWR<WPCategory | null>(key, () => fetcher(key) as Promise<WPCategory | null>)
 }
 
 export function useTags() {
-  return useSWR<WPTag[]>('tags:all', fetcher)
+  return useSWR<WPTag[]>('tags:all', () => fetcher('tags:all') as Promise<WPTag[]>)
 }
 
 export function useTag(slugOrId: string | number) {
   const key = typeof slugOrId === 'string' ? `tags:slug:${slugOrId}` : `tags:${slugOrId}`
-  return useSWR<WPTag | null>(key, fetcher)
+  return useSWR<WPTag | null>(key, () => fetcher(key) as Promise<WPTag | null>)
 }

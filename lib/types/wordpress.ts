@@ -34,6 +34,35 @@ export interface WPPost {
   tags: number[]
   yoast_head?: string
   yoast_head_json?: YoastHeadJson
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      id: number
+      source_url: string
+      alt_text?: string
+      caption?: {
+        rendered: string
+      }
+      media_details?: {
+        width: number
+        height: number
+      }
+    }>
+    author?: Array<{
+      id: number
+      name: string
+      url: string
+      description: string
+      link: string
+      slug: string
+    }>
+    'wp:term'?: Array<Array<{
+      id: number
+      link: string
+      name: string
+      slug: string
+      taxonomy: string
+    }>>
+  }
 }
 
 export interface WPPage {
@@ -70,6 +99,28 @@ export interface WPPage {
   meta: any[]
   yoast_head?: string
   yoast_head_json?: YoastHeadJson
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      id: number
+      source_url: string
+      alt_text?: string
+      caption?: {
+        rendered: string
+      }
+      media_details?: {
+        width: number
+        height: number
+      }
+    }>
+    author?: Array<{
+      id: number
+      name: string
+      url: string
+      description: string
+      link: string
+      slug: string
+    }>
+  }
 }
 
 export interface WPMedia {
