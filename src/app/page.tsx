@@ -66,8 +66,11 @@ export default async function Home() {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
   const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
 
-  // Fetch hero image by slug
-  const heroImage = await wpApi.media.getBySlug('fc52ba8aedbbfe413f98241d1568a6cc96c2dec61').catch(() => null)
+  // Use direct hero image URL
+  const heroImage = {
+    source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
+    alt_text: 'Hero Image'
+  }
 
   // Fetch project tile image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
@@ -75,30 +78,28 @@ export default async function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      {heroImage && (
-        <div className="relative h-[90vh] m-2" style={{ width: 'calc(100% - 16px)' }}>
-          <Image
-            src={heroImage.source_url}
-            alt={heroImage.alt_text || 'Hero Image'}
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
-            <div className="text-center text-white px-4">
-              <h1 style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', lineHeight: '1' }}>
-                <span className="block font-normal" style={{ fontSize: '48px', lineHeight: '1' }}>Entrez dans une</span>
-                <span className="block italic" style={{ fontWeight: 900, fontSize: '64px', lineHeight: '0.9' }}>nouvelle</span>
-                <span className="block italic" style={{ fontWeight: 400, fontSize: '64px', lineHeight: '0.9' }}>réalité</span>
-              </h1>
-              <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
-                Contact
-              </Link>
-            </div>
+      <div className="relative h-screen m-2" style={{ width: 'calc(100% - 16px)' }}>
+        <Image
+          src={heroImage.source_url}
+          alt={heroImage.alt_text}
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
+          <div className="text-center text-white px-4">
+            <h1 style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', lineHeight: '1' }}>
+              <span className="block font-normal" style={{ fontSize: '48px', lineHeight: '1' }}>Entrez dans une</span>
+              <span className="block italic" style={{ fontWeight: 900, fontSize: '64px', lineHeight: '0.9' }}>nouvelle</span>
+              <span className="block italic" style={{ fontWeight: 400, fontSize: '64px', lineHeight: '0.9' }}>réalité</span>
+            </h1>
+            <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
+              Contact
+            </Link>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Text Section */}
       <section className="px-8 py-16">

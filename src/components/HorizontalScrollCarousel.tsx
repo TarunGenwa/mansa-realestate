@@ -40,7 +40,7 @@ export default function HorizontalScrollCarousel({ projectTileImage }: Horizonta
           {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
             <div
               key={index}
-              className="relative flex-shrink-0 rounded-xl overflow-hidden group cursor-pointer"
+              className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
               style={{ width: '360px', height: '577px' }}
             >
               <Image

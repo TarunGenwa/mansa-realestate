@@ -1,5 +1,5 @@
 export const wpConfig = {
-  apiUrl: process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://docker-image-production-8469.up.railway.app',
+  apiUrl: process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
   apiBase: '/wp-json/wp/v2',
   rankMathBase: '/wp-json/rankmath/v1',
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',

@@ -17,11 +17,25 @@ interface ImageShowcaseSectionProps {
 }
 
 export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSectionProps) {
-  // Filter out the project tile and hero images for this showcase
-  const showcaseImages = mediaImages.filter(img =>
-    !img.title.rendered.toLowerCase().includes('project_tile') &&
-    !img.title.rendered.toLowerCase().includes('fc52ba8aedbbfe413f98241d1568a6cc96c2dec61')
-  ).slice(0, 9) // Show up to 9 images
+  // Filter images with GI_ prefix and organize by grid position
+  const gridImages = mediaImages
+    .filter(img => img.title.rendered.startsWith('GI_'))
+    .map(img => {
+      const title = img.title.rendered
+      // Parse GI_R_C format where R is row (4th char) and C is column (last char)
+      const parts = title.split('_')
+      if (parts.length >= 3) {
+        const row = parseInt(parts[1]) || 1
+        const col = parseInt(parts[2]) || 1
+        return { ...img, row, col }
+      }
+      return { ...img, row: 1, col: 1 }
+    })
+    .sort((a, b) => {
+      // Sort by row first, then by column
+      if (a.row !== b.row) return a.row - b.row
+      return a.col - b.col
+    })
 
   return (
     <section className="py-20 px-8">
@@ -42,51 +56,56 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
         </div>
 
         {/* Image Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {showcaseImages.map((image, index) => (
-            <div
-              key={image.id}
-              className={`relative overflow-hidden group cursor-pointer ${
-                index === 0 ? 'md:col-span-2 md:row-span-2' :
-                index === 3 ? 'lg:row-span-2' : ''
-              }`}
-              style={{
-                height: index === 0 ? '600px' : index === 3 ? '600px' : '280px'
-              }}
-            >
-              <Image
-                src={image.source_url}
-                alt={image.alt_text || image.title.rendered}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                sizes={
-                  index === 0
-                    ? "(max-width: 768px) 100vw, 66vw"
-                    : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                }
-              />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[280px]">
+          {gridImages.map((image) => {
+            // Determine grid positioning and spanning based on row/col values
+            const gridColumn = `${image.col} / span 1`
+            const gridRow = `${image.row} / span 1`
 
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  {image.caption.rendered && (
-                    <p
-                      className="text-white text-sm"
-                      style={{
-                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                        fontWeight: 300
-                      }}
-                      dangerouslySetInnerHTML={{ __html: image.caption.rendered }}
-                    />
-                  )}
+            // Special cases for larger images (you can adjust these rules)
+            const isLarge = (image.row === 1 && image.col === 1) || (image.row === 2 && image.col === 1)
+            const colSpan = isLarge ? 'lg:col-span-2' : ''
+            const rowSpan = isLarge ? 'lg:row-span-2' : ''
+
+            return (
+              <div
+                key={image.id}
+                className={`relative overflow-hidden group cursor-pointer ${colSpan} ${rowSpan}`}
+                style={{
+                  gridColumn: `${image.col}`,
+                  gridRow: `${image.row}`
+                }}
+              >
+                <Image
+                  src={image.source_url}
+                  alt={image.alt_text || image.title.rendered}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    {image.caption.rendered && (
+                      <p
+                        className="text-white text-sm"
+                        style={{
+                          fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                          fontWeight: 300
+                        }}
+                        dangerouslySetInnerHTML={{ __html: image.caption.rendered }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Fallback if no images */}
-        {showcaseImages.length === 0 && (
+        {gridImages.length === 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((index) => (
               <div

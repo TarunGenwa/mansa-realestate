@@ -48,7 +48,7 @@ export default function SimpleCarousel({ projectTileImage }: SimpleCarouselProps
             {cards.map((index) => (
               <div
                 key={index}
-                className="relative flex-shrink-0 rounded-xl overflow-hidden group cursor-pointer"
+                className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
                 style={{ width: '360px', height: '577px' }}
               >
                 <Image
