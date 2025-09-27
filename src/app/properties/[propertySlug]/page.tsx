@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 
 interface PropertyPageProps {
   params: Promise<{
@@ -59,20 +60,18 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const heroImageRight = allMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_right'))
   const overviewImage = allMedia.find(img => img.alt_text?.toLowerCase().includes('property_overview'))
 
-  // Debug logging for images
+  // Parse the property content
+  const parsedContent = parsePropertyContentSimple(property.content.rendered)
+
+  // Debug logging for images and content
   console.log('Property Slug:', propertySlug)
   console.log('Post ID:', property.id)
+  console.log('Parsed Content:', parsedContent)
   console.log('Total Media Count:', allMedia.length)
   console.log('Found Hero Left:', heroImageLeft?.alt_text, heroImageLeft?.source_url)
   console.log('Found Hero Right:', heroImageRight?.alt_text, heroImageRight?.source_url)
   console.log('Found Overview Image:', overviewImage?.alt_text, overviewImage?.source_url)
   console.log('Featured Image:', featuredImage?.source_url)
-  console.log('Property images in media library:', allMedia.filter(img =>
-    img.alt_text?.toLowerCase().includes('property_')).map(img => ({
-      id: img.id,
-      alt: img.alt_text,
-      title: img.title.rendered
-    })))
 
   return (
     <div className="min-h-screen pt-24">
@@ -166,11 +165,72 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 </div>
               )}
 
-              <div
-                className="prose prose-lg max-w-none mb-8"
-                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                dangerouslySetInnerHTML={{ __html: property.content.rendered }}
-              />
+              {/* Structured Content Display */}
+              <div className="space-y-6 mb-8">
+                {/* Description Paragraphs */}
+                {parsedContent.description.length > 0 && (
+                  <div className="space-y-4">
+                    {parsedContent.description.map((paragraph: string, index: number) => (
+                      <p
+                        key={index}
+                        className="text-lg leading-relaxed text-gray-700"
+                        style={{
+                          fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                          fontWeight: 400
+                        }}
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Property Details List */}
+                {Object.keys(parsedContent.details).length > 0 && (
+                  <div className="bg-gray-50 p-6 rounded-lg">
+                    <h3
+                      className="text-xl font-semibold mb-4"
+                      style={{
+                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
+                      }}
+                    >
+                      Property Features
+                    </h3>
+                    <ul className="space-y-3">
+                      {parsedContent.details.type && (
+                        <li className="flex items-start">
+                          <span className="font-semibold text-gray-700 min-w-[150px]">Type:</span>
+                          <span className="text-gray-600">{parsedContent.details.type}</span>
+                        </li>
+                      )}
+                      {parsedContent.details.modern && (
+                        <li className="flex items-start">
+                          <span className="font-semibold text-gray-700 min-w-[150px]">Modern:</span>
+                          <span className="text-gray-600">{parsedContent.details.modern}</span>
+                        </li>
+                      )}
+                      {parsedContent.details.targetMarket && (
+                        <li className="flex items-start">
+                          <span className="font-semibold text-gray-700 min-w-[150px]">Target Market:</span>
+                          <span className="text-gray-600">{parsedContent.details.targetMarket}</span>
+                        </li>
+                      )}
+                      {parsedContent.details.uniqueSellingPoints && (
+                        <li className="flex items-start">
+                          <span className="font-semibold text-gray-700 min-w-[150px]">USP:</span>
+                          <span className="text-gray-600">{parsedContent.details.uniqueSellingPoints}</span>
+                        </li>
+                      )}
+                      {parsedContent.details.location && (
+                        <li className="flex items-start">
+                          <span className="font-semibold text-gray-700 min-w-[150px]">Coordinates:</span>
+                          <span className="text-gray-600">{parsedContent.details.location}</span>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Property Details Sidebar */}
