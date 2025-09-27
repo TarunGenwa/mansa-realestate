@@ -7,6 +7,7 @@ import SimpleCarousel from '@/src/components/SimpleCarousel'
 import FAQSection from '@/src/components/FAQSection'
 import ContactFormSection from '@/src/components/ContactFormSection'
 import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
+import DirectorSection from '@/src/components/DirectorSection'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -90,8 +91,10 @@ export default async function Home() {
     })
   }
 
-  // Use direct hero image URL
-  const heroImage = {
+  // Fetch hero image from WordPress media
+  const heroImageFromWP = mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_image_landing'))
+
+  const heroImage = heroImageFromWP || {
     source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
     alt_text: 'Hero Image'
   }
@@ -102,24 +105,30 @@ export default async function Home() {
   // Fetch contact us image
   const contactUsImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('contactus')) || null
 
+  // Fetch Ismahen image
+  const ismahenImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('ismahen')) || null
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
       <div className="relative h-screen m-2" style={{ width: 'calc(100% - 16px)' }}>
         <Image
           src={heroImage.source_url}
-          alt={heroImage.alt_text}
+          alt={heroImage.alt_text || 'Hero Image'}
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
-        <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
-          <div className="text-center text-white px-4">
+        <div className="absolute inset-0 flex items-start justify-center pt-32" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
+          <div className="text-center text-white px-4 mt-16">
             <h1 style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', lineHeight: '1' }}>
               <span className="block font-normal" style={{ fontSize: '48px', lineHeight: '1' }}>Entrez dans une</span>
-              <span className="block italic" style={{ fontWeight: 900, fontSize: '64px', lineHeight: '0.9' }}>nouvelle</span>
-              <span className="block italic" style={{ fontWeight: 400, fontSize: '64px', lineHeight: '0.9' }}>réalité</span>
+              <span className="block" style={{ fontSize: '64px', lineHeight: '0.9' }}>
+                <span className="italic" style={{ fontWeight: 900 }}>nouvelle</span>
+                {' '}
+                <span className="italic" style={{ fontWeight: 200 }}>réalité</span>
+              </span>
             </h1>
             <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
               Contact
@@ -157,6 +166,9 @@ export default async function Home() {
 
       {/* FAQ Section */}
       <FAQSection />
+
+      {/* Director Introduction Section */}
+      <DirectorSection directorImage={ismahenImage} />
 
       {/* Contact Form Section */}
       <ContactFormSection contactImage={contactUsImage} />
