@@ -66,21 +66,27 @@ export default async function Home() {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
   const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 20 }).catch(() => [])
 
-  // Fetch posts with featured media for carousel
-  const posts = await wpApi.posts.getAll({
-    per_page: 10,
-    _embed: true
-  }).catch(() => [])
+  // First, get the properties category
+  const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
 
-  console.log('Fetched posts:', posts)
-  console.log('Number of posts:', posts.length)
-  if (posts.length > 0) {
-    console.log('First post details:', {
-      title: posts[0].title?.rendered,
-      slug: posts[0].slug,
-      hasEmbedded: !!posts[0]._embedded,
-      hasFeaturedMedia: !!posts[0]._embedded?.['wp:featuredmedia'],
-      featuredMediaUrl: posts[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url
+  // Fetch posts from properties category only for carousel
+  const properties = propertiesCategory
+    ? await wpApi.posts.getAll({
+        per_page: 10,
+        categories: [propertiesCategory.id],
+        _embed: true
+      }).catch(() => [])
+    : []
+
+  console.log('Fetched properties:', properties)
+  console.log('Number of properties:', properties.length)
+  if (properties.length > 0) {
+    console.log('First property details:', {
+      title: properties[0].title?.rendered,
+      slug: properties[0].slug,
+      hasEmbedded: !!properties[0]._embedded,
+      hasFeaturedMedia: !!properties[0]._embedded?.['wp:featuredmedia'],
+      featuredMediaUrl: properties[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url
     })
   }
 
@@ -141,7 +147,7 @@ export default async function Home() {
       </section>
 
       {/* Project Cards Section */}
-      {posts.length > 0 && <SimpleCarousel posts={posts} fallbackImage={projectTileImage || undefined} />}
+      {properties.length > 0 && <SimpleCarousel posts={properties} fallbackImage={projectTileImage || undefined} />}
 
       {/* Image Showcase Section */}
       <ImageShowcaseSection mediaImages={mediaImages} />

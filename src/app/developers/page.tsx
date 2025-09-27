@@ -9,17 +9,19 @@ export const metadata: Metadata = {
 }
 
 export default async function DevelopersPage() {
-  const developers = await wpApi.developers.getAll({
-    per_page: 20,
-    _embed: true
-  })
+  // First, get the developers category
+  const developersCategory = await wpApi.categories.getBySlug('developers').catch(() => null)
 
-  // For now, use posts as fallback if developers custom post type is not set up yet
-  const posts = developers.length === 0
-    ? await wpApi.posts.getAll({ per_page: 10, _embed: true }).catch(() => [])
+  // Fetch posts from developers category
+  const developers = developersCategory
+    ? await wpApi.posts.getAll({
+        per_page: 100,
+        categories: [developersCategory.id],
+        _embed: true
+      }).catch(() => [])
     : []
 
-  const items = developers.length > 0 ? developers : posts
+  const items = developers
 
   return (
     <div className="min-h-screen">
