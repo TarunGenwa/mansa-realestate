@@ -2,7 +2,6 @@ import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import Footer from '@/src/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Invest in Dubai - Mansa',

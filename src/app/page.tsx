@@ -1,8 +1,6 @@
 import { wpApi } from '@/lib/api/wordpress'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
 import SimpleCarousel from '@/src/components/SimpleCarousel'
 import FAQSection from '@/src/components/FAQSection'
 import ContactFormSection from '@/src/components/ContactFormSection'
@@ -97,15 +95,20 @@ export default async function Home() {
     mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_1')),
     mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_2')),
     mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_3'))
-  ].filter(Boolean) // Remove any undefined images
+  ].filter(Boolean) as typeof mediaImages // Remove any undefined images and assert type
 
   // Fallback if no hero images found
   const fallbackHeroImage = {
     source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
-    alt_text: 'Hero Image'
+    alt_text: 'Hero Image',
+    title: { rendered: 'Hero Image' }
   }
 
-  const finalHeroImages = heroImages.length > 0 ? heroImages : [fallbackHeroImage]
+  const finalHeroImages = heroImages.length > 0 ? heroImages.map(img => ({
+    source_url: img.source_url,
+    alt_text: img.alt_text,
+    title: img.title
+  })) : [fallbackHeroImage]
 
   // Fetch fallback image for posts without featured image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null

@@ -69,7 +69,7 @@ export default function ContactHeroSection({ heroImage }: ContactHeroSectionProp
             }}
             className="text-gray-600 mb-8"
           >
-            Let's start a conversation about your dream project
+            Let&apos;s start a conversation about your dream project
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">

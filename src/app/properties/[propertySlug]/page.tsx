@@ -4,17 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-interface PropertyACF {
-  location?: string
-  price?: string
-  price_from?: string
-  status?: string
-}
-
-interface PropertyWithACF {
-  acf?: PropertyACF
-}
-
 interface PropertyPageProps {
   params: Promise<{
     propertySlug: string
@@ -58,27 +47,32 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   const featuredImage = property._embedded?.['wp:featuredmedia']?.[0]
 
-  // Fetch media attached to this specific post
-  const postMedia = await wpApi.media.getAll({
-    parent: property.id,
+  // Fetch all media to find property-specific images
+  const allMedia = await wpApi.media.getAll({
     media_type: 'image',
     per_page: 100
   }).catch(() => [])
 
-  // Look for property-specific images using alt text from attached media
-  const heroImageLeft = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_left'))
-  const heroImageRight = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_right'))
-  const overviewImage = postMedia.find(img => img.alt_text?.toLowerCase().includes('property_overview'))
+  // Look for property-specific images using alt text
+  // These should be attached to the property post and have specific alt text
+  const heroImageLeft = allMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_left'))
+  const heroImageRight = allMedia.find(img => img.alt_text?.toLowerCase().includes('property_hero_right'))
+  const overviewImage = allMedia.find(img => img.alt_text?.toLowerCase().includes('property_overview'))
 
   // Debug logging for images
   console.log('Property Slug:', propertySlug)
   console.log('Post ID:', property.id)
-  console.log('Attached Media Count:', postMedia.length)
+  console.log('Total Media Count:', allMedia.length)
   console.log('Found Hero Left:', heroImageLeft?.alt_text, heroImageLeft?.source_url)
   console.log('Found Hero Right:', heroImageRight?.alt_text, heroImageRight?.source_url)
   console.log('Found Overview Image:', overviewImage?.alt_text, overviewImage?.source_url)
   console.log('Featured Image:', featuredImage?.source_url)
-  console.log('All attached media alt texts:', postMedia.map(img => ({ id: img.id, alt: img.alt_text, title: img.title.rendered })))
+  console.log('Property images in media library:', allMedia.filter(img =>
+    img.alt_text?.toLowerCase().includes('property_')).map(img => ({
+      id: img.id,
+      alt: img.alt_text,
+      title: img.title.rendered
+    })))
 
   return (
     <div className="min-h-screen pt-24">
