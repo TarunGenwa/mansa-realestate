@@ -258,3 +258,145 @@ export interface RankMathSEO {
   primary_category?: string
   focus_keyword?: string
 }
+
+export interface WPDeveloper {
+  id: number
+  date: string
+  date_gmt: string
+  guid: {
+    rendered: string
+  }
+  modified: string
+  modified_gmt: string
+  slug: string
+  status: string
+  type: string
+  link: string
+  title: {
+    rendered: string
+  }
+  content: {
+    rendered: string
+    protected: boolean
+  }
+  excerpt: {
+    rendered: string
+    protected: boolean
+  }
+  author: number
+  featured_media: number
+  template: string
+  meta: any[]
+  acf?: {
+    logo?: string
+    website?: string
+    email?: string
+    phone?: string
+    address?: string
+    description?: string
+    established_year?: string
+    total_projects?: number
+  }
+  yoast_head?: string
+  yoast_head_json?: YoastHeadJson
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      id: number
+      source_url: string
+      alt_text?: string
+      caption?: {
+        rendered: string
+      }
+      media_details?: {
+        width: number
+        height: number
+      }
+    }>
+  }
+}
+
+export interface WPProperty {
+  id: number
+  date: string
+  date_gmt: string
+  guid: {
+    rendered: string
+  }
+  modified: string
+  modified_gmt: string
+  slug: string
+  status: string
+  type: string
+  link: string
+  title: {
+    rendered: string
+  }
+  content: {
+    rendered: string
+    protected: boolean
+  }
+  excerpt: {
+    rendered: string
+    protected: boolean
+  }
+  author: number
+  featured_media: number
+  template: string
+  meta: any[]
+  developer: number[]
+  property_type: number[]
+  location: number[]
+  acf?: {
+    developer_id?: number
+    price?: string
+    price_from?: string
+    price_to?: string
+    bedrooms?: string
+    bathrooms?: string
+    area?: string
+    location?: string
+    status?: 'available' | 'sold' | 'under-construction' | 'coming-soon'
+    completion_date?: string
+    amenities?: string[]
+    gallery?: Array<{
+      id: number
+      url: string
+      alt: string
+    }>
+    floor_plans?: Array<{
+      title: string
+      image: {
+        id: number
+        url: string
+        alt: string
+      }
+      bedrooms: string
+      bathrooms: string
+      area: string
+    }>
+  }
+  yoast_head?: string
+  yoast_head_json?: YoastHeadJson
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      id: number
+      source_url: string
+      alt_text?: string
+      caption?: {
+        rendered: string
+      }
+      media_details?: {
+        width: number
+        height: number
+      }
+    }>
+    'wp:term'?: Array<Array<{
+      id: number
+      link: string
+      name: string
+      slug: string
+      taxonomy: string
+    }>>
+    developer?: Array<WPDeveloper>
+  }
+}

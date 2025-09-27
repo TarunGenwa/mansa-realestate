@@ -7,7 +7,9 @@ import type {
   WPCategory,
   WPTag,
   WPUser,
-  RankMathSEO
+  RankMathSEO,
+  WPDeveloper,
+  WPProperty
 } from '@/lib/types/wordpress'
 
 const api = axios.create({
@@ -193,6 +195,115 @@ export const wpApi = {
         return data || null
       } catch (error) {
         console.error('Error fetching RankMath SEO data:', error)
+        return null
+      }
+    },
+  },
+
+  developers: {
+    async getAll(params?: {
+      page?: number
+      per_page?: number
+      search?: string
+      orderby?: string
+      order?: 'asc' | 'desc'
+      _embed?: boolean
+    }): Promise<WPDeveloper[]> {
+      try {
+        const { data } = await api.get<WPDeveloper[]>(getApiUrl('/developers'), { params })
+        return data
+      } catch (error) {
+        console.error('Error fetching developers:', error)
+        return []
+      }
+    },
+
+    async getBySlug(slug: string): Promise<WPDeveloper | null> {
+      try {
+        const { data } = await api.get<WPDeveloper[]>(getApiUrl('/developers'), {
+          params: { slug, _embed: true }
+        })
+        return data[0] || null
+      } catch (error) {
+        console.error('Error fetching developer:', error)
+        return null
+      }
+    },
+
+    async getById(id: number): Promise<WPDeveloper | null> {
+      try {
+        const { data } = await api.get<WPDeveloper>(getApiUrl(`/developers/${id}`), {
+          params: { _embed: true }
+        })
+        return data
+      } catch (error) {
+        console.error('Error fetching developer:', error)
+        return null
+      }
+    },
+  },
+
+  properties: {
+    async getAll(params?: {
+      page?: number
+      per_page?: number
+      search?: string
+      developer?: number
+      property_type?: number[]
+      location?: number[]
+      orderby?: string
+      order?: 'asc' | 'desc'
+      _embed?: boolean
+    }): Promise<WPProperty[]> {
+      try {
+        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), { params })
+        return data
+      } catch (error) {
+        console.error('Error fetching properties:', error)
+        return []
+      }
+    },
+
+    async getByDeveloper(developerId: number, params?: {
+      page?: number
+      per_page?: number
+      _embed?: boolean
+    }): Promise<WPProperty[]> {
+      try {
+        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), {
+          params: {
+            developer: developerId,
+            _embed: true,
+            ...params
+          }
+        })
+        return data
+      } catch (error) {
+        console.error('Error fetching properties by developer:', error)
+        return []
+      }
+    },
+
+    async getBySlug(slug: string): Promise<WPProperty | null> {
+      try {
+        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), {
+          params: { slug, _embed: true }
+        })
+        return data[0] || null
+      } catch (error) {
+        console.error('Error fetching property:', error)
+        return null
+      }
+    },
+
+    async getById(id: number): Promise<WPProperty | null> {
+      try {
+        const { data } = await api.get<WPProperty>(getApiUrl(`/properties/${id}`), {
+          params: { _embed: true }
+        })
+        return data
+      } catch (error) {
+        console.error('Error fetching property:', error)
         return null
       }
     },

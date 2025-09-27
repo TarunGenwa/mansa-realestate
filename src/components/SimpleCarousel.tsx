@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface SimpleCarouselProps {
   posts: Array<{
@@ -13,10 +14,26 @@ interface SimpleCarouselProps {
       rendered: string
     }
     slug: string
+    type?: string
+    developer?: number[]
+    acf?: {
+      developer_id?: number
+      price?: string
+      price_from?: string
+      location?: string
+      status?: string
+    }
     _embedded?: {
       'wp:featuredmedia'?: Array<{
         source_url: string
         alt_text?: string
+      }>
+      developer?: Array<{
+        id: number
+        slug: string
+        title: {
+          rendered: string
+        }
       }>
     }
   }>
@@ -65,10 +82,35 @@ export default function SimpleCarousel({ posts, fallbackImage }: SimpleCarouselP
               // Strip HTML tags from excerpt
               const cleanExcerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
 
+              // Determine the correct link based on post type
+              const getPostLink = () => {
+                // If it's a property type and has developer information
+                if (post.type === 'property' && post._embedded?.developer?.[0]) {
+                  const developer = post._embedded.developer[0]
+                  return `/developers/${developer.slug}/properties/${post.slug}`
+                }
+                // If it's a property but no embedded developer, try to get from ACF
+                else if (post.type === 'property' && post.acf?.developer_id) {
+                  // We'll need the developer slug, for now use a fallback
+                  return `/developers/developer-${post.acf.developer_id}/properties/${post.slug}`
+                }
+                // If it's a developer type
+                else if (post.type === 'developer') {
+                  return `/developers/${post.slug}`
+                }
+                // For regular posts (current fallback), treat as properties under a default developer
+                else {
+                  return `/developers/mansa/properties/${post.slug}`
+                }
+              }
+
+              const postLink = getPostLink()
+
               return (
-                <div
+                <Link
                   key={post.id}
-                  className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
+                  href={postLink}
+                  className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer block"
                   style={{ width: '360px', height: '577px' }}
                 >
                   <Image
@@ -82,9 +124,35 @@ export default function SimpleCarousel({ posts, fallbackImage }: SimpleCarouselP
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <h3 className="text-white text-xl font-semibold">{post.title.rendered}</h3>
                       <p className="text-white/80 text-sm mt-2">{cleanExcerpt}</p>
+
+                      {/* Property metadata if available */}
+                      {post.acf && (
+                        <div className="mt-3 space-y-1">
+                          {post.acf.location && (
+                            <p className="text-white/90 text-xs">
+                              📍 {post.acf.location}
+                            </p>
+                          )}
+                          {(post.acf.price || post.acf.price_from) && (
+                            <p className="text-white font-semibold text-sm">
+                              {post.acf.price || `From ${post.acf.price_from}`}
+                            </p>
+                          )}
+                          {post.acf.status && (
+                            <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                              post.acf.status === 'available' ? 'bg-green-500/80 text-white' :
+                              post.acf.status === 'sold' ? 'bg-red-500/80 text-white' :
+                              post.acf.status === 'under-construction' ? 'bg-yellow-500/80 text-black' :
+                              'bg-blue-500/80 text-white'
+                            }`}>
+                              {post.acf.status.replace('-', ' ').toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>
