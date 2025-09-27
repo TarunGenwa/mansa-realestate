@@ -99,6 +99,9 @@ export default async function Home() {
   // Fetch fallback image for posts without featured image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
 
+  // Fetch contact us image
+  const contactUsImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('contactus')) || null
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
@@ -156,7 +159,7 @@ export default async function Home() {
       <FAQSection />
 
       {/* Contact Form Section */}
-      <ContactFormSection />
+      <ContactFormSection contactImage={contactUsImage} />
 
       {homePage ? (
         <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-8">
