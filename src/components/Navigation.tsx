@@ -1,63 +1,63 @@
+'use client'
+
 import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
+  const pathname = usePathname()
+  const isInvestPage = pathname === '/investir-dubai'
+  const linkColor = isInvestPage ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
+  const logoSrc = isInvestPage ? '/logo_black.svg' : '/logo_white.svg'
+
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 pt-6">
       <div className="w-full px-12">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center ml-4">
-            <svg width="176" height="41" viewBox="0 0 176 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_2_215)">
-                <path d="M56.2263 26.7946V8.9356L49.1821 24.108H45.2821L38.2378 8.9356V26.7946H32.8223V0.308594H39.5255L47.2512 16.5027L54.9387 0.308594H61.6042V26.7946H56.2263Z" fill="white"/>
-                <path d="M78.8684 6.55154L74.6645 16.8434H83.034L78.8684 6.55154ZM72.6953 21.6486L70.6119 26.7946H64.4395L75.9527 0.308594H82.1252L93.4487 26.7946H87.0477L84.9655 21.6486H72.6953Z" fill="white"/>
-                <mask id="mask0_2_215" style={{ maskType: "luminance" }} maskUnits="userSpaceOnUse" x="-153" y="-166" width="482" height="373">
-                  <path d="M-152.746 -165.367H328.746V206.367H-152.746V-165.367Z" fill="white"/>
-                </mask>
-                <g mask="url(#mask0_2_215)">
-                  <path d="M145.82 2.91942L143.509 7.87648C140.707 6.21157 137.374 5.15224 135.254 5.15224C133.246 5.15224 131.884 5.87082 131.884 7.30855C131.884 12.1897 146.009 9.46545 145.971 19.0005C145.971 24.1841 141.465 26.9843 135.595 26.9843C131.24 26.9843 126.884 25.3194 123.893 22.7841L126.278 17.9029C129.005 20.3247 132.868 21.876 135.67 21.876C138.132 21.876 139.609 20.9679 139.609 19.3407C139.609 14.3466 125.483 17.2597 125.483 7.87648C125.483 3.07067 129.611 0.0439453 135.746 0.0439453C139.457 0.0439453 143.169 1.1792 145.82 2.91942Z" fill="white"/>
-                  <path d="M161.419 6.55154L157.215 16.8434H165.585L161.419 6.55154ZM155.246 21.6486L153.164 26.7946H146.99L158.503 0.308594H164.676L176 26.7946H169.598L167.516 21.6486H155.246Z" fill="white"/>
-                  <path d="M101.589 0.308594H96.2109V26.7946H101.929V9.80541L114.767 26.7946H120.221V24.8521L101.589 0.308594Z" fill="white"/>
-                  <path d="M120.222 20.9154V0.309082H114.541V13.4321L120.222 20.9154Z" fill="white"/>
-                  <path d="M38.6458 36.6469C38.6458 36.1786 38.2755 35.8555 37.6445 35.8555H34.3032V37.4718H37.6524C38.284 37.4718 38.6458 37.1578 38.6458 36.6469ZM38.6038 40.8332L37.1058 38.655H34.3032V40.8332H32.8223V34.6729H37.8123C39.2008 34.6729 40.1097 35.4898 40.1097 36.6894C40.1097 37.6595 39.6385 38.2887 38.7212 38.5445L40.2696 40.8332H38.6038Z" fill="white"/>
-                  <path d="M47.9863 40.8332V34.6729H54.5923V35.8561H49.4673V37.1152H53.0268V38.2979H49.4673V39.6506H54.8281V40.8332H47.9863Z" fill="white"/>
-                  <path d="M65.9272 35.7966L64.5891 38.3234H67.2653L65.9272 35.7966ZM68.5864 40.8332L67.8878 39.506H63.983L63.2851 40.8332H61.7871L65.0269 34.6729H66.8531L70.0843 40.8332H68.5864Z" fill="white"/>
-                  <path d="M77.2969 40.8332V34.6729H78.7778V39.6506H83.4651V40.8332H77.2969Z" fill="white"/>
-                  <path d="M99.8301 40.8332V34.6729H106.436V35.8561H101.311V37.1152H104.871V38.2979H101.311V39.6506H106.672V40.8332H99.8301Z" fill="white"/>
-                  <path d="M117.409 35.7198C116.139 35.7198 115.482 35.9664 115.482 36.3661C115.482 36.5786 115.659 36.7232 116.012 36.8089C116.593 36.9534 117.376 36.9109 118.318 36.9959C120.228 37.1745 121.146 37.6422 121.146 38.8503C121.146 40.1866 119.9 40.9775 117.586 40.9775C116.063 40.9775 114.801 40.6374 113.631 39.8204L114.439 38.8169C115.482 39.4632 116.517 39.7694 117.653 39.7694C118.882 39.7694 119.572 39.4122 119.572 38.9105C119.572 38.3656 118.781 38.3656 117.485 38.3061C115.112 38.2041 113.942 37.7279 113.942 36.4936C113.942 35.2855 115.137 34.5195 117.342 34.5195C118.831 34.5195 120.034 34.8263 120.927 35.4221L120.085 36.4092C119.227 35.9409 118.36 35.7198 117.409 35.7198Z" fill="white"/>
-                  <path d="M132.17 35.856V40.8331H130.689V35.856H127.785V34.6733H135.073V35.856H132.17Z" fill="white"/>
-                  <path d="M144.759 35.7966L143.421 38.3234H146.097L144.759 35.7966ZM147.418 40.8332L146.72 39.506H142.815L142.117 40.8332H140.619L143.859 34.6729H145.685L148.916 40.8332H147.418Z" fill="white"/>
-                  <path d="M158.849 35.856V40.8331H157.368V35.856H154.465V34.6733H161.752V35.856H158.849Z" fill="white"/>
-                  <path d="M169.158 40.8332V34.6729H175.764V35.8561H170.639V37.1152H174.199V38.2979H170.639V39.6506H176V40.8332H169.158Z" fill="white"/>
-                  <path d="M19.4042 10.748L25.5962 26.7951H21.861L16.1523 12.0005L19.4042 10.748Z" fill="white"/>
-                  <path d="M18.0184 26.7948H14.1749L9.46094 14.578L12.829 13.3462L18.0184 26.7948Z" fill="white"/>
-                  <path d="M10.3299 26.7946H6.59472L2.86133 17.1192L6.11323 15.8667L10.3299 26.7946Z" fill="white"/>
-                  <path d="M19.1091 0.0224609L22.75 9.45915L19.4039 10.7481L15.2656 0.0224609H19.1091Z" fill="white"/>
-                  <path d="M16.1531 12.0005L12.8289 13.3466L7.6875 0.0224609H11.5309L16.1531 12.0005Z" fill="white"/>
-                  <path d="M6.1141 15.8673L9.46023 14.5784L3.84342 0.0224609H0L6.1141 15.8673Z" fill="white"/>
-                </g>
-              </g>
-              <defs>
-                <clipPath id="clip0_2_215">
-                  <rect width="176" height="41" fill="white"/>
-                </clipPath>
-              </defs>
-            </svg>
+            <Image
+              src={logoSrc}
+              alt="Mansa Real Estate"
+              width={176}
+              height={41}
+              priority
+            />
           </Link>
 
           <div className="flex items-center space-x-8">
-            <Link href="/proprietes" className="text-white hover:text-gray-300 transition">
-              Propriétés
+            <Link
+              href="/properties"
+              className={`${linkColor} transition`}
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+            >
+              Properties
             </Link>
-            <Link href="/investir-dubai" className="text-white hover:text-gray-300 transition">
-              Investir à Dubaï
+            <Link
+              href="/developers"
+              className={`${linkColor} transition`}
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+            >
+              Developers
             </Link>
-            <Link href="/services-expertise" className="text-white hover:text-gray-300 transition">
-              Services et Expertise
+            <Link
+              href="/investir-dubai"
+              className={`${linkColor} transition`}
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+            >
+              Invest in Dubai
             </Link>
-            <Link href="/actualites-guides" className="text-white hover:text-gray-300 transition">
-              Actualités et Guides
+            <Link
+              href="/about"
+              className={`${linkColor} transition`}
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+            >
+              About
             </Link>
-            <Link href="/contact" className="text-white hover:text-gray-300 transition">
+            <Link
+              href="/contact"
+              className={`${linkColor} transition`}
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+            >
               Contact
             </Link>
           </div>
