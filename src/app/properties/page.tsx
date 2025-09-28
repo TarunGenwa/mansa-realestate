@@ -13,6 +13,7 @@ export default function PropertiesPage() {
   const [loading, setLoading] = useState(true)
   const [fallbackImage, setFallbackImage] = useState<any>(null)
   const [heroBannerImage, setHeroBannerImage] = useState<any>(null)
+  const [consultationImage, setConsultationImage] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -37,6 +38,16 @@ export default function PropertiesPage() {
 
         // Get hero banner image
         const heroBanner = mediaImages.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner'))
+
+        // Get consultation background image
+        try {
+          const consultationMedia = await wpApi.media.getBySlug('schedule-consultation')
+          if (consultationMedia) {
+            setConsultationImage(consultationMedia.source_url)
+          }
+        } catch (err) {
+          console.error('Failed to fetch consultation image:', err)
+        }
 
         setProperties(fetchedProperties)
         setFilteredProperties(fetchedProperties)
@@ -245,6 +256,46 @@ export default function PropertiesPage() {
 
       {/* Contact Form Section */}
       <ContactFormSection reverseOrder={true} />
+
+      {/* Schedule a Consultation Section */}
+      {consultationImage && (
+        <section className="mt-20 relative w-full h-[700px] overflow-hidden">
+          <Image
+            src={consultationImage}
+            alt="Schedule a consultation"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/20">
+            <div className="relative h-full flex items-center">
+              <div className="w-[90%] mx-auto">
+                <div className="bg-white rounded-lg p-8 max-w-md shadow-xl">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                    Schedule a free consultation
+                  </h2>
+                  <p className="text-gray-600 mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                    We craft inspiring spaces that blend cutting-edge design with enduring functionality, turning your vision into reality.
+                  </p>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black font-medium rounded-full hover:bg-black hover:text-white transition-all duration-300"
+                    style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                  >
+                    Get Started
+                    <Image
+                      src="/top-right-arrow.svg"
+                      alt="Arrow"
+                      width={40}
+                      height={40}
+                      className="ml-4"
+                    />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
