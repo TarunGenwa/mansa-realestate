@@ -33,7 +33,7 @@ export default function Navigation() {
               Propriétés
             </Link>
             <Link
-              href="/investir-dubai"
+              href="/invest-in-dubai"
               className={`${linkColor} transition`}
               style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
             >
