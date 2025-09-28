@@ -104,9 +104,8 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
   const currentTab = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
   return (
-    <section className="py-20 bg-white">
-      <div style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
+    <section className="py-20 bg-white" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      <div>
           {/* Section Header */}
           <div className="mb-16 text-center">
             <h2
@@ -142,7 +141,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
           </div>
 
           {/* Full Width Image with Overlay Tabs */}
-          <div className="relative h-[600px] lg:h-[700px] rounded-lg overflow-hidden">
+          <div className="relative h-[435px] lg:h-[435px] rounded-lg overflow-hidden">
             {/* Background Image */}
             <Image
               src={currentTab.image.source_url}
@@ -151,25 +150,27 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
               className="object-cover transition-all duration-700 ease-in-out"
               sizes="100vw"
               priority
+              style={{ filter: 'blur(8px)' }}
             />
 
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/30">
-              {/* Tab Buttons Overlay */}
-              <div className="absolute top-8 left-8 right-8 flex flex-wrap gap-3 justify-center lg:justify-start">
+              {/* Tab Buttons Overlay - Vertical Centered */}
+              <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-6 py-3 rounded-full border-2 transition-all duration-300 backdrop-blur-sm ${
+                    className={`px-6 py-3 rounded-full border-2 transition-all duration-300 backdrop-blur-sm text-left cursor-pointer relative z-10 ${
                       activeTab === tab.id
-                        ? 'bg-white text-black border-white shadow-lg'
+                        ? 'bg-black text-white border-black shadow-lg'
                         : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
                     }`}
                     style={{
                       fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                       fontWeight: 500,
-                      fontSize: '14px'
+                      fontSize: '14px',
+                      minWidth: '200px'
                     }}
                   >
                     {tab.title}
@@ -177,50 +178,32 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
                 ))}
               </div>
 
-              {/* Content Overlay */}
-              <div className="absolute bottom-0 left-0 right-0">
-                <div className="p-8 lg:p-12 text-white">
-                  <div className="max-w-3xl">
-                    <h3
-                      className="text-3xl lg:text-5xl font-bold mb-6"
-                      style={{
-                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
-                      }}
-                    >
-                      {currentTab.title}
-                    </h3>
-                    <p
-                      className="text-lg lg:text-xl leading-relaxed opacity-90"
-                      style={{
-                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                        fontWeight: 400,
-                        lineHeight: '1.6'
-                      }}
-                    >
-                      {currentTab.description}
-                    </p>
-                  </div>
+              {/* Content Overlay - Centered */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center text-white px-8 lg:px-12 max-w-4xl">
+                  <h3
+                    className="text-3xl lg:text-5xl font-bold mb-6"
+                    style={{
+                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
+                    }}
+                  >
+                    {currentTab.title}
+                  </h3>
+                  <p
+                    className="text-lg lg:text-xl leading-relaxed opacity-90"
+                    style={{
+                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                      fontWeight: 400,
+                      lineHeight: '1.6'
+                    }}
+                  >
+                    {currentTab.description}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom CTA */}
-          <div className="mt-16 text-center">
-            <button
-              className="inline-flex items-center justify-center px-8 py-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 500
-              }}
-            >
-              Découvrir nos réalisations
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   )
