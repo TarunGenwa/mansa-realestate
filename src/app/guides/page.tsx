@@ -150,7 +150,8 @@ export default function GuidesPage() {
               {posts.slice(0, 2).map((post) => (
                 <article
                   key={post.id}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                  className="group rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                  style={{ backgroundColor: '#FCFCFC' }}
                 >
                   {post._embedded?.['wp:featuredmedia']?.[0] && (
                     <div className="relative h-64 w-full overflow-hidden bg-gray-100">
@@ -169,11 +170,12 @@ export default function GuidesPage() {
                         <span
                           key={category.id}
                           className="text-xs font-medium text-blue-600 uppercase tracking-wider"
+                          style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                         >
                           {category.name}
                         </span>
                       ))}
-                      <time className="text-xs text-gray-500">
+                      <time className="text-xs text-gray-500" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                         {new Date(post.date).toLocaleDateString('fr-FR', {
                           year: 'numeric',
                           month: 'long',
@@ -182,7 +184,7 @@ export default function GuidesPage() {
                       </time>
                     </div>
 
-                    <h2 className="text-2xl font-semibold mb-3 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-2xl font-semibold mb-3 group-hover:text-blue-600 transition-colors" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       <Link
                         href={`/guides/${post.slug}`}
                         dangerouslySetInnerHTML={{ __html: post.title.rendered }}
@@ -191,12 +193,14 @@ export default function GuidesPage() {
 
                     <div
                       className="text-gray-600 text-base line-clamp-3 mb-4"
+                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                       dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
                     />
 
                     <Link
                       href={`/guides/${post.slug}`}
                       className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                     >
                       Lire la suite
                       <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,7 +219,8 @@ export default function GuidesPage() {
               {posts.slice(2).map((post) => (
                 <article
                   key={post.id}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                  className="group rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                  style={{ backgroundColor: '#FCFCFC' }}
                 >
                   {post._embedded?.['wp:featuredmedia']?.[0] && (
                     <div className="relative h-40 w-full overflow-hidden bg-gray-100">
@@ -234,11 +239,12 @@ export default function GuidesPage() {
                         <span
                           key={category.id}
                           className="text-xs font-medium text-blue-600 uppercase tracking-wider"
+                          style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                         >
                           {category.name}
                         </span>
                       ))}
-                      <time className="text-xs text-gray-500">
+                      <time className="text-xs text-gray-500" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                         {new Date(post.date).toLocaleDateString('fr-FR', {
                           year: 'numeric',
                           month: 'short',
@@ -247,7 +253,7 @@ export default function GuidesPage() {
                       </time>
                     </div>
 
-                    <h2 className="text-base font-semibold mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h2 className="text-base font-semibold mb-2 group-hover:text-blue-600 transition-colors line-clamp-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       <Link
                         href={`/guides/${post.slug}`}
                         dangerouslySetInnerHTML={{ __html: post.title.rendered }}
@@ -256,12 +262,14 @@ export default function GuidesPage() {
 
                     <div
                       className="text-gray-600 text-sm line-clamp-2 mb-3"
+                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                       dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
                     />
 
                     <Link
                       href={`/guides/${post.slug}`}
                       className="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                     >
                       Lire la suite
                       <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,8 +289,8 @@ export default function GuidesPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <p className="text-gray-600 text-lg mb-2">Aucun guide disponible pour le moment</p>
-              <p className="text-gray-500">Les articles avec la catégorie "guides" apparaîtront ici.</p>
+              <p className="text-gray-600 text-lg mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>Aucun guide disponible pour le moment</p>
+              <p className="text-gray-500" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>Les articles avec la catégorie "guides" apparaîtront ici.</p>
             </div>
           )}
         </div>
@@ -303,12 +311,13 @@ export default function GuidesPage() {
                     <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       Schedule a free consultation
                     </h2>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
+                    <p className="text-gray-600 mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       We craft inspiring spaces that blend cutting-edge design with enduring functionality, turning your vision into reality.
                     </p>
                     <Link
                       href="/contact"
                       className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black font-medium rounded-full hover:bg-black hover:text-white transition-all duration-300"
+                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                     >
                       Get Started
                       <Image
