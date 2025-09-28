@@ -99,7 +99,7 @@ export default async function Home() {
 
   // Fallback if no hero images found
   const fallbackHeroImage = {
-    source_url: 'https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538',
+    source_url: 'https://via.placeholder.com/1920x1080?text=Hero+Image',
     alt_text: 'Hero Image',
     title: { rendered: 'Hero Image' }
   }
