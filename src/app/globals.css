@@ -39,14 +39,14 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
+* {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), 'Montserrat', sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-playfair), 'Playfair Display', serif;
 }
 
 /* Hide horizontal scrollbar for carousel */
