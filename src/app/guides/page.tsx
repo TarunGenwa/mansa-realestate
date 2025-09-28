@@ -17,11 +17,16 @@ export default function GuidesPage() {
   useEffect(() => {
     const fetchGuidesCategory = async () => {
       try {
-        const categories = await wpApi.categories.getAll({ search: 'guides' })
+        console.log('Fetching categories...')
+        const categories = await wpApi.categories.getAll({ per_page: 100 })
+        console.log('All categories:', categories)
+
         const guidesCat = categories.find(cat =>
           cat.slug === 'guides' ||
           cat.name.toLowerCase().includes('guides')
         )
+
+        console.log('Found guides category:', guidesCat)
 
         if (guidesCat) {
           return guidesCat.id
@@ -50,20 +55,24 @@ export default function GuidesPage() {
       try {
         const categoryId = await fetchGuidesCategory()
 
-        const params: any = {
-          per_page: 12,
-          _embed: true
-        }
+        if (!categoryId) {
+          // If no guides category found, set empty posts
+          console.log('No guides category found')
+          setPosts([])
+        } else {
+          const params: any = {
+            per_page: 12,
+            _embed: true,
+            categories: [categoryId] // Only fetch posts with guides category
+          }
 
-        if (categoryId) {
-          params.categories = [categoryId]
+          const data = await wpApi.posts.getAll(params)
+          console.log('Fetched posts:', data)
+          setPosts(data)
         }
-
-        const data = await wpApi.posts.getAll(params)
-        setPosts(data)
       } catch (err) {
         setError('Impossible de charger les guides')
-        console.error(err)
+        console.error('Error fetching posts:', err)
       } finally {
         setLoading(false)
       }
@@ -192,7 +201,7 @@ export default function GuidesPage() {
                 </svg>
               </div>
               <p className="text-gray-600 text-lg mb-2">Aucun guide disponible pour le moment</p>
-              <p className="text-gray-500">Revenez bientôt pour découvrir nos nouveaux contenus.</p>
+              <p className="text-gray-500">Les articles avec la catégorie "guides" apparaîtront ici.</p>
             </div>
           )}
         </div>
