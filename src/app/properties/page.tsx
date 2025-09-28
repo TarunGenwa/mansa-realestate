@@ -3,7 +3,7 @@
 import { wpApi } from '@/lib/api/wordpress'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ContactFormSection from '@/src/components/ContactFormSection'
 
 export default function PropertiesPage() {
@@ -16,6 +16,8 @@ export default function PropertiesPage() {
   const [fallbackImage, setFallbackImage] = useState<any>(null)
   const [heroBannerImage, setHeroBannerImage] = useState<any>(null)
   const [consultationImage, setConsultationImage] = useState<string | null>(null)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -54,7 +56,7 @@ export default function PropertiesPage() {
         // Extract unique developers from properties
         const uniqueDevelopers = [...new Set(
           fetchedProperties
-            .map(p => p.acf?.developer)
+            .map(p => (p as any).acf?.developer)
             .filter(Boolean)
         )].sort()
 
@@ -95,6 +97,20 @@ export default function PropertiesPage() {
 
     setFilteredProperties(filtered)
   }, [searchTerm, selectedDeveloper, properties])
+
+  // Click outside handler for dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -147,24 +163,66 @@ export default function PropertiesPage() {
 
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="w-full">
-              <div className="relative flex bg-white rounded-full shadow-lg p-4  mx-auto">
-                {/* Developer Select Dropdown */}
-                <select
-                  value={selectedDeveloper}
-                  onChange={(e) => setSelectedDeveloper(e.target.value)}
-                  className="px-6 py-4 text-white bg-black border-r border-gray-300 text-lg focus:outline-none appearance-none cursor-pointer"
-                  style={{
-                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                    minWidth: '200px'
-                  }}
-                >
-                  <option value="all">All Developers</option>
-                  {developers.map(developer => (
-                    <option key={developer} value={developer}>
-                      {developer}
-                    </option>
-                  ))}
-                </select>
+              <div className="relative flex bg-white rounded-full shadow-lg overflow-hidden">
+                {/* Custom Developer Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center justify-between px-6 py-5 text-black bg-white hover:bg-gray-50 text-lg focus:outline-none cursor-pointer border-r border-gray-200"
+                    style={{
+                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                      minWidth: '240px'
+                    }}
+                  >
+                    <span className="truncate">
+                      {selectedDeveloper === 'all' ? 'All Developers' : selectedDeveloper}
+                    </span>
+                    <svg
+                      className={`ml-3 w-5 h-5 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <div className="absolute z-50 top-full left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-100 max-h-64 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedDeveloper('all')
+                          setDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-6 py-3 hover:bg-gray-50 transition-colors ${
+                          selectedDeveloper === 'all' ? 'bg-gray-50 font-semibold' : ''
+                        }`}
+                        style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                      >
+                        All Developers
+                      </button>
+                      {developers.map(developer => (
+                        <button
+                          key={developer}
+                          type="button"
+                          onClick={() => {
+                            setSelectedDeveloper(developer)
+                            setDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-6 py-3 hover:bg-gray-50 transition-colors ${
+                            selectedDeveloper === developer ? 'bg-gray-50 font-semibold' : ''
+                          }`}
+                          style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                        >
+                          {developer}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {/* Search Input */}
                 <input
@@ -172,7 +230,7 @@ export default function PropertiesPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by property name, location, or description..."
-                  className="flex-1 px-6 py-4 pr-16 text-black bg-white text-lg focus:outline-none transition-all"
+                  className="flex-1 px-6 py-5 pr-16 text-black bg-white text-lg focus:outline-none transition-all"
                   style={{
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
                   }}
