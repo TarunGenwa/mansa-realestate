@@ -27,6 +27,7 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
         const contactUsImage = mediaImages.find(img =>
           img.title.rendered.toLowerCase().includes('contactus_section')
         )
+        console.log('Fetched contact us image:', contactUsImage)
         if (contactUsImage) {
           setContactImage({
             source_url: contactUsImage.source_url,
@@ -56,9 +57,9 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
 
   return (
     <section style={{ backgroundColor: 'transparent', paddingLeft: '87px', paddingRight: '87px' }} className="relative overflow-hidden px-20 my-8">
-      <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 min-h-[600px] ${reverseOrder ? 'lg:flex lg:flex-row-reverse' : ''}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 min-h-[600px]">
         {/* Contact Form */}
-        <div className="py-8 lg:py-12 bg-[#EDECE3] px-6 lg:px-12 flex items-center">
+        <div className={`py-8 lg:py-12 bg-[#EDECE3] px-6 lg:px-12 flex items-center ${reverseOrder ? 'lg:order-2' : 'lg:order-1'}`}>
           <div className="max-w-lg">
             <h2
               style={{
@@ -217,14 +218,20 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
         </div>
 
         {/* Image */}
-        <div className="relative h-96 lg:h-auto">
-          <Image
-            src={contactImage?.source_url || ''}
-            alt={contactImage?.alt_text || "Contact Office"}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
+        <div className={`relative h-96 lg:h-auto ${reverseOrder ? 'lg:order-1' : 'lg:order-2'}`}>
+          {contactImage?.source_url ? (
+            <Image
+              src={contactImage.source_url}
+              alt={contactImage.alt_text || "Contact Office"}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">Loading image...</span>
+            </div>
+          )}
           {/* <div className="absolute inset-0 bg-gradient-to-r from-[#ECE8DD]/80 to-transparent w-32" /> */}
         </div>
       </div>

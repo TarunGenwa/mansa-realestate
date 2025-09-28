@@ -349,7 +349,7 @@ export default async function InvestInDubaiPage() {
       </section>
 
       {/* Contact Form Section */}
-      <ContactFormSection />
+      <ContactFormSection reverseOrder={true} />
 
     </div>
   )
