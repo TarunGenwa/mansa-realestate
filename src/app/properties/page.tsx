@@ -82,7 +82,7 @@ export default function PropertiesPage() {
     // Filter by developer
     if (selectedDeveloper !== 'all') {
       filtered = filtered.filter(property =>
-        property.acf?.developer?.toLowerCase() === selectedDeveloper.toLowerCase()
+        (property as any).acf?.developer?.toLowerCase() === selectedDeveloper.toLowerCase()
       )
     }
 
@@ -91,7 +91,7 @@ export default function PropertiesPage() {
       filtered = filtered.filter(property =>
         property.title.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.excerpt.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.acf?.location?.toLowerCase().includes(searchTerm.toLowerCase())
+        (property as any).acf?.location?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -169,7 +169,7 @@ export default function PropertiesPage() {
                   <button
                     type="button"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center justify-between px-6 py-5 text-black bg-white hover:bg-gray-50 text-lg focus:outline-none cursor-pointer border-r border-gray-200"
+                    className="flex items-center justify-between rounded-full m-2 px-6 py-5 text-white bg-black  text-lg focus:outline-none cursor-pointer border-r border-gray-200"
                     style={{
                       fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                       minWidth: '240px'
