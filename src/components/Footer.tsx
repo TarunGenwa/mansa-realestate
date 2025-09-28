@@ -30,7 +30,7 @@ export default function Footer() {
     support: [
       { name: 'Contact', href: '/contact' },
       { name: 'FAQ', href: '/faq' },
-      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Privacy Policy', href: '/privacy-policy' },
       { name: 'Terms of Service', href: '/terms' }
     ]
   }

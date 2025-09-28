@@ -3,6 +3,7 @@ import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
 import ContactHeroSection from '@/src/components/ContactHeroSection'
 import ContactMapSection from '@/src/components/ContactMapSection'
+import FAQSection from '@/src/components/FAQSection'
 
 export async function generateMetadata(): Promise<Metadata> {
   const contactPage = await wpApi.pages.getBySlug('contact').catch(() => null)
@@ -71,6 +72,9 @@ export default async function ContactPage() {
 
       {/* Map and Visit Us Section */}
       <ContactMapSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
     </div>
   )
 }
