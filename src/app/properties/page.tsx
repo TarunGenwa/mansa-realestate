@@ -10,6 +10,8 @@ export default function PropertiesPage() {
   const [properties, setProperties] = useState<any[]>([])
   const [filteredProperties, setFilteredProperties] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
+  const [developers, setDevelopers] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [fallbackImage, setFallbackImage] = useState<any>(null)
   const [heroBannerImage, setHeroBannerImage] = useState<any>(null)
@@ -49,6 +51,14 @@ export default function PropertiesPage() {
           console.error('Failed to fetch consultation image:', err)
         }
 
+        // Extract unique developers from properties
+        const uniqueDevelopers = [...new Set(
+          fetchedProperties
+            .map(p => p.acf?.developer)
+            .filter(Boolean)
+        )].sort()
+
+        setDevelopers(uniqueDevelopers)
         setProperties(fetchedProperties)
         setFilteredProperties(fetchedProperties)
         setFallbackImage(fallback)
@@ -64,18 +74,27 @@ export default function PropertiesPage() {
   }, [])
 
   useEffect(() => {
-    // Filter properties based on search term
-    if (searchTerm.trim() === '') {
-      setFilteredProperties(properties)
-    } else {
-      const filtered = properties.filter(property =>
+    // Filter properties based on search term and developer
+    let filtered = properties
+
+    // Filter by developer
+    if (selectedDeveloper !== 'all') {
+      filtered = filtered.filter(property =>
+        property.acf?.developer?.toLowerCase() === selectedDeveloper.toLowerCase()
+      )
+    }
+
+    // Filter by search term
+    if (searchTerm.trim() !== '') {
+      filtered = filtered.filter(property =>
         property.title.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.excerpt.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.acf?.location?.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      setFilteredProperties(filtered)
     }
-  }, [searchTerm, properties])
+
+    setFilteredProperties(filtered)
+  }, [searchTerm, selectedDeveloper, properties])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -114,40 +133,63 @@ export default function PropertiesPage() {
 
         {/* Hero Content */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white max-w-4xl mx-auto px-8">
+          <div className="text-center text-white w-[90%] mx-auto">
             <h1
-              className="text-5xl lg:text-7xl mb-8"
+              className="text-4xl lg:text-7xl mb-32"
               style={{
                 fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 700,
-                lineHeight: '1.1'
+                fontWeight: 400,
+                lineHeight: '1.1',
               }}
             >
               Find Properties
             </h1>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-              <div className="relative">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative flex bg-white rounded-full shadow-lg p-4  mx-auto">
+                {/* Developer Select Dropdown */}
+                <select
+                  value={selectedDeveloper}
+                  onChange={(e) => setSelectedDeveloper(e.target.value)}
+                  className="px-6 py-4 text-white bg-black border-r border-gray-300 text-lg focus:outline-none appearance-none cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    minWidth: '200px'
+                  }}
+                >
+                  <option value="all">All Developers</option>
+                  {developers.map(developer => (
+                    <option key={developer} value={developer}>
+                      {developer}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Search Input */}
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by property name, location, or description..."
-                  className="w-full px-6 py-4 pr-20 text-black bg-white text-lg focus:outline-none focus:ring-4 focus:ring-white/30 transition-all"
+                  className="flex-1 px-6 py-4 pr-16 text-black bg-white text-lg focus:outline-none transition-all"
                   style={{
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
                   }}
                 />
+
+                {/* Search Arrow Button */}
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black text-white px-6 py-2 hover:bg-gray-800 transition-colors"
-                  style={{
-                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                    fontWeight: 500
-                  }}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 hover:scale-110 transition-transform"
+                  aria-label="Search"
                 >
-                  Search
+                  <Image
+                    src="/right-arrow-black.svg"
+                    alt="Search"
+                    width={32}
+                    height={32}
+                  />
                 </button>
               </div>
             </form>
@@ -156,25 +198,28 @@ export default function PropertiesPage() {
       </section>
 
       {/* Properties Grid */}
-      <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
-          {/* Results count */}
-          <div className="mb-8">
-            <p
-              className="text-lg text-gray-600"
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+      <section className="py-20">
+        <div className="w-[90%] mx-auto">
+          {/* Dynamic Heading */}
+          <div className="mb-12 text-center">
+            <h2
+              className="text-4xl md:text-5xl"
+              style={{
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                fontWeight: 800
+              }}
             >
-              {searchTerm ? `${filteredProperties.length} properties found for "${searchTerm}"` : `${filteredProperties.length} properties available`}
-            </p>
+              {selectedDeveloper !== 'all' ? `All Projects by ${selectedDeveloper}` : 'All Projects'}
+            </h2>
           </div>
 
           {filteredProperties.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredProperties.map((property) => {
                 const featuredImage = property._embedded?.['wp:featuredmedia']?.[0]
                 const imageUrl = featuredImage?.source_url || fallbackImage?.source_url || '/placeholder.jpg'
                 const imageAlt = featuredImage?.alt_text || property.title.rendered
-                const cleanExcerpt = property.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 120) + '...'
+                const cleanExcerpt = property.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
 
                 return (
                   <Link
@@ -183,27 +228,27 @@ export default function PropertiesPage() {
                     className="group block bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     {/* Property Image */}
-                    <div className="relative h-64 bg-gray-200">
+                    <div className="relative h-80 bg-gray-200">
                       <Image
                         src={imageUrl}
                         alt={imageAlt}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
 
                     {/* Property Info */}
-                    <div className="p-6">
+                    <div className="p-8">
                       <h2
-                        className="text-xl font-semibold mb-3 group-hover:text-gray-700 transition-colors"
+                        className="text-2xl font-semibold mb-4 group-hover:text-gray-700 transition-colors"
                         style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                       >
                         {property.title.rendered}
                       </h2>
 
                       <p
-                        className="text-gray-600 mb-4 text-sm"
+                        className="text-gray-600 mb-4 text-base"
                         style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
                       >
                         {cleanExcerpt}
@@ -218,12 +263,12 @@ export default function PropertiesPage() {
                             </p>
                           )}
                           {(property.acf.price || property.acf.price_from) && (
-                            <p className="text-sm font-semibold text-gray-800">
+                            <p className="text-base font-semibold text-gray-800">
                               {property.acf.price || `From ${property.acf.price_from}`}
                             </p>
                           )}
                           {property.acf.status && (
-                            <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                            <span className={`inline-block px-3 py-1 rounded text-xs font-semibold ${
                               property.acf.status === 'available' ? 'bg-green-100 text-green-800' :
                               property.acf.status === 'sold' ? 'bg-red-100 text-red-800' :
                               property.acf.status === 'under-construction' ? 'bg-yellow-100 text-yellow-800' :
@@ -236,8 +281,8 @@ export default function PropertiesPage() {
                       )}
 
                       {/* View Details Link */}
-                      <div className="mt-4 pt-4 border-t border-gray-100">
-                        <span className="text-black font-semibold group-hover:underline text-sm">
+                      <div className="mt-6 pt-6 border-t border-gray-100">
+                        <span className="text-black font-semibold group-hover:underline text-base">
                           View Details →
                         </span>
                       </div>
