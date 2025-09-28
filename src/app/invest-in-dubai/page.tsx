@@ -18,8 +18,6 @@ export default async function InvestInDubaiPage() {
     img.title.rendered.toLowerCase().includes('investdubai')
   )
 
-  // Fetch contact us image
-  const contactUsImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('contactus')) || null
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -351,7 +349,7 @@ export default async function InvestInDubaiPage() {
       </section>
 
       {/* Contact Form Section */}
-      <ContactFormSection contactImage={contactUsImage} />
+      <ContactFormSection />
 
     </div>
   )

@@ -113,8 +113,6 @@ export default async function Home() {
   // Fetch fallback image for posts without featured image
   const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
 
-  // Fetch contact us image
-  const contactUsImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('contactus')) || null
 
   // Fetch Ismahen image
   const ismahenImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('ismahen')) || null
@@ -158,7 +156,7 @@ export default async function Home() {
       <DirectorSection directorImage={ismahenImage} />
 
       {/* Contact Form Section */}
-      <ContactFormSection contactImage={contactUsImage} />
+      <ContactFormSection />
 
       {/* {homePage ? (
         <main style={{ paddingLeft: '87px', paddingRight: '87px' }} className="py-8">

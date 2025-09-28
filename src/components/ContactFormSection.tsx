@@ -1,21 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { wpApi } from '@/lib/api/wordpress'
 
 interface ContactFormSectionProps {
-  contactImage?: {
-    source_url: string
-    alt_text?: string
-  } | null
+  reverseOrder?: boolean
 }
 
-export default function ContactFormSection({ contactImage }: ContactFormSectionProps) {
+export default function ContactFormSection({ reverseOrder = false }: ContactFormSectionProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     about: ''
   })
+
+  const [contactImage, setContactImage] = useState<{
+    source_url: string
+    alt_text?: string
+  } | null>(null)
+
+  useEffect(() => {
+    const fetchContactImage = async () => {
+      try {
+        const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 })
+        const contactUsImage = mediaImages.find(img =>
+          img.title.rendered.toLowerCase().includes('contactus_section')
+        )
+        if (contactUsImage) {
+          setContactImage({
+            source_url: contactUsImage.source_url,
+            alt_text: contactUsImage.alt_text
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching contact image:', error)
+      }
+    }
+
+    fetchContactImage()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -31,10 +55,10 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
   }
 
   return (
-    <section style={{ backgroundColor: '#ECE8DD' }} className="relative overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 min-h-[600px]">
-        {/* Left Side - Contact Form */}
-        <div className="py-16 lg:py-20" style={{ paddingLeft: '87px', paddingRight: '60px' }}>
+    <section style={{ backgroundColor: 'transparent', paddingLeft: '87px', paddingRight: '87px' }} className="relative overflow-hidden px-20 my-8">
+      <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 min-h-[600px] ${reverseOrder ? 'lg:flex lg:flex-row-reverse' : ''}`}>
+        {/* Contact Form */}
+        <div className="py-8 lg:py-12 bg-[#EDECE3] px-6 lg:px-12 flex items-center">
           <div className="max-w-lg">
             <h2
               style={{
@@ -60,8 +84,20 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
               Envoyez-nous un message et commençons la conversation — sans pression, juste un véritable soutien.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-5 p-6 bg-white/70 rounded-lg border border-gray-200">
+            <form onSubmit={handleSubmit} className="space-y-5 p-6  rounded-lg border border-gray-200">
               <div>
+                <label
+                  htmlFor="name"
+                  className="block mb-2"
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 500,
+                    fontSize: '14px',
+                    color: '#333'
+                  }}
+                >
+                  Nom complet
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -69,7 +105,7 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="Nom complet"
+                  placeholder="Entrez votre nom complet"
                   className="w-full px-4 py-3 bg-white border border-gray-300 focus:outline-none focus:border-gray-500 transition"
                   style={{
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -79,6 +115,18 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
               </div>
 
               <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2"
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 500,
+                    fontSize: '14px',
+                    color: '#333'
+                  }}
+                >
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -86,7 +134,7 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="Email"
+                  placeholder="votre@email.com"
                   className="w-full px-4 py-3 bg-white border border-gray-300 focus:outline-none focus:border-gray-500 transition"
                   style={{
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -96,6 +144,18 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
               </div>
 
               <div>
+                <label
+                  htmlFor="about"
+                  className="block mb-2"
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontWeight: 500,
+                    fontSize: '14px',
+                    color: '#333'
+                  }}
+                >
+                  Message
+                </label>
                 <textarea
                   id="about"
                   name="about"
@@ -108,7 +168,7 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                     fontSize: '14px'
                   }}
-                  placeholder="Parlez-nous de vous..."
+                  placeholder="Parlez-nous de vous et de votre projet..."
                 />
               </div>
 
@@ -126,7 +186,7 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
             </form>
 
             {/* Office Address */}
-            <div className="mt-12 pt-8 border-t border-gray-300">
+            {/* <div className="mt-12 pt-8 border-t border-gray-300">
               <div className="p-6 bg-white/50 rounded-lg border border-gray-200">
                 <h3
                   style={{
@@ -152,20 +212,20 @@ export default function ContactFormSection({ contactImage }: ContactFormSectionP
                   Business Bay, Dubai, U.A.E
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
-        {/* Right Side - Image */}
+        {/* Image */}
         <div className="relative h-96 lg:h-auto">
           <Image
-            src={contactImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
+            src={contactImage?.source_url || ''}
             alt={contactImage?.alt_text || "Contact Office"}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#ECE8DD]/80 to-transparent w-32" />
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-[#ECE8DD]/80 to-transparent w-32" /> */}
         </div>
       </div>
     </section>
