@@ -7,6 +7,7 @@ import ContactFormSection from '@/src/components/ContactFormSection'
 import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
 import DirectorSection from '@/src/components/DirectorSection'
 import HeroCarousel from '@/src/components/HeroCarousel'
+import TailorMadeSection from '@/src/components/TailorMadeSection'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -145,6 +146,9 @@ export default async function Home() {
 
       {/* Project Cards Section */}
       {properties.length > 0 && <SimpleCarousel posts={properties} fallbackImage={projectTileImage || undefined} />}
+
+      {/* Tailor Made Section */}
+      <TailorMadeSection mediaImages={mediaImages} />
 
       {/* Image Showcase Section */}
       <ImageShowcaseSection mediaImages={mediaImages} />
