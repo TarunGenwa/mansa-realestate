@@ -2,6 +2,7 @@ import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import ContactFormSection from '@/src/components/ContactFormSection'
 
 export const metadata: Metadata = {
   title: 'Invest in Dubai - Mansa',
@@ -16,6 +17,9 @@ export default async function InvestInDubaiPage() {
   const investDubaiImage = mediaImages.find(img =>
     img.title.rendered.toLowerCase().includes('investdubai')
   )
+
+  // Fetch contact us image
+  const contactUsImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('contactus')) || null
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -320,7 +324,7 @@ export default async function InvestInDubaiPage() {
                 >
                   {(() => {
                     const giImage = mediaImages.find(img =>
-                      img.title.rendered.toLowerCase().includes('gi_1_3')
+                      img.title.rendered.toLowerCase().includes('ig_1_3')
                     );
                     return giImage ? (
                       <Image
@@ -335,7 +339,7 @@ export default async function InvestInDubaiPage() {
                         className="w-full h-full rounded-lg flex items-center justify-center"
                         style={{ backgroundColor: '#ECE8DD' }}
                       >
-                        <span className="text-gray-500">GI_1_3 Image</span>
+                        <span className="text-gray-500">IG_1_3 Image</span>
                       </div>
                     );
                   })()}
@@ -346,6 +350,8 @@ export default async function InvestInDubaiPage() {
         </div>
       </section>
 
+      {/* Contact Form Section */}
+      <ContactFormSection contactImage={contactUsImage} />
 
     </div>
   )
