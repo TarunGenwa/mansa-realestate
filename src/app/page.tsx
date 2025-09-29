@@ -125,22 +125,22 @@ export default async function Home() {
 
       {/* Text Section */}
       <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="w-[40%]">
-          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
-            Découvrez une
-          </p>
-          <p style={{ fontFamily: 'var(--font-playfair), Playfair Display, serif', fontWeight: 900, fontSize: '48px', lineHeight: '1.2' }} className="italic">
-            architecture
-          </p>
-          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
-            innovante qui
-          </p>
-          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
-            transforme vos rêves
-          </p>
-          <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 300, fontSize: '48px', lineHeight: '1.2' }}>
-            en réalité
-          </p>
+        <div className="flex justify-between items-center">
+          <div className="w-[45%]">
+            <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 500, fontSize: '48px', lineHeight: '1.2', textAlign: 'left' }}>
+              <span style={{ fontWeight: 900, }}>MANSA </span>
+               Real Estate, <br></br> votre 
+                <span style={{ fontWeight: 900,  fontStyle: 'italic', fontFamily: 'var(--font-playfair), Playfair Display, serif' }}> partenaire </span> 
+                aux  <br></br> Émirats arabes unis.
+                {/* fontFamily: 'var(--font-playfair), Playfair Display, serif', */}
+            </p>
+          </div>
+          <div className="w-[45%]">
+            <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 200, fontSize: '24px', lineHeight: '1.4', textAlign: 'right' }}>
+              Avec 15 ans d'expertise dans l'immobilier aux Émirats arabes unis, Dubaï et Abu Dhabi demeurent les destinations les plus convoitées.
+              <br></br> <span className='bold'>___________</span>
+            </p>
+          </div>
         </div>
       </section>
 
