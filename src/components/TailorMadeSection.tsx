@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
+import { ReactElement } from 'react'
 
 interface TailorMadeTab {
   id: number
   title: string
-  description: string
+  contentHead?: ReactElement<any, any>
+  contentSubHead?: string
   image: {
     source_url: string
     alt_text?: string
@@ -41,7 +43,8 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     {
       id: 1,
       title: "Sur Plan",
-      description: "Créez des espaces uniques qui reflètent votre personnalité et répondent à vos besoins spécifiques. Notre équipe de designers expérimentés transforme vos idées en réalité.",
+      contentHead: <p className="text-h2 text-mont-light text-black">Découvrez  <span className="text-h2 text-play-black-italic">l’architecture</span> visionnaire de Dubaï, aujourd’hui au prix de demain</p>,
+      contentSubHead: "Accédez aux lancements exclusifs, plans optimisés et conditions développeur",
       image: surMeasureImages[0] ? {
         source_url: surMeasureImages[0].source_url,
         alt_text: surMeasureImages[0].alt_text
@@ -50,10 +53,12 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
         alt_text: "Design Personnalisé"
       }
     },
+    
     {
       id: 2,
       title: "Marché secondaire",
-      description: "Explorez les dernières tendances architecturales avec des solutions avant-gardistes qui allient esthétique moderne et fonctionnalité optimale pour votre style de vie.",
+      contentHead: <p className="text-h2 text-mont-light text-black">Le meilleur du  <span className="text-h2 text-play-black-italic">marché <br></br> secondaire</span>  à Dubaï, prêt<br></br> à vivre sans compromis</p>,
+      contentSubHead: "Biens vérifiés,  historique clair, négociation maîtrisée",      
       image: surMeasureImages[1] ? {
         source_url: surMeasureImages[1].source_url,
         alt_text: surMeasureImages[1].alt_text
@@ -62,10 +67,12 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
         alt_text: "Architecture Innovante"
       }
     },
+    
     {
       id: 3,
       title: "Appartement à vendre",
-      description: "Sélection rigoureuse des meilleurs matériaux durables et élégants. Chaque élément est choisi pour sa qualité exceptionnelle et son impact environnemental réduit.",
+      contentHead: <p className="text-h2 text-mont-light text-black">Des appartements  aux <br></br> <span className="text-h2 text-play-black-italic"> vues iconiques,</span>  au cœur du <br></br> rythme de <span className="text-h2 text-play-black-italic"> Dubaï</span> </p>,
+      contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
       image: surMeasureImages[2] ? {
         source_url: surMeasureImages[2].source_url,
         alt_text: surMeasureImages[2].alt_text
@@ -77,7 +84,8 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     {
       id: 4,
       title: "Location",
-      description: "Intégration harmonieuse des dernières technologies domotiques pour un confort et une efficacité énergétique optimaux dans votre nouvel espace de vie.",
+      contentHead: <p className="text-h2 text-black text-mont-light">Louez   <span className="text-h2 text-play-black-italic">l’expérience</span> <br></br> Dubaï : adresse,  <br></br>services, lumière </p>,
+      contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
       image: surMeasureImages[3] ? {
         source_url: surMeasureImages[3].source_url,
         alt_text: surMeasureImages[3].alt_text
@@ -89,7 +97,8 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     {
       id: 5,
       title: "Achat Villa",
-      description: "Un suivi personnalisé de A à Z, de la conception initiale à la livraison finale. Notre équipe vous accompagne à chaque étape de votre projet immobilier.",
+      contentHead: <p className="text-h2 text-black text-mont-light">Votre villa de    <span className="text-h2 text-play-black-italic">caractère</span> entre mer, désert et skyline</p>,
+      contentSubHead: "Emirates Hills, Palm, District One : conseil  indépendant & off-market",      
       image: surMeasureImages[4] ? {
         source_url: surMeasureImages[4].source_url,
         alt_text: surMeasureImages[4].alt_text
@@ -98,6 +107,8 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
         alt_text: "Accompagnement Complet"
       }
     }
+
+    
   ]
 
   const [activeTab, setActiveTab] = useState(1)
@@ -135,12 +146,12 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/30">
               {/* Tab Buttons Overlay - Vertical Centered */}
-              <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
+              <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10 items-start">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={` px-6 py-3 text-body text-mont-regular rounded-full border-2 transition-all duration-300 backdrop-blur-sm text-left cursor-pointer relative z-10 ${
+                    className={`inline-block px-6 py-3 text-body text-mont-regular rounded-full border-2 transition-all duration-300 backdrop-blur-sm cursor-pointer relative z-10 whitespace-nowrap ${
                       activeTab === tab.id
                         ? 'bg-black text-white border-black shadow-lg'
                         : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
@@ -154,24 +165,16 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
               {/* Content Overlay - Centered */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center text-white px-8 lg:px-12 max-w-4xl">
-                  <h3
-                    className="text-3xl lg:text-5xl font-bold mb-6"
-                    style={{
-                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif'
-                    }}
-                  >
-                    {currentTab.title}
-                  </h3>
+                  
+                 {currentTab.contentHead}
+                <div className='flex w-full justify-center'>
                   <p
-                    className="text-lg lg:text-xl leading-relaxed opacity-90"
-                    style={{
-                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                      fontWeight: 400,
-                      lineHeight: '1.6'
-                    }}
+                    className="w-120 text-center text-sm text-mont-bold lg:text-xl text-black mt-4 leading-relaxed opacity-90"
                   >
-                    {currentTab.description}
+                    {currentTab.contentSubHead}
                   </p>
+                </div>
+                 
                 </div>
               </div>
             </div>
