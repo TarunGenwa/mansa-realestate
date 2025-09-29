@@ -9,6 +9,7 @@ import DirectorSection from '@/src/components/DirectorSection'
 import HeroCarousel from '@/src/components/HeroCarousel'
 import TailorMadeSection from '@/src/components/TailorMadeSection'
 import PartnersSection from '@/src/components/PartnersSection'
+import GuidesCarousel from '@/src/components/GuidesCarousel'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -75,6 +76,18 @@ export default async function Home() {
     ? await wpApi.posts.getAll({
         per_page: 10,
         categories: [propertiesCategory.id],
+        _embed: true
+      }).catch(() => [])
+    : []
+
+  // Get the guides category
+  const guidesCategory = await wpApi.categories.getBySlug('guides').catch(() => null)
+
+  // Fetch posts from guides category for carousel
+  const guides = guidesCategory
+    ? await wpApi.posts.getAll({
+        per_page: 10,
+        categories: [guidesCategory.id],
         _embed: true
       }).catch(() => [])
     : []
@@ -156,7 +169,8 @@ export default async function Home() {
       {/* Image Showcase Section */}
       <ImageShowcaseSection mediaImages={mediaImages} />
 
-     
+      {/* Guides Section */}
+      {guides.length > 0 && <GuidesCarousel posts={guides} fallbackImage={projectTileImage || undefined} />}
 
       {/* Director Introduction Section */}
       <DirectorSection directorImage={ismahenImage} />

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface DirectorSectionProps {
   directorImage?: {
@@ -11,14 +12,14 @@ interface DirectorSectionProps {
 
 export default function DirectorSection({ directorImage }: DirectorSectionProps) {
   return (
-    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px', backgroundColor: '#FAFAFA' }}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px', backgroundColor: '#fff' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
         {/* Left Side - Director Image */}
         <div className="relative h-[500px] lg:h-[600px] overflow-hidden rounded-lg">
           {directorImage ? (
             <Image
               src={directorImage.source_url}
-              alt={directorImage.alt_text || "Ismahen - Director of Real Estate"}
+              alt={directorImage.alt_text || "Ismahen Lesongeur"}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -31,90 +32,69 @@ export default function DirectorSection({ directorImage }: DirectorSectionProps)
         </div>
 
         {/* Right Side - Text Content */}
-        <div className="space-y-6">
+        <div className="space-y-6 w-4/5 mx-auto lg:mx-0">
+          {/* Name */}
           <div>
-            <h2
-              className="text-4xl mb-2"
-              style={{
-                fontFamily: 'var(--font-playfair), Playfair Display, serif',
-                fontWeight: 700
-              }}
-            >
-              Ismahen
-            </h2>
-            <p
-              className="text-xl text-gray-600"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 500
-              }}
-            >
-              Directrice de l&apos;Immobilier
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <p
-              className="text-gray-700"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '1.8'
-              }}
-            >
-              Avec plus de 15 ans d&apos;expérience dans le marché immobilier de Dubaï, Ismahen apporte une expertise inégalée et une passion pour l&apos;excellence à notre équipe. Sa connaissance approfondie du marché local et son réseau étendu garantissent que nos clients reçoivent les meilleures opportunités d&apos;investissement.
-            </p>
-
-            <p
-              className="text-gray-700"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '1.8'
-              }}
-            >
-              Diplômée en finance et immobilier, Ismahen a dirigé certaines des transactions les plus importantes de la région, aidant des investisseurs internationaux à réaliser leurs objectifs immobiliers à Dubaï. Sa vision stratégique et son engagement envers la satisfaction client font d&apos;elle un atout précieux pour Mansa.
-            </p>
-
-            <p
-              className="text-gray-700"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '1.8'
-              }}
-            >
-              &quot;Mon objectif est de transformer vos rêves immobiliers en réalité, en vous offrant un service personnalisé et des conseils d&apos;experts à chaque étape de votre parcours d&apos;investissement.&quot;
-            </p>
-          </div>
-
-          {/* Contact Info */}
-          <div className="pt-6">
-            <div className="flex flex-col space-y-2">
-              <a
-                href="mailto:ismahen@mansa.ae"
-                className="text-gray-600 hover:text-black transition-colors"
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontSize: '14px'
-                }}
-              >
-                ismahen@mansa.ae
-              </a>
-              <a
-                href="tel:+971501234567"
-                className="text-gray-600 hover:text-black transition-colors"
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontSize: '14px'
-                }}
-              >
-                +971 50 123 4567
-              </a>
+            <div className="leading-tight">
+              <p className="text-h2 text-mont-regular">Ismahen</p>
+              <p className="text-h2 text-play-black-italic">Lesongeur</p>
             </div>
+
+            {/* Designation */}
+            <p className="text-body text-mont-bold mt-4">
+              Co-Fondatrice MANSA REAL ESTATE
+            </p>
+          </div>
+
+          {/* Description */}
+          <div>
+            <p className="text-body-sm text-mont-regular text-gray-700 leading-relaxed">
+              Présents depuis plus de 15 ans à Dubaï et Abu Dhabi, nous avons bâti notre réputation sur l&apos;art d&apos;accompagner les projets les plus ambitieux. Chaque transaction est pour nous une aventure humaine, où la confiance se construit autant que la pierre.
+            </p>
+          </div>
+
+          {/* Signature Placeholder */}
+          <div className="py-4">
+            <div className="h-16 w-48">
+              {/* Placeholder for signature image */}
+              <Image
+                src="/ismahen-sign.svg"
+                alt="Signature"
+                width={192}
+                height={64}
+                className="object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Qualities */}
+          <div className="flex gap-4 flex-wrap">
+            <button className="px-6 py-2 text-body text-mont-regular border-2 border-black rounded-full bg-transparent hover:bg-gray-100 transition-colors">
+              Vision
+            </button>
+            <button className="px-6 py-2 text-body text-mont-regular border-2 border-black rounded-full bg-transparent hover:bg-gray-100 transition-colors">
+              Confiance
+            </button>
+            <button className="px-6 py-2 text-body text-mont-regular border-2 border-black rounded-full bg-transparent hover:bg-gray-100 transition-colors">
+              Prestige
+            </button>
+          </div>
+
+          {/* Contact Button */}
+          <div className="pt-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-between px-8 py-3 text-white bg-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 min-w-[200px]"
+            >
+              <span className="flex-1 text-center text-mont-regular">Contact</span>
+              <Image
+                src="/top-right-white.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="ml-4"
+              />
+            </Link>
           </div>
         </div>
       </div>
