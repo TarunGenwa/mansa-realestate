@@ -161,7 +161,7 @@ export default function ContactMapSection() {
             </div>
 
             {/* CTA Button */}
-            <div className="pt-4">
+            {/* <div className="pt-4">
               <a
                 href="https://wa.me/971501234567"
                 target="_blank"
@@ -175,7 +175,7 @@ export default function ContactMapSection() {
               >
                 Chat on WhatsApp
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

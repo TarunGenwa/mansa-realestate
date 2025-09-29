@@ -50,29 +50,27 @@ export default function Navigation() {
           <div className="flex items-center space-x-8">
             <Link
               href="/properties"
-              className={`${linkColor} transition`}
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+              className={`${linkColor} transition text-body text-mont-regular`}
+            
             >
               Propriétés
             </Link>
             <Link
               href="/invest-in-dubai"
-              className={`${linkColor} transition`}
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+              className={`${linkColor} transition text-body text-mont-regular`}
+            
             >
               Investir à Dubaï
             </Link>
             <Link
               href="/guides"
-              className={`${linkColor} transition`}
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+              className={`${linkColor} transition text-body text-mont-regular`}
             >
               Actualités et Guides
             </Link>
             <Link
               href="/contact"
-              className={`${linkColor} transition`}
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontSize: '14px', fontWeight: 500 }}
+              className={`${linkColor} transition text-body text-mont-regular`}
             >
               Contact
             </Link>

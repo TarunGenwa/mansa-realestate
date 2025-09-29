@@ -146,10 +146,10 @@ export default function ContactFormSection({ reverseOrder = false, contactImageU
               {/* Status Messages */}
               {submitStatus.type && (
                 <div
-                  className={`p-4 rounded-lg ${
+                  className={`p-4 rounded-lg relative ${
                     submitStatus.type === 'success'
-                      ? 'bg-green-50 text-green-800 border border-green-200'
-                      : 'bg-red-50 text-red-800 border border-red-200'
+                      ? 'bg-black text-white border border-black'
+                      : 'bg-white text-black border-2 border-black'
                   }`}
                   style={{
                     fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -157,6 +157,30 @@ export default function ContactFormSection({ reverseOrder = false, contactImageU
                   }}
                 >
                   {submitStatus.message}
+                  <button
+                    type="button"
+                    onClick={() => setSubmitStatus({ type: null, message: '' })}
+                    className={`absolute top-3 right-3 transition-opacity hover:opacity-70 ${
+                      submitStatus.type === 'success' ? 'text-white' : 'text-black'
+                    }`}
+                    aria-label="Close message"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15 5L5 15M5 5L15 15"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
                 </div>
               )}
               <div>
