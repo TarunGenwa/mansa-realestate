@@ -32,14 +32,6 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
     setCurrentIndex(index)
   }
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-  }
-
   return (
     <div className="relative h-screen m-2" style={{ width: 'calc(100% - 16px)' }}>
       {/* Images */}
@@ -75,50 +67,25 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
               <span className="italic" style={{ fontWeight: 200 }}>réalité</span>
             </span>
           </h1>
-          <Link href="/contact" className="inline-block mt-8 px-8 py-3 text-white border-2 border-white rounded-full hover:bg-white hover:text-black transition-all duration-300">
-            Contact
+          <Link href="/contact" className="inline-flex items-center justify-between mt-8 px-8 py-3 text-white border-2 border-white rounded-full transition-all duration-300 min-w-[200px]">
+            <span className="flex-1 text-center">Contact</span>
+            <Image src="/right-arrow-white.svg" alt="" width={32} height={32} className="ml-4 transition-all duration-300" />
           </Link>
         </div>
       </div>
 
-      {/* Navigation Arrows (only show if more than 1 image) */}
-      {images.length > 1 && (
-        <>
-          <button
-            onClick={prevSlide}
-            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 transition-all duration-200 z-10"
-            style={{
-              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-              fontSize: '20px'
-            }}
-          >
-            ←
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 transition-all duration-200 z-10"
-            style={{
-              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-              fontSize: '20px'
-            }}
-          >
-            →
-          </button>
-        </>
-      )}
 
       {/* Dots Indicator (only show if more than 1 image) */}
       {images.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-3 z-10">
+        <div className="absolute bottom-8 right-8 flex space-x-3 z-10">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+              className={`transition-all duration-200 ${
                 currentIndex === index
-                  ? 'bg-white'
-                  : 'bg-white/50 hover:bg-white/75'
+                  ? 'w-8 h-2 bg-white'
+                  : 'w-6 h-2 bg-white/50 hover:bg-white/75'
               }`}
             />
           ))}
