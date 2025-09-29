@@ -1,7 +1,6 @@
 import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 
@@ -98,72 +97,68 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   console.log('Featured Image:', featuredImage?.source_url)
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen pt-32">
 
-      {/* Property Title and Subtitle */}
-      <section className="pb-8" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
-          <h1
-            className="text-4xl lg:text-5xl mb-6"
+      {/* Property Title and Subtitle - Full Width */}
+      <section className="pb-8 px-8 lg:px-16">
+        <h1
+          className="text-4xl lg:text-5xl mb-6"
+          style={{
+            fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+            fontWeight: 700,
+            lineHeight: '1.2'
+          }}
+          dangerouslySetInnerHTML={{ __html: property.title.rendered }}
+        />
+
+        {/* Subtitle - First Description Element */}
+        {parsedContent.description.length > 0 && (
+          <div
+            className="text-lg text-gray-600"
             style={{
               fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-              fontWeight: 700,
-              lineHeight: '1.2'
+              fontWeight: 400,
+              lineHeight: '1.6'
             }}
-            dangerouslySetInnerHTML={{ __html: property.title.rendered }}
-          />
-
-          {/* Subtitle - First Description Element */}
-          {parsedContent.description.length > 0 && (
-            <div
-              className="text-lg text-gray-600 max-w-4xl"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 400,
-                lineHeight: '1.6'
-              }}
-            >
-              {parsedContent.description[0]}
-            </div>
-          )}
-        </div>
+          >
+            {parsedContent.description[0]}
+          </div>
+        )}
       </section>
 
-      {/* Property Hero Images */}
-      <section className="pb-12" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
-          {(heroImageLeft || heroImageRight || featuredImage) && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Left Hero Image */}
-              <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden">
-                <Image
-                  src={heroImageLeft?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
-                  alt={heroImageLeft?.alt_text || featuredImage?.alt_text || property.title.rendered}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-              </div>
-
-              {/* Right Hero Image */}
-              <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden">
-                <Image
-                  src={heroImageRight?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
-                  alt={heroImageRight?.alt_text || property.title.rendered}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-              </div>
+      {/* Property Hero Images - Full Width */}
+      <section className="pb-12">
+        {(heroImageLeft || heroImageRight || featuredImage) && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Left Hero Image */}
+            <div className="relative h-96 lg:h-[600px]">
+              <Image
+                src={heroImageLeft?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
+                alt={heroImageLeft?.alt_text || featuredImage?.alt_text || property.title.rendered}
+                fill
+                className="object-cover rounded-tr-lg rounded-br-lg"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              />
             </div>
-          )}
-        </div>
+
+            {/* Right Hero Image */}
+            <div className="relative h-96 lg:h-[600px]">
+              <Image
+                src={heroImageRight?.source_url || featuredImage?.source_url || "https://ik.imagekit.io/slamseven/3699346bfbeb7e914d97ca326277009b9841dce3_D4dt-DTI0.jpg?updatedAt=1758914537538"}
+                alt={heroImageRight?.alt_text || property.title.rendered}
+                fill
+                className="object-cover rounded-tl-lg rounded-bl-lg"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              />
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Second Description Element - Bottom of Hero */}
@@ -190,16 +185,6 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content with Overview Image */}
             <div className="lg:col-span-2">
-              <h2
-                className="text-2xl lg:text-3xl mb-6"
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontWeight: 600,
-                  lineHeight: '1.2'
-                }}
-              >
-                Property Overview
-              </h2>
 
               {/* Overview Image */}
               {overviewImage && (
