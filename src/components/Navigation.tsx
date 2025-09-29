@@ -3,30 +3,44 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 export default function Navigation() {
   const pathname = usePathname()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const isLandingPage = pathname === '/'
   const isLightBackground = pathname !== '/' && pathname !== '/contact'
   const linkColor = isLightBackground ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
   const logoSrc = isLightBackground ? '/logo_black.svg' : '/logo_white.svg'
 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+
+  const navigationLinks = [
+    { href: '/properties', text: 'Propriétés' },
+    { href: '/invest-in-dubai', text: 'Investir à Dubaï' },
+    { href: '/guides', text: 'Actualités et Guides' },
+    { href: '/contact', text: 'Contact' }
+  ]
+
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 pt-6">
-      <div className="w-full px-12">
+      <div className="w-full px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center ml-4 gap-4">
+          {/* Logo Section */}
+          <div className="flex items-center gap-2 sm:gap-4 ml-2 sm:ml-4">
             <Link href="/" className="flex items-center">
               <Image
                 src={logoSrc}
                 alt="Mansa Real Estate"
-                width={176}
-                height={41}
+                width={140}
+                height={33}
+                className="sm:w-[176px] sm:h-[41px]"
                 priority
               />
             </Link>
+            {/* City logos - hidden on mobile, visible on desktop for landing page */}
             {isLandingPage && (
-              <div className="flex items-center gap-4 ml-8">
+              <div className="hidden lg:flex items-center gap-4 ml-8">
                 <Image
                   src="/dubai-logo.svg"
                   alt="Dubai"
@@ -47,33 +61,84 @@ export default function Navigation() {
             )}
           </div>
 
-          <div className="flex items-center space-x-8">
-            <Link
-              href="/properties"
-              className={`${linkColor} transition text-body text-mont-regular`}
-            
-            >
-              Propriétés
-            </Link>
-            <Link
-              href="/invest-in-dubai"
-              className={`${linkColor} transition text-body text-mont-regular`}
-            
-            >
-              Investir à Dubaï
-            </Link>
-            <Link
-              href="/guides"
-              className={`${linkColor} transition text-body text-mont-regular`}
-            >
-              Actualités et Guides
-            </Link>
-            <Link
-              href="/contact"
-              className={`${linkColor} transition text-body text-mont-regular`}
-            >
-              Contact
-            </Link>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navigationLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`${linkColor} transition text-body text-mont-regular`}
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={toggleMenu}
+            className="lg:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            aria-label="Toggle navigation menu"
+          >
+            <div className="w-6 h-6 flex flex-col justify-center items-center">
+              <span
+                className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                  isMenuOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'
+                } ${isLightBackground ? 'bg-black' : 'bg-white'}`}
+              />
+              <span
+                className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                  isMenuOpen ? 'opacity-0' : 'opacity-100'
+                } ${isLightBackground ? 'bg-black' : 'bg-white'}`}
+              />
+              <span
+                className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                  isMenuOpen ? '-rotate-45 -translate-y-0.5' : 'translate-y-1'
+                } ${isLightBackground ? 'bg-black' : 'bg-white'}`}
+              />
+            </div>
+          </button>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        <div
+          className={`lg:hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          } overflow-hidden`}
+        >
+          <div className={`pt-4 pb-6 space-y-4 ${
+            isLightBackground ? 'bg-white/95' : 'bg-black/95'
+          } backdrop-blur-sm rounded-lg mt-2 shadow-lg`}>
+            {navigationLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`block px-4 py-3 text-body text-mont-regular transition-colors ${linkColor}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.text}
+              </Link>
+            ))}
+
+            {/* Mobile City Logos for Landing Page */}
+            {isLandingPage && (
+              <div className="flex items-center justify-center gap-6 pt-4 border-t border-gray-200/20">
+                <Image
+                  src="/dubai-logo.svg"
+                  alt="Dubai"
+                  width={40}
+                  height={53}
+                  priority
+                />
+                <Image
+                  src="/abu-dhabi-logo.svg"
+                  alt="Abu Dhabi"
+                  width={53}
+                  height={53}
+                  priority
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
