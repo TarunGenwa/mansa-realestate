@@ -2,6 +2,9 @@ import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
+
+// Enable ISR - revalidate every 24 hours for privacy policy
+export const revalidate = 86400
 export const metadata: Metadata = {
   title: 'Privacy Policy - Mansa',
   description: 'Privacy Policy and Data Protection Information for Mansa',

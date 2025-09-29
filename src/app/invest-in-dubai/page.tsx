@@ -4,6 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ContactFormSection from '@/src/components/ContactFormSection'
 
+// Enable ISR - revalidate every 6 hours for invest page
+export const revalidate = 21600
+
 export const metadata: Metadata = {
   title: 'Invest in Dubai - Mansa',
   description: "Unlock unprecedented opportunities in the Middle East's most dynamic property landscape. Discover strategic investments with guaranteed returns.",

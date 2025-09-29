@@ -11,6 +11,9 @@ import TailorMadeSection from '@/src/components/TailorMadeSection'
 import PartnersSection from '@/src/components/PartnersSection'
 import GuidesCarousel from '@/src/components/GuidesCarousel'
 
+// Enable ISR - revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600
+
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
 

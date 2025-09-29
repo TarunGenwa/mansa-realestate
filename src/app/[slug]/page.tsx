@@ -3,6 +3,9 @@ import { wpApi } from '@/lib/api/wordpress'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
 
+// Enable ISR - revalidate every 2 hours for pages
+export const revalidate = 7200
+
 interface DynamicPageProps {
   params: Promise<{
     slug: string

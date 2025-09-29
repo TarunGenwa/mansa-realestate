@@ -5,10 +5,34 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import DeveloperPropertiesSection from '../../../components/DeveloperPropertiesSection'
 
+// Enable ISR - revalidate every 1 hour for developers
+export const revalidate = 3600
+
 interface DeveloperPageProps {
   params: Promise<{
     developerSlug: string
   }>
+}
+
+// Generate static params at build time for all developers
+export async function generateStaticParams() {
+  // Get developers category
+  const developersCategory = await wpApi.categories.getBySlug('developers').catch(() => null)
+
+  if (!developersCategory) {
+    return []
+  }
+
+  // Fetch all developer posts
+  const developers = await wpApi.posts.getAll({
+    categories: [developersCategory.id],
+    per_page: 100,
+    _embed: false
+  }).catch(() => [])
+
+  return developers.map((developer) => ({
+    developerSlug: developer.slug,
+  }))
 }
 
 export async function generateMetadata({ params }: DeveloperPageProps): Promise<Metadata> {

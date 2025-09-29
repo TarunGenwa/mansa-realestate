@@ -5,6 +5,9 @@ import ContactHeroSection from '@/src/components/ContactHeroSection'
 import ContactMapSection from '@/src/components/ContactMapSection'
 import FAQSection from '@/src/components/FAQSection'
 
+// Enable ISR - revalidate every 4 hours for contact page
+export const revalidate = 14400
+
 export async function generateMetadata(): Promise<Metadata> {
   const contactPage = await wpApi.pages.getBySlug('contact').catch(() => null)
 

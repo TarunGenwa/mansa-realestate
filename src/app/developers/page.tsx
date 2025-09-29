@@ -3,6 +3,9 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Enable ISR - revalidate every 2 hours for developers page
+export const revalidate = 7200
+
 export const metadata: Metadata = {
   title: 'Developers - Mansa',
   description: 'Browse our trusted real estate developers and their projects.',

@@ -6,10 +6,34 @@ import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 import PropertyMap from '../../../components/PropertyMap'
 
+// Enable ISR - revalidate every 30 minutes for properties
+export const revalidate = 1800
+
 interface PropertyPageProps {
   params: Promise<{
     propertySlug: string
   }>
+}
+
+// Generate static params at build time for all properties
+export async function generateStaticParams() {
+  // Get properties category
+  const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
+
+  if (!propertiesCategory) {
+    return []
+  }
+
+  // Fetch all property posts
+  const properties = await wpApi.posts.getAll({
+    categories: [propertiesCategory.id],
+    per_page: 100,
+    _embed: false
+  }).catch(() => [])
+
+  return properties.map((property) => ({
+    propertySlug: property.slug,
+  }))
 }
 
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
@@ -120,6 +144,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
               </div>
 
@@ -132,6 +158,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
               </div>
             </div>

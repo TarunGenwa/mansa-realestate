@@ -25,6 +25,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Enable experimental features for better performance
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['framer-motion'],
+  },
+  // Note: output: 'export' is commented out because this site uses WordPress API
+  // and requires ISR for dynamic content updates. Uncomment only if you want
+  // a completely static site without dynamic updates:
+  // output: 'export',
+  // trailingSlash: true,
+  // distDir: 'dist',
 };
 
 export default nextConfig;
