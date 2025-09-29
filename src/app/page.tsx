@@ -8,6 +8,7 @@ import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
 import DirectorSection from '@/src/components/DirectorSection'
 import HeroCarousel from '@/src/components/HeroCarousel'
 import TailorMadeSection from '@/src/components/TailorMadeSection'
+import PartnersSection from '@/src/components/PartnersSection'
 
 export async function generateMetadata(): Promise<Metadata> {
   const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
@@ -149,14 +150,19 @@ export default async function Home() {
       {/* Tailor Made Section */}
       <TailorMadeSection mediaImages={mediaImages} />
 
+      {/* Partners Section */}
+      <PartnersSection />
+
       {/* Image Showcase Section */}
       <ImageShowcaseSection mediaImages={mediaImages} />
 
-      {/* FAQ Section */}
-      <FAQSection />
+     
 
       {/* Director Introduction Section */}
       <DirectorSection directorImage={ismahenImage} />
+
+       {/* FAQ Section */}
+      <FAQSection />
 
       {/* Contact Form Section */}
       <ContactFormSection />

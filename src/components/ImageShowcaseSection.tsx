@@ -51,17 +51,13 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
       <div>
         {/* Heading */}
         <div className="w-[40%] mb-16">
-          <h2
-            style={{
-              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-              fontWeight: 400,
-              fontSize: '32px',
-              lineHeight: '100%',
-              letterSpacing: '0%'
-            }}
-          >
-            Embrassez des espaces d&apos;exception conçus pour votre style de vie
-          </h2>
+           <p className='text-body text-mont-regular text-capitalize' >
+              INSIGHTS & ART DE VIVRE         
+           </p>
+          <p className='text-h3 text-play-regular text-black'
+          > 
+            Embrassez des espaces <span className='text-play-black-italic'>d&apos;exception </span> conçus pour votre <span className='text-play-black-italic'>style</span>  de vie
+          </p>
         </div>
 
         {/* Image Grid - 5 columns, 3 rows */}
