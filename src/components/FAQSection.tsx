@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 interface FAQItem {
   question: string
@@ -10,29 +11,21 @@ interface FAQItem {
 
 const faqData: FAQItem[] = [
   {
-    question: "Par où commencer pour acheter une maison ?",
-    answer: "Commencez par définir votre budget et vos objectifs d'investissement. Ensuite, explorez les différents quartiers de Dubaï pour identifier ceux qui correspondent à vos critères. Nous vous accompagnons dès cette première étape avec une consultation personnalisée gratuite pour établir votre stratégie d'investissement."
+    question: "Comment démarrer un achat immobilier à Dubaï ?",
+    answer: "Commencez par définir votre budget et obtenir, si besoin, une pré-approbation bancaire. Nous vous aidons à cibler les quartiers, organiser les visites (physiques ou virtuelles), puis à formaliser l’offre (MOU), réaliser la due diligence, obtenir le NOC et finaliser le transfert chez un trustee de la DLD."
   },
   {
-    question: "Quels sont les avantages d'investir dans l'immobilier à Dubaï ?",
-    answer: "Dubaï offre des rendements locatifs élevés, pas d'impôt sur le revenu, une économie stable et en croissance, ainsi qu'une qualité de vie exceptionnelle. Le marché immobilier est régulé et transparent, offrant une sécurité juridique aux investisseurs internationaux."
+    question: "Un étranger peut-il acheter en pleine propriété (freehold) ?",
+    answer: "Oui, dans de nombreuses zones freehold désignées par l’Emirat. Nous vous orientons vers les secteurs adaptés à votre projet (résidentiel, investissement, villégiature) et vérifions pour vous le statut foncier et les règles de copropriété."
   },
   {
-    question: "Comment financer mon investissement immobilier à Dubaï ?",
-    answer: "Plusieurs options de financement sont disponibles : prêts bancaires locaux avec des taux compétitifs, financement développeur avec plans de paiement flexibles, ou investissement au comptant. Nous vous accompagnons dans le choix de la meilleure solution selon votre profil."
+    question: "Quels frais prévoir en plus du prix d’achat ?",
+    answer: "Au-delà du prix du bien, anticipez : frais d’enregistrement à la DLD, éventuelle taxe Oqood pour l’off-plan, commission d’agence, charges de copropriété (service charges), raccordements/évaluations, et, en cas de financement, frais bancaires/assurance. Nous vous remettons un budget prévisionnel détaillé avant toute décision."
   },
   {
-    question: "Quelle est la procédure d'achat pour un étranger ?",
-    answer: "Les étrangers peuvent acheter en pleine propriété dans les zones désignées. La procédure comprend : signature du contrat de vente, versement d'un acompte, enregistrement auprès du Dubai Land Department, et obtention du titre de propriété. Nous gérons l'ensemble du processus pour vous."
+    question: "Quelle stratégie locative et quel rendement viser ?",
+    answer: "À Dubaï, la location classique et la location meublée à court ou moyen terme coexistent. Le rendement dépend du quartier, du type de bien et de la gestion. Nous modélisons votre cash-flow (loyers nets des charges) et proposons un service de gestion locative pour sécuriser l’occupation et la performance."
   },
-  {
-    question: "Quels sont les frais associés à l'achat ?",
-    answer: "Les frais incluent : 4% de frais de transfert au DLD, environ 2% de frais d'agence, frais administratifs (environ 5,000 AED), et frais de prêt si financement bancaire (environ 1% du montant emprunté). Nous vous fournirons un décompte détaillé avant tout engagement."
-  },
-  {
-    question: "Comment gérer mon bien à distance ?",
-    answer: "Nous proposons des services complets de gestion locative : recherche de locataires, contrats de location, collecte des loyers, maintenance, et rapports réguliers. Vous pouvez investir en toute sérénité sans être présent à Dubaï."
-  }
 ]
 
 export default function FAQSection() {
@@ -44,21 +37,19 @@ export default function FAQSection() {
 
   return (
     <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-      <div>
-        <h2
-          style={{
-            fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-            fontWeight: 500,
-            fontSize: '32px',
-            lineHeight: '100%',
-            letterSpacing: '0%'
-          }}
-          className="mb-12"
-        >
-          Foire aux questions
-        </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-64">
+        {/* Left side - Heading and subheading */}
+        <div className="lg:sticky lg:top-8 lg:self-start">
+          <h2 className="text-h2 text-mont-medium mb-6">
+            Questions fréquentes
+          </h2>
+          <p className="text-body-lg text-mont-regular text-gray-600 leading-relaxed">
+            Pour vous aider à décider avec clarté, nous répondons aux questions que l'on nous pose le plus souvent.
+          </p>
+        </div>
 
-        <div className="space-y-4">
+        {/* Right side - FAQs */}
+        <div className="space-y-4 lg:col-span-2">
           {faqData.map((item, index) => (
             <div
               key={index}
@@ -76,15 +67,15 @@ export default function FAQSection() {
                 }}
               >
                 <span>{item.question}</span>
-                <span
-                  className="font-light"
-                  style={{
-                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                    fontSize: '24px'
-                  }}
-                >
-                  {openIndex === index ? '−' : '+'}
-                </span>
+                <div className="flex-shrink-0 ml-4">
+                  <Image
+                    src={openIndex === index ? "/top-right-arrow.svg" : "/bottom-right-arrow.svg"}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="transition-all duration-200"
+                  />
+                </div>
               </button>
 
               <AnimatePresence>
