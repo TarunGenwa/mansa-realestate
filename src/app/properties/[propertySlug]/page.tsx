@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
-import PropertyMap from '../../../components/PropertyMap'
 
 // Enable ISR - revalidate every 30 minutes for properties
 export const revalidate = 1800
@@ -284,7 +283,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             </div>
 
             {/* Property Details Sidebar */}
-            <div className="lg:col-span-1">
+            {/* <div className="lg:col-span-1">
               <div className="bg-gray-50 p-6 rounded-lg sticky top-8">
                 <h3
                   className="text-xl font-semibold mb-4"
@@ -327,7 +326,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </div>
                 )}
 
-                {/* Contact CTA */}
+
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <h4
                     className="font-semibold mb-3"
@@ -344,74 +343,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </Link>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
 
-      {/* Location Map Section */}
-      {parsedContent.details.location && (
-        <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-          <div className="max-w-7xl mx-auto">
-            <h2
-              className="text-3xl font-semibold mb-8"
-              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-            >
-              Property Location
-            </h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Map */}
-              <div className="h-[400px] bg-gray-200 rounded-lg overflow-hidden shadow-lg">
-                <PropertyMap coordinates={parsedContent.details.location} />
-              </div>
-
-              {/* Location Details */}
-              <div className="flex flex-col justify-center">
-                <h3
-                  className="text-xl font-semibold mb-4"
-                  style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                >
-                  Location Details
-                </h3>
-
-                <div className="space-y-4">
-                  <div className="border-l-4 border-black pl-4">
-                    <span className="font-semibold text-gray-700">Coordinates:</span>
-                    <p className="text-gray-600">{parsedContent.details.location}</p>
-                  </div>
-
-                  {parsedContent.details.type && (
-                    <div className="border-l-4 border-gray-300 pl-4">
-                      <span className="font-semibold text-gray-700">Property Type:</span>
-                      <p className="text-gray-600">{parsedContent.details.type}</p>
-                    </div>
-                  )}
-
-                  <div className="pt-4">
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(parsedContent.details.location)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
-                      style={{
-                        fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                        fontWeight: 500,
-                        fontSize: '16px'
-                      }}
-                    >
-                      View on Google Maps
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Related Properties */}
-      <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      {/* <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
         <div className="max-w-7xl mx-auto">
           <h2
             className="text-3xl font-semibold mb-8"
@@ -430,7 +369,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   )
 }
