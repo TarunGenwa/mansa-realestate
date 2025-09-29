@@ -6,14 +6,21 @@ import { wpApi } from '@/lib/api/wordpress'
 
 interface ContactFormSectionProps {
   reverseOrder?: boolean
+  contactImageUrl?: string // Allow passing image URL to avoid redundant API calls
 }
 
-export default function ContactFormSection({ reverseOrder = false }: ContactFormSectionProps) {
+export default function ContactFormSection({ reverseOrder = false, contactImageUrl }: ContactFormSectionProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     about: ''
   })
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null
+    message: string
+  }>({ type: null, message: '' })
 
   const [contactImage, setContactImage] = useState<{
     source_url: string
@@ -21,9 +28,19 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
   } | null>(null)
 
   useEffect(() => {
+    // Only fetch contact image if not provided via props
+    if (contactImageUrl) {
+      setContactImage({
+        source_url: contactImageUrl,
+        alt_text: 'Contact Office'
+      })
+      return
+    }
+
     const fetchContactImage = async () => {
       try {
-        const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 })
+        // Reduced per_page for faster loading
+        const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 50 })
         const contactUsImage = mediaImages.find(img =>
           img.title.rendered.toLowerCase().includes('contactus_section')
         )
@@ -40,7 +57,7 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
     }
 
     fetchContactImage()
-  }, [])
+  }, [contactImageUrl])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -49,10 +66,50 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
+
+    setIsSubmitting(true)
+    setSubmitStatus({ type: null, message: '' })
+
+    try {
+      const response = await fetch('https://formcarry.com/s/PhkoOyLIwjN', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.about
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Merci pour votre message! Nous vous répondrons bientôt.'
+        })
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          about: ''
+        })
+      } else {
+        throw new Error(data.message || 'Une erreur est survenue')
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Une erreur est survenue. Veuillez réessayer.'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -86,6 +143,22 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-5 p-6  rounded-lg border border-gray-200">
+              {/* Status Messages */}
+              {submitStatus.type && (
+                <div
+                  className={`p-4 rounded-lg ${
+                    submitStatus.type === 'success'
+                      ? 'bg-green-50 text-green-800 border border-green-200'
+                      : 'bg-red-50 text-red-800 border border-red-200'
+                  }`}
+                  style={{
+                    fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                    fontSize: '14px'
+                  }}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
               <div>
                 <label
                   htmlFor="name"
@@ -175,14 +248,19 @@ export default function ContactFormSection({ reverseOrder = false }: ContactForm
 
               <button
                 type="submit"
-                className="w-full bg-black text-white py-3 rounded-full hover:bg-gray-900 transition"
+                disabled={isSubmitting}
+                className={`w-full py-3 rounded-full transition ${
+                  isSubmitting
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-900'
+                }`}
                 style={{
                   fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                   fontWeight: 500,
                   fontSize: '16px'
                 }}
               >
-                Soumettre
+                {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
               </button>
             </form>
 

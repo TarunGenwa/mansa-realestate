@@ -16,41 +16,47 @@ export default function PropertiesPage() {
   const [fallbackImage, setFallbackImage] = useState<any>(null)
   const [heroBannerImage, setHeroBannerImage] = useState<any>(null)
   const [consultationImage, setConsultationImage] = useState<string | null>(null)
+  const [contactImage, setContactImage] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Get properties category
-        const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
+        // Make all API calls in parallel for better performance
+        const [
+          propertiesCategory,
+          mediaImages,
+          consultationMedia
+        ] = await Promise.allSettled([
+          wpApi.categories.getBySlug('properties'),
+          wpApi.media.getAll({ media_type: 'image', per_page: 50 }), // Reduced from 100 to 50
+          wpApi.media.getBySlug('schedule-consultation')
+        ])
 
-        // Fetch all properties
-        const fetchedProperties = propertiesCategory
-          ? await wpApi.posts.getAll({
-              per_page: 100,
-              categories: [propertiesCategory.id],
-              _embed: true
-            }).catch(() => [])
-          : []
+        // Get properties only if category exists
+        let fetchedProperties: any[] = []
+        if (propertiesCategory.status === 'fulfilled' && propertiesCategory.value) {
+          fetchedProperties = await wpApi.posts.getAll({
+            per_page: 50, // Reduced from 100 to 50 for faster loading
+            categories: [propertiesCategory.value.id],
+            _embed: true
+          }).catch(() => [])
+        }
 
-        // Get media images
-        const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
+        // Process media images if successful
+        let fallback = null
+        let heroBanner = null
+        let contactUs = null
+        if (mediaImages.status === 'fulfilled') {
+          fallback = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('project_tile'))
+          heroBanner = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner'))
+          contactUs = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('contactus_section'))
+        }
 
-        // Get fallback image
-        const fallback = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile'))
-
-        // Get hero banner image
-        const heroBanner = mediaImages.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner'))
-
-        // Get consultation background image
-        try {
-          const consultationMedia = await wpApi.media.getBySlug('schedule-consultation')
-          if (consultationMedia) {
-            setConsultationImage(consultationMedia.source_url)
-          }
-        } catch (err) {
-          console.error('Failed to fetch consultation image:', err)
+        // Set consultation image if successful
+        if (consultationMedia.status === 'fulfilled' && consultationMedia.value) {
+          setConsultationImage(consultationMedia.value.source_url)
         }
 
         // Extract unique developers from properties
@@ -65,6 +71,7 @@ export default function PropertiesPage() {
         setFilteredProperties(fetchedProperties)
         setFallbackImage(fallback)
         setHeroBannerImage(heroBanner)
+        setContactImage(contactUs?.source_url || null)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -119,10 +126,36 @@ export default function PropertiesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl">Loading properties...</p>
-        </div>
+      <div className="min-h-screen">
+        {/* Hero Section Skeleton */}
+        <section className="relative mt-24 h-screen bg-gray-200 animate-pulse">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center w-[90%] mx-auto">
+              <div className="h-16 bg-gray-300 rounded mb-8 w-96 mx-auto"></div>
+              <div className="h-16 bg-gray-300 rounded w-full max-w-4xl mx-auto"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* Properties Grid Skeleton */}
+        <section className="py-20">
+          <div className="w-[90%] mx-auto">
+            <div className="h-12 bg-gray-200 rounded mb-12 w-64 mx-auto animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-lg animate-pulse">
+                  <div className="h-80 bg-gray-200"></div>
+                  <div className="p-8">
+                    <div className="h-6 bg-gray-200 rounded mb-4 w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-4 w-2/3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     )
   }
@@ -358,7 +391,7 @@ export default function PropertiesPage() {
       </section>
 
       {/* Contact Form Section */}
-      <ContactFormSection reverseOrder={true} />
+      <ContactFormSection reverseOrder={true} contactImageUrl={contactImage || undefined} />
 
       {/* Schedule a Consultation Section */}
       {consultationImage && (
