@@ -8,6 +8,10 @@ export interface PropertyContent {
     location?: string
     [key: string]: string | undefined
   }
+  images: {
+    src: string
+    alt?: string
+  }[]
   rawHtml: string
 }
 
@@ -24,6 +28,7 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
   const content: PropertyContent = {
     description: [],
     details: {},
+    images: [],
     rawHtml: htmlContent
   }
 
@@ -32,6 +37,12 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
   const paragraphRegex = /<p[^>]*>([\s\S]*?)<\/p>/g
   let paragraphMatch
   while ((paragraphMatch = paragraphRegex.exec(htmlContent)) !== null) {
+    // Check if paragraph contains an image
+    if (paragraphMatch[1].includes('<img')) {
+      // Skip paragraphs that only contain images
+      continue
+    }
+
     // Remove HTML tags and decode entities
     const text = paragraphMatch[1]
       .replace(/<[^>]*>/g, '')
@@ -67,6 +78,29 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
         const normalizedKey = normalizeKey(key)
         content.details[normalizedKey] = value
       }
+    }
+  }
+
+  // Extract images from the content
+  const imageRegex = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/g
+  let imageMatch
+  while ((imageMatch = imageRegex.exec(htmlContent)) !== null) {
+    content.images.push({
+      src: imageMatch[1],
+      alt: imageMatch[2] || undefined
+    })
+  }
+
+  // Alternative regex for images with attributes in different order
+  const altImageRegex = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/g
+  let altImageMatch
+  while ((altImageMatch = altImageRegex.exec(htmlContent)) !== null) {
+    // Check if this image wasn't already captured
+    if (!content.images.some(img => img.src === altImageMatch[2])) {
+      content.images.push({
+        src: altImageMatch[2],
+        alt: altImageMatch[1] || undefined
+      })
     }
   }
 

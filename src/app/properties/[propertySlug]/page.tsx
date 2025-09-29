@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
+import PropertyGallery from '../../../components/PropertyGallery'
 
 // Enable ISR - revalidate every 30 minutes for properties
 export const revalidate = 1800
@@ -333,6 +334,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         </div>
       </section>
 
+      {/* Image Gallery from Content */}
+      {parsedContent.images && parsedContent.images.length > 0 && (
+        <PropertyGallery images={parsedContent.images} />
+      )}
 
       {/* Related Properties */}
       {/* <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
