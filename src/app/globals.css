@@ -185,3 +185,141 @@ body {
   border-radius: 0.25rem;
   font-size: 0.875em;
 }
+
+/* Typography Helper Classes */
+/* Montserrat Font Weights */
+.text-mont-thin {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 100;
+}
+
+.text-mont-extralight {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 200;
+}
+
+.text-mont-light {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 300;
+}
+
+.text-mont-regular {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+.text-mont-medium {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+.text-mont-semibold {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.text-mont-bold {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+.text-mont-extrabold {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 800;
+}
+
+.text-mont-black {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  font-weight: 900;
+}
+
+/* Playfair Display Font Weights */
+.text-play-regular {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 400;
+}
+
+.text-play-medium {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 500;
+}
+
+.text-play-semibold {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 600;
+}
+
+.text-play-bold {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 700;
+}
+
+.text-play-extrabold {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 800;
+}
+
+.text-play-black {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 900;
+}
+
+/* Playfair Display Italic variants */
+.text-play-regular-italic {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.text-play-bold-italic {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.text-play-black-italic {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Common text sizes */
+.text-h1 {
+  font-size: 64px;
+  line-height: 1.1;
+}
+
+.text-h2 {
+  font-size: 48px;
+  line-height: 1.2;
+}
+
+.text-h3 {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.text-h4 {
+  font-size: 32px;
+  line-height: 1.3;
+}
+
+.text-h5 {
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.text-body-lg {
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.text-body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  font-size: 14px;
+  line-height: 1.6;
+}

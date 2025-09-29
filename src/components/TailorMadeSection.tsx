@@ -40,7 +40,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
   const tabs: TailorMadeTab[] = [
     {
       id: 1,
-      title: "Design Personnalisé",
+      title: "Sur Plan",
       description: "Créez des espaces uniques qui reflètent votre personnalité et répondent à vos besoins spécifiques. Notre équipe de designers expérimentés transforme vos idées en réalité.",
       image: surMeasureImages[0] ? {
         source_url: surMeasureImages[0].source_url,
@@ -52,7 +52,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     },
     {
       id: 2,
-      title: "Architecture Innovante",
+      title: "Marché secondaire",
       description: "Explorez les dernières tendances architecturales avec des solutions avant-gardistes qui allient esthétique moderne et fonctionnalité optimale pour votre style de vie.",
       image: surMeasureImages[1] ? {
         source_url: surMeasureImages[1].source_url,
@@ -64,7 +64,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     },
     {
       id: 3,
-      title: "Matériaux Premium",
+      title: "Appartement à vendre",
       description: "Sélection rigoureuse des meilleurs matériaux durables et élégants. Chaque élément est choisi pour sa qualité exceptionnelle et son impact environnemental réduit.",
       image: surMeasureImages[2] ? {
         source_url: surMeasureImages[2].source_url,
@@ -76,7 +76,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     },
     {
       id: 4,
-      title: "Technologie Intégrée",
+      title: "Location",
       description: "Intégration harmonieuse des dernières technologies domotiques pour un confort et une efficacité énergétique optimaux dans votre nouvel espace de vie.",
       image: surMeasureImages[3] ? {
         source_url: surMeasureImages[3].source_url,
@@ -88,7 +88,7 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     },
     {
       id: 5,
-      title: "Accompagnement Complet",
+      title: "Achat Villa",
       description: "Un suivi personnalisé de A à Z, de la conception initiale à la livraison finale. Notre équipe vous accompagne à chaque étape de votre projet immobilier.",
       image: surMeasureImages[4] ? {
         source_url: surMeasureImages[4].source_url,
@@ -107,36 +107,15 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
     <section className="py-20 bg-white" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
       <div>
           {/* Section Header */}
-          <div className="mb-16 text-center">
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl mb-6"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 300,
-                lineHeight: '1.2'
-              }}
-            >
-              Solutions{' '}
-              <span
-                className="italic"
-                style={{
-                  fontFamily: 'var(--font-playfair), Playfair Display, serif',
-                  fontWeight: 900
-                }}
+          <div className="mb-16 text-start">
+
+              <p className='text-body text-mont-regular'
               >
-                sur mesure
-              </span>
-            </h2>
-            <p
-              className="text-lg text-gray-600 max-w-3xl mx-auto"
-              style={{
-                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                fontWeight: 400,
-                lineHeight: '1.6'
-              }}
-            >
-              Découvrez notre approche personnalisée pour créer des espaces exceptionnels
-              qui dépassent vos attentes et reflètent votre vision unique.
+                SUR MESURE
+              </p>
+           
+            <p className='text-h3 text-mont-regular mt-2 mb-6'>
+             L’immobilier de <span className='text-h3 text-play-black-italic'>Dubaï,</span> <br></br> à votre mesure
             </p>
           </div>
 
@@ -161,17 +140,11 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-6 py-3 rounded-full border-2 transition-all duration-300 backdrop-blur-sm text-left cursor-pointer relative z-10 ${
+                    className={` px-6 py-3 text-body text-mont-regular rounded-full border-2 transition-all duration-300 backdrop-blur-sm text-left cursor-pointer relative z-10 ${
                       activeTab === tab.id
                         ? 'bg-black text-white border-black shadow-lg'
                         : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
                     }`}
-                    style={{
-                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                      fontWeight: 500,
-                      fontSize: '14px',
-                      minWidth: '200px'
-                    }}
                   >
                     {tab.title}
                   </button>
