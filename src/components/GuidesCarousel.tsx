@@ -63,12 +63,13 @@ export default function GuidesCarousel({ posts, fallbackImage }: GuidesCarouselP
         {/* Section Header - Similar to ImageShowcaseSection */}
         <div className="mb-12">
           <p className='text-body text-mont-regular'>
-            ACTUALITÉS ET GUIDES
+            INVESTISSEMENT ET GUIDES
           </p>
           <p className='text-h3 text-mont-regular mt-2'>
-            Explorez nos <span className='text-h3 text-play-black-italic'>conseils</span> et <br/>
-            <span className='text-h3 text-play-black-italic'>actualités</span> immobilières
+             Investir et  <span className='text-h3 text-play-black-italic'>Vivre à Dubaï,</span>  <br></br> nos guides d’experts 
           </p>
+
+         
         </div>
 
         {/* Carousel Container */}
@@ -96,7 +97,7 @@ export default function GuidesCarousel({ posts, fallbackImage }: GuidesCarouselP
                   <Link
                     key={post.id}
                     href={postLink}
-                    className="relative flex-shrink-0 rounded-lg overflow-hidden group cursor-pointer block bg-white shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="relative flex-shrink-0 rounded-lg overflow-hidden group cursor-pointer block bg-[#EDECE3] shadow-sm hover:shadow-lg transition-all duration-300"
                     style={{ width: '360px' }}
                   >
                     {/* Image Container */}
