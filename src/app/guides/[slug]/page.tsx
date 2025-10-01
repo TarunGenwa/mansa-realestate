@@ -186,27 +186,51 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
         return { type: 'image', src: imgMatch[1], alt: imgMatch[2] || '' }
       }
 
-      // Otherwise it's text content - extract heading (strong/bold) and description
-      const cleanBlock = block.replace(/<\/?p[^>]*>/gi, '').trim()
-      const headingMatch = cleanBlock.match(/<strong[^>]*>([^<]+)<\/strong>|<b[^>]*>([^<]+)<\/b>/i)
-      const heading = headingMatch ? (headingMatch[1] || headingMatch[2]) : ''
-      const description = cleanBlock.replace(/<strong[^>]*>[^<]+<\/strong>|<b[^>]*>[^<]+<\/b>/i, '').replace(/<[^>]*>/g, '').trim()
-      return { type: 'text', heading, description }
+      // Otherwise it's text content - split by colon
+      const cleanBlock = block.replace(/<\/?p[^>]*>/gi, '').replace(/<[^>]*>/g, '').trim()
+      const parts = cleanBlock.split(':').map(p => p.trim())
+
+      if (parts.length >= 3) {
+        // Format: bigNumber : smallHeading : subheading
+        return {
+          type: 'text',
+          bigNumber: parts[0],
+          smallHeading: parts[1],
+          subheading: parts.slice(2).join(':').trim()
+        }
+      } else if (parts.length === 2) {
+        return {
+          type: 'text',
+          bigNumber: parts[0],
+          smallHeading: parts[1],
+          subheading: ''
+        }
+      } else {
+        return {
+          type: 'text',
+          bigNumber: cleanBlock,
+          smallHeading: '',
+          subheading: ''
+        }
+      }
     })
 
     const gridHtml = `
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 my-12">
         <!-- First Column - Single Element -->
         <div class="lg:col-span-1">
-          <div class="h-full flex flex-col items-center space-around" style="background-color: #ECE8DD; min-height: 400px; border-radius: 2px;">
-            <div class="text-center p-8 h-full">
-              <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
-                ${items[0].type === 'text' ? items[0].heading : ''}
+          <div class="h-full flex flex-col justify-between" style="background-color: #ECE8DD; min-height: 400px; border-radius: 2px;">
+            <div class="text-center p-8">
+              <h3 class="text-mono-bold" style="font-size: 96px; color: #000;">
+                ${items[0].type === 'text' ? items[0].bigNumber : ''}
               </h3>
             </div>
             <div class="text-center p-8">
-              <p style="font-family: Montserrat, sans-serif; font-weight: 400; font-size: 16px; line-height: 1.6; color: #666;">
-                ${items[0].type === 'text' ? items[0].description : ''}
+              <p class="text-mono-regular mb-2" style="font-size: 16px; color: #000;">
+                ${items[0].type === 'text' ? items[0].smallHeading : ''}
+              </p>
+              <p class="text-mono-light" style="font-size: 16px; color: #666;">
+                ${items[0].type === 'text' ? items[0].subheading : ''}
               </p>
             </div>
           </div>
@@ -224,15 +248,18 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
                 `
               } else {
                 return `
-                  <div class="flex w-full flex-col items-center space-around" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
-                    <div class="text-center p-8 h-full">
-                      <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
-                        ${item.heading}
+                  <div class="flex w-full flex-col justify-between" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
+                    <div class="text-center p-8">
+                      <h3 class="text-mono-bold" style="font-size: 96px; color: #000;">
+                        ${item.bigNumber}
                       </h3>
                     </div>
                     <div class="text-center p-4">
-                      <p style="font-family: Montserrat, sans-serif; font-weight: 400; font-size: 16px; line-height: 1.6; color: #666;">
-                        ${item.description}
+                      <p class="text-mono-regular mb-2" style="font-size: 16px; color: #000;">
+                        ${item.smallHeading}
+                      </p>
+                      <p class="text-mono-light" style="font-size: 16px; color: #666;">
+                        ${item.subheading}
                       </p>
                     </div>
                   </div>
