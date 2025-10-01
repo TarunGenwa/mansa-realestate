@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
+  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 1000 }).catch(() => [])
 
   // Fetch allproperties_banner image
   const heroImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner')) || null

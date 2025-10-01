@@ -69,7 +69,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
+  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 1000 }).catch(() => [])
 
   // First, get the properties category
   const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
