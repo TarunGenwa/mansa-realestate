@@ -1,22 +1,10 @@
 'use client'
 
 import Image from 'next/image'
+import { useMedia } from '@/src/providers/MediaProvider'
 
-interface ImageShowcaseSectionProps {
-  mediaImages: Array<{
-    id: number
-    source_url: string
-    alt_text: string
-    title: {
-      rendered: string
-    }
-    caption: {
-      rendered: string
-    }
-  }>
-}
-
-export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSectionProps) {
+export default function ImageShowcaseSection() {
+  const { mediaImages } = useMedia()
   // Filter images with core_GI_ prefix and organize by grid position
   const gridImages = mediaImages
     .filter(img => img.title.rendered.toLowerCase().startsWith('core_gi_'))

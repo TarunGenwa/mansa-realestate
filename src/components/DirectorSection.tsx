@@ -2,15 +2,11 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useMedia } from '@/src/providers/MediaProvider'
 
-interface DirectorSectionProps {
-  directorImage?: {
-    source_url: string
-    alt_text?: string
-  } | null
-}
-
-export default function DirectorSection({ directorImage }: DirectorSectionProps) {
+export default function DirectorSection() {
+  const { getImageByTitle } = useMedia()
+  const directorImage = getImageByTitle('core_ismahen')
   return (
     <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px', backgroundColor: '#fff' }}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">

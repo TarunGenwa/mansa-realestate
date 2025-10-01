@@ -5,20 +5,25 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import ContactFormSection from '@/src/components/ContactFormSection'
+import { useMedia } from '@/src/providers/MediaProvider'
 
 export default function PropertiesPage() {
+  const { getImageByTitle } = useMedia()
+
   const [properties, setProperties] = useState<any[]>([])
   const [filteredProperties, setFilteredProperties] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
   const [developers, setDevelopers] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
-  const [fallbackImage, setFallbackImage] = useState<any>(null)
-  const [heroBannerImage, setHeroBannerImage] = useState<any>(null)
   const [consultationImage, setConsultationImage] = useState<string | null>(null)
-  const [contactImage, setContactImage] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Get images from MediaContext
+  const fallbackImage = getImageByTitle('project_tile')
+  const heroBannerImage = getImageByTitle('allproperties_banner')
+  const contactImage = getImageByTitle('contactus_section')
 
   useEffect(() => {
     async function fetchData() {
@@ -26,11 +31,9 @@ export default function PropertiesPage() {
         // Make all API calls in parallel for better performance
         const [
           propertiesCategory,
-          mediaImages,
           consultationMedia
         ] = await Promise.allSettled([
           wpApi.categories.getBySlug('properties'),
-          wpApi.media.getAll({ media_type: 'image', per_page: 50 }), // Reduced from 100 to 50
           wpApi.media.getBySlug('schedule-consultation')
         ])
 
@@ -38,20 +41,10 @@ export default function PropertiesPage() {
         let fetchedProperties: any[] = []
         if (propertiesCategory.status === 'fulfilled' && propertiesCategory.value) {
           fetchedProperties = await wpApi.posts.getAll({
-            per_page: 50, // Reduced from 100 to 50 for faster loading
+            per_page: 50,
             categories: [propertiesCategory.value.id],
             _embed: true
           }).catch(() => [])
-        }
-
-        // Process media images if successful
-        let fallback = null
-        let heroBanner = null
-        let contactUs = null
-        if (mediaImages.status === 'fulfilled') {
-          fallback = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('project_tile'))
-          heroBanner = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner'))
-          contactUs = mediaImages.value.find(img => img.title.rendered.toLowerCase().includes('contactus_section'))
         }
 
         // Set consultation image if successful
@@ -69,9 +62,6 @@ export default function PropertiesPage() {
         setDevelopers(uniqueDevelopers)
         setProperties(fetchedProperties)
         setFilteredProperties(fetchedProperties)
-        setFallbackImage(fallback)
-        setHeroBannerImage(heroBanner)
-        setContactImage(contactUs?.source_url || null)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -391,7 +381,7 @@ export default function PropertiesPage() {
       </section>
 
       {/* Contact Form Section */}
-      <ContactFormSection reverseOrder={true} contactImageUrl={contactImage || undefined} />
+      <ContactFormSection reverseOrder={true} contactImageUrl={contactImage?.source_url || undefined} />
 
       {/* Schedule a Consultation Section */}
       {consultationImage && (

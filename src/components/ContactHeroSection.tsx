@@ -2,15 +2,11 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { useMedia } from '@/src/providers/MediaProvider'
 
-interface ContactHeroSectionProps {
-  heroImage?: {
-    source_url: string
-    alt_text?: string
-  } | null
-}
-
-export default function ContactHeroSection({ heroImage }: ContactHeroSectionProps) {
+export default function ContactHeroSection() {
+  const { getImageByTitle } = useMedia()
+  const heroImage = getImageByTitle('allproperties_banner')
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

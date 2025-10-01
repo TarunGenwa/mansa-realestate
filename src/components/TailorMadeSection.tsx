@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { ReactElement } from 'react'
+import { useMedia } from '@/src/providers/MediaProvider'
 
 interface TailorMadeTab {
   id: number
@@ -15,18 +16,9 @@ interface TailorMadeTab {
   }
 }
 
-interface TailorMadeSectionProps {
-  mediaImages: Array<{
-    id: number
-    title: {
-      rendered: string
-    }
-    source_url: string
-    alt_text: string
-  }>
-}
+export default function TailorMadeSection() {
+  const { mediaImages } = useMedia()
 
-export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProps) {
   // Find the sur-measure images
   const surMeasureImages = []
   for (let i = 1; i <= 5; i++) {
@@ -45,12 +37,9 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
       title: "Sur Plan",
       contentHead: <p className="text-h2 text-mont-light text-black">Découvrez  <span className="text-h2 text-play-black-italic">l’architecture</span> visionnaire de Dubaï, aujourd’hui au prix de demain</p>,
       contentSubHead: "Accédez aux lancements exclusifs, plans optimisés et conditions développeur",
-      image: surMeasureImages[0] ? {
-        source_url: surMeasureImages[0].source_url,
-        alt_text: surMeasureImages[0].alt_text
-      } : {
-        source_url: "https://via.placeholder.com/800x600?text=Design+Personnalisé",
-        alt_text: "Design Personnalisé"
+      image: {
+        source_url: surMeasureImages[0]?.source_url || '',
+        alt_text: surMeasureImages[0]?.alt_text
       }
     },
     
@@ -59,12 +48,9 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
       title: "Marché secondaire",
       contentHead: <p className="text-h2 text-mont-light text-black">Le meilleur du  <span className="text-h2 text-play-black-italic">marché <br></br> secondaire</span>  à Dubaï, prêt<br></br> à vivre sans compromis</p>,
       contentSubHead: "Biens vérifiés,  historique clair, négociation maîtrisée",      
-      image: surMeasureImages[1] ? {
-        source_url: surMeasureImages[1].source_url,
-        alt_text: surMeasureImages[1].alt_text
-      } : {
-        source_url: "https://via.placeholder.com/800x600?text=Architecture+Innovante",
-        alt_text: "Architecture Innovante"
+      image: {
+        source_url: surMeasureImages[1]?.source_url || '',
+        alt_text: surMeasureImages[1]?.alt_text
       }
     },
     
@@ -73,12 +59,9 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
       title: "Appartement à vendre",
       contentHead: <p className="text-h2 text-mont-light text-black">Des appartements  aux <br></br> <span className="text-h2 text-play-black-italic"> vues iconiques,</span>  au cœur du <br></br> rythme de <span className="text-h2 text-play-black-italic"> Dubaï</span> </p>,
       contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
-      image: surMeasureImages[2] ? {
-        source_url: surMeasureImages[2].source_url,
-        alt_text: surMeasureImages[2].alt_text
-      } : {
-        source_url: "https://via.placeholder.com/800x600?text=Matériaux+Premium",
-        alt_text: "Matériaux Premium"
+      image: {
+        source_url: surMeasureImages[2]?.source_url || '',
+        alt_text: surMeasureImages[2]?.alt_text
       }
     },
     {
@@ -86,12 +69,9 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
       title: "Location",
       contentHead: <p className="text-h2 text-black text-mont-light">Louez   <span className="text-h2 text-play-black-italic">l’expérience</span> <br></br> Dubaï : adresse,  <br></br>services, lumière </p>,
       contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
-      image: surMeasureImages[3] ? {
-        source_url: surMeasureImages[3].source_url,
-        alt_text: surMeasureImages[3].alt_text
-      } : {
-        source_url: "https://via.placeholder.com/800x600?text=Technologie+Intégrée",
-        alt_text: "Technologie Intégrée"
+      image: {
+        source_url: surMeasureImages[3]?.source_url || '',
+        alt_text: surMeasureImages[3]?.alt_text
       }
     },
     {
@@ -99,12 +79,9 @@ export default function TailorMadeSection({ mediaImages }: TailorMadeSectionProp
       title: "Achat Villa",
       contentHead: <p className="text-h2 text-black text-mont-light">Votre villa de    <span className="text-h2 text-play-black-italic">caractère</span> entre mer, désert et skyline</p>,
       contentSubHead: "Emirates Hills, Palm, District One : conseil  indépendant & off-market",      
-      image: surMeasureImages[4] ? {
-        source_url: surMeasureImages[4].source_url,
-        alt_text: surMeasureImages[4].alt_text
-      } : {
-        source_url: "https://via.placeholder.com/800x600?text=Accompagnement+Complet",
-        alt_text: "Accompagnement Complet"
+      image: {
+        source_url: surMeasureImages[4]?.source_url || '',
+        alt_text: surMeasureImages[4]?.alt_text
       }
     }
 

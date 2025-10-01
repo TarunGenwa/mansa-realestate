@@ -1,15 +1,14 @@
 import { wpApi } from '@/lib/api/wordpress'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
-import SimpleCarousel from '@/src/components/SimpleCarousel'
 import FAQSection from '@/src/components/FAQSection'
 import ContactFormSection from '@/src/components/ContactFormSection'
 import ImageShowcaseSection from '@/src/components/ImageShowcaseSection'
 import DirectorSection from '@/src/components/DirectorSection'
-import HeroCarousel from '@/src/components/HeroCarousel'
+import HomeHeroCarousel from '@/src/components/HomeHeroCarousel'
 import TailorMadeSection from '@/src/components/TailorMadeSection'
 import PartnersSection from '@/src/components/PartnersSection'
-import GuidesCarousel from '@/src/components/GuidesCarousel'
+import HomeCarousels from '@/src/components/HomeCarousels'
 
 // Enable ISR - revalidate every 1 hour (3600 seconds)
 export const revalidate = 3600
@@ -69,8 +68,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100, search: 'core_' }).catch(() => [])
-  console.log('Fetched media images:', mediaImages.length)
   // First, get the properties category
   const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
 
@@ -95,49 +92,10 @@ export default async function Home() {
       }).catch(() => [])
     : []
 
-  console.log('Fetched properties:', properties)
-  console.log('Number of properties:', properties.length)
-  if (properties.length > 0) {
-    console.log('First property details:', {
-      title: properties[0].title?.rendered,
-      slug: properties[0].slug,
-      hasEmbedded: !!properties[0]._embedded,
-      hasFeaturedMedia: !!properties[0]._embedded?.['wp:featuredmedia'],
-      featuredMediaUrl: properties[0]._embedded?.['wp:featuredmedia']?.[0]?.source_url
-    })
-  }
-
-  // Fetch hero carousel images from WordPress media
-  const heroImages = [
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('core_hero_landing_1')),
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('core_hero_landing_2')),
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('core_hero_landing_3'))
-  ].filter(Boolean) as typeof mediaImages // Remove any undefined images and assert type
-
-  // Fallback if no hero images found
-  const fallbackHeroImage = {
-    source_url: 'https://via.placeholder.com/1920x1080?text=Hero+Image',
-    alt_text: 'Hero Image',
-    title: { rendered: 'Hero Image' }
-  }
-
-  const finalHeroImages = heroImages.length > 0 ? heroImages.map(img => ({
-    source_url: img.source_url,
-    alt_text: img.alt_text,
-    title: img.title
-  })) : [fallbackHeroImage]
-
-  // Fetch fallback image for posts without featured image
-  const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('core_project_tile')) || null
-
-
-  // Fetch Ismahen image
-  const ismahenImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('core_ismahen')) || null
-
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      <HeroCarousel images={finalHeroImages} />
+      <HomeHeroCarousel />
 
       {/* Text Section */}
       <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
@@ -160,23 +118,20 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Project Cards Section */}
-      {properties.length > 0 && <SimpleCarousel posts={properties} fallbackImage={projectTileImage || undefined} />}
+      {/* Carousels */}
+      <HomeCarousels properties={properties} guides={guides} />
 
       {/* Tailor Made Section */}
-      <TailorMadeSection mediaImages={mediaImages} />
+      <TailorMadeSection />
 
       {/* Partners Section */}
       <PartnersSection />
 
       {/* Image Showcase Section */}
-      <ImageShowcaseSection mediaImages={mediaImages} />
-
-      {/* Guides Section */}
-      {guides.length > 0 && <GuidesCarousel posts={guides} fallbackImage={projectTileImage || undefined} />}
+      <ImageShowcaseSection />
 
       {/* Director Introduction Section */}
-      <DirectorSection directorImage={ismahenImage} />
+      <DirectorSection />
 
        {/* FAQ Section */}
       <FAQSection />

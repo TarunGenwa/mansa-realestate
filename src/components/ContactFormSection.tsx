@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { wpApi } from '@/lib/api/wordpress'
+import { useMedia } from '@/src/providers/MediaProvider'
 
 interface ContactFormSectionProps {
   reverseOrder?: boolean
@@ -10,6 +10,8 @@ interface ContactFormSectionProps {
 }
 
 export default function ContactFormSection({ reverseOrder = false, contactImageUrl }: ContactFormSectionProps) {
+  const { getImageByTitle } = useMedia()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,27 +39,15 @@ export default function ContactFormSection({ reverseOrder = false, contactImageU
       return
     }
 
-    const fetchContactImage = async () => {
-      try {
-        // Reduced per_page for faster loading
-        const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 50 })
-        const contactUsImage = mediaImages.find(img =>
-          img.title.rendered.toLowerCase().includes('contactus_section')
-        )
-        console.log('Fetched contact us image:', contactUsImage)
-        if (contactUsImage) {
-          setContactImage({
-            source_url: contactUsImage.source_url,
-            alt_text: contactUsImage.alt_text
-          })
-        }
-      } catch (error) {
-        console.error('Error fetching contact image:', error)
-      }
+    const contactUsImage = getImageByTitle('core_contactus_section')
+    console.log('Fetched contact us image:', contactUsImage)
+    if (contactUsImage) {
+      setContactImage({
+        source_url: contactUsImage.source_url,
+        alt_text: contactUsImage.alt_text
+      })
     }
-
-    fetchContactImage()
-  }, [contactImageUrl])
+  }, [contactImageUrl, getImageByTitle])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({

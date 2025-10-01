@@ -63,15 +63,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
-
-  // Fetch allproperties_banner image
-  const heroImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('allproperties_banner')) || null
-
   return (
     <div className="min-h-screen">
       {/* Hero Section with Contact Form */}
-      <ContactHeroSection heroImage={heroImage} />
+      <ContactHeroSection />
 
       {/* Map and Visit Us Section */}
       <ContactMapSection />

@@ -3,6 +3,7 @@ import { Montserrat, Playfair_Display } from "next/font/google";
 import Navigation from "@/src/components/Navigation";
 import Footer from "@/src/components/Footer";
 import LenisProvider from "@/src/components/LenisProvider";
+import { MediaProvider } from "@/src/providers/MediaProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -32,11 +33,13 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${playfairDisplay.variable} antialiased`}
       >
-        <LenisProvider>
-          <Navigation />
-          {children}
-          <Footer />
-        </LenisProvider>
+        <MediaProvider>
+          <LenisProvider>
+            <Navigation />
+            {children}
+            <Footer />
+          </LenisProvider>
+        </MediaProvider>
       </body>
     </html>
   );
