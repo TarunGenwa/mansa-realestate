@@ -144,6 +144,86 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
     return `<div class="flex flex-wrap gap-4 md:gap-6 my-6">${statsHtml}</div>`
   })
 
+  // Replace IMAGES GRID: blocks with grid layout - takes next 5 blocks after IMAGES GRID:
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*IMAGES GRID:\s*<\/p>((?:[\s\S]*?(?:<p[^>]*>[\s\S]*?<\/p>|<figure[^>]*>[\s\S]*?<\/figure>)){5})/gi, (_match, nextBlocks) => {
+    // Extract the 5 blocks (can be p tags or figure tags)
+    const blockMatches = nextBlocks.match(/<p[^>]*>[\s\S]*?<\/p>|<figure[^>]*>[\s\S]*?<\/figure>/gi)
+    if (!blockMatches || blockMatches.length < 5) return ''
+
+    const items = blockMatches.slice(0, 5).map((block: string) => {
+      // Check if block contains an image (figure tag)
+      const figureImgMatch = block.match(/<img[^>]*src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i)
+      if (figureImgMatch) {
+        return { type: 'image', src: figureImgMatch[1], alt: figureImgMatch[2] || '' }
+      }
+
+      // Check if p tag contains an image
+      const imgMatch = block.match(/<img[^>]*src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i)
+      if (imgMatch) {
+        return { type: 'image', src: imgMatch[1], alt: imgMatch[2] || '' }
+      }
+
+      // Otherwise it's text content - extract heading (strong/bold) and description
+      const cleanBlock = block.replace(/<\/?p[^>]*>/gi, '').trim()
+      const headingMatch = cleanBlock.match(/<strong[^>]*>([^<]+)<\/strong>|<b[^>]*>([^<]+)<\/b>/i)
+      const heading = headingMatch ? (headingMatch[1] || headingMatch[2]) : ''
+      const description = cleanBlock.replace(/<strong[^>]*>[^<]+<\/strong>|<b[^>]*>[^<]+<\/b>/i, '').replace(/<[^>]*>/g, '').trim()
+      return { type: 'text', heading, description }
+    })
+
+    const gridHtml = `
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 my-12">
+        <!-- First Column - Single Element -->
+        <div class="lg:col-span-1">
+          <div class="h-full rounded-lg flex flex-col items-center space-around" style="background-color: #ECE8DD; min-height: 400px;">
+            <div class="text-center p-8 h-full">
+              <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
+                ${items[0].type === 'text' ? items[0].heading : ''}
+              </h3>
+            </div>
+            <div class="text-center p-8">
+              <p style="font-family: Montserrat, sans-serif; font-weight: 400; font-size: 16px; line-height: 1.6; color: #666;">
+                ${items[0].type === 'text' ? items[0].description : ''}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Column - 4 Cards Grid -->
+        <div class="lg:col-span-2">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${items.slice(1).map((item: any) => {
+              if (item.type === 'image') {
+                return `
+                  <div class="rounded-lg w-full relative overflow-hidden" style="height: 300px;">
+                    <img src="${item.src}" alt="${item.alt}" class="w-full h-full object-cover rounded-lg" />
+                  </div>
+                `
+              } else {
+                return `
+                  <div class="rounded-lg flex w-full flex-col items-center space-around" style="background-color: #ECE8DD; height: 300px;">
+                    <div class="text-center p-8 h-full">
+                      <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
+                        ${item.heading}
+                      </h3>
+                    </div>
+                    <div class="text-center p-4">
+                      <p style="font-family: Montserrat, sans-serif; font-weight: 400; font-size: 16px; line-height: 1.6; color: #666;">
+                        ${item.description}
+                      </p>
+                    </div>
+                  </div>
+                `
+              }
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `
+
+    return gridHtml
+  })
+
   return (
     <main className="min-h-screen pt-24 pb-16">
       <article className="max-w-4xl mx-auto px-6">
@@ -198,26 +278,6 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
           dangerouslySetInnerHTML={{ __html: cleanedContent }}
         />
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <h3 className="text-2xl font-semibold mb-3">
-              Besoin de conseils pour votre investissement ?
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Nos experts sont à votre disposition pour vous accompagner
-              dans votre projet d&apos;investissement immobilier à Dubaï.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Contactez-nous
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-        </div>
       </article>
     </main>
   )
