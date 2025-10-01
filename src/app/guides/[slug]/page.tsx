@@ -135,13 +135,13 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
   // Replace CONTENT HEADING: blocks with styled headings in place
   cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT HEADING:\s*([^<]+)<\/p>|CONTENT HEADING:\s*([^\n<]+)/gi, (_match, p1, p2) => {
     const heading = (p1 || p2)?.trim()
-    return `<h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-4 mt-8">${heading}</h2>`
+    return `<h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-2 mt-8">${heading}</h2>`
   })
 
   // Replace CONTENT SUBHEADING: blocks with styled subheadings in place
   cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT SUBHEADING:\s*([^<]+)<\/p>|CONTENT SUBHEADING:\s*([^\n<]+)/gi, (_match, p1, p2) => {
     const subheading = (p1 || p2)?.trim()
-    return `<p class="text-lg text-gray-600 mb-6">${subheading}</p>`
+    return `<p class="text-lg text-gray-600 mb-6 mt-1">${subheading}</p>`
   })
 
   // Replace each CONTENT STATS: block with a custom marker for rendering
@@ -220,12 +220,12 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
         <!-- First Column - Single Element -->
         <div class="lg:col-span-1">
           <div class="h-full flex flex-col justify-between" style="background-color: #ECE8DD; min-height: 400px; border-radius: 2px;">
-            <div class="text-center p-8">
+            <div class="p-8">
               <h3 class="text-mono-bold" style="font-size: 96px; color: #000;">
                 ${items[0].type === 'text' ? items[0].bigNumber : ''}
               </h3>
             </div>
-            <div class="text-center p-8">
+            <div class="p-8">
               <p class="text-mono-regular mb-2" style="font-size: 16px; color: #000;">
                 ${items[0].type === 'text' ? items[0].smallHeading : ''}
               </p>
@@ -249,12 +249,12 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
               } else {
                 return `
                   <div class="flex w-full flex-col justify-between" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
-                    <div class="text-center p-8">
+                    <div class="p-8">
                       <h3 class="text-mono-bold" style="font-size: 96px; color: #000;">
                         ${item.bigNumber}
                       </h3>
                     </div>
-                    <div class="text-center p-4">
+                    <div class="p-4">
                       <p class="text-mono-regular mb-2" style="font-size: 16px; color: #000;">
                         ${item.smallHeading}
                       </p>
