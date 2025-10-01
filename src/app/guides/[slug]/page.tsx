@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 import { wpApi } from '@/lib/api/wordpress'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
@@ -138,7 +137,7 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
 
     const stats = listItems.map((item: string) => item.replace(/<\/?li[^>]*>/gi, '').trim())
     const statsHtml = stats.map((stat: string) =>
-      `<div class="bg-gray-100 px-4 py-2 rounded-lg inline-block mr-4 mb-2"><span class="text-gray-700 font-medium">${stat}</span></div>`
+      `<div class="bg-gray-100 px-4 py-2 inline-block mr-4 mb-2" style="border-radius: 2px;"><span class="text-gray-700 font-medium">${stat}</span></div>`
     ).join('')
 
     return `<div class="flex flex-wrap gap-4 md:gap-6 my-6">${statsHtml}</div>`
@@ -175,7 +174,7 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 my-12">
         <!-- First Column - Single Element -->
         <div class="lg:col-span-1">
-          <div class="h-full rounded-lg flex flex-col items-center space-around" style="background-color: #ECE8DD; min-height: 400px;">
+          <div class="h-full flex flex-col items-center space-around" style="background-color: #ECE8DD; min-height: 400px; border-radius: 2px;">
             <div class="text-center p-8 h-full">
               <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
                 ${items[0].type === 'text' ? items[0].heading : ''}
@@ -195,13 +194,13 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
             ${items.slice(1).map((item: any) => {
               if (item.type === 'image') {
                 return `
-                  <div class="rounded-lg w-full relative overflow-hidden" style="height: 300px;">
-                    <img src="${item.src}" alt="${item.alt}" class="w-full h-full object-cover rounded-lg" />
+                  <div class="w-full relative overflow-hidden" style="height: 300px; border-radius: 2px;">
+                    <img src="${item.src}" alt="${item.alt}" class="w-full h-full object-cover" style="border-radius: 2px;" />
                   </div>
                 `
               } else {
                 return `
-                  <div class="rounded-lg flex w-full flex-col items-center space-around" style="background-color: #ECE8DD; height: 300px;">
+                  <div class="flex w-full flex-col items-center space-around" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
                     <div class="text-center p-8 h-full">
                       <h3 class="text-3xl mb-4" style="font-family: Montserrat, sans-serif; font-weight: 500; color: #000; font-size: 96px;">
                         ${item.heading}
@@ -225,18 +224,17 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
   })
 
   return (
-    <main className="min-h-screen pt-24 pb-16">
-      <article className="max-w-4xl mx-auto px-6">
-        <div className="mb-8">
+    <main className="min-h-screen pt-32 pb-16">
+      <article className="w-full px-16">
+        <div className="mb-8 text-center max-w-4xl mx-auto">
 
           <h1
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-            style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-mont-regular"
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           />
 
           {subheading && (
-            <p className="text-xl md:text-2xl text-gray-600 mb-4">
+            <p className="text-xl text-gray-600 mb-4">
               {subheading}
             </p>
           )}
@@ -244,7 +242,7 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
         </div>
 
         {post._embedded?.['wp:featuredmedia']?.[0] && (
-          <div className="relative h-96 md:h-[500px] w-full mb-10 rounded-lg overflow-hidden">
+          <div className="relative h-96 md:h-[500px] w-full mb-10 overflow-hidden" style={{ borderRadius: '2px' }}>
             <Image
               src={post._embedded['wp:featuredmedia'][0].source_url}
               alt={post._embedded['wp:featuredmedia'][0].alt_text || post.title.rendered}
@@ -272,9 +270,10 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
             prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-4
             prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-4
             prose-li:mb-2
-            prose-img:rounded-lg prose-img:shadow-lg
+            prose-img:shadow-lg
             prose-blockquote:border-l-4 prose-blockquote:border-blue-600
             prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700"
+          style={{ ['--prose-img-border-radius' as any]: '2px' }}
           dangerouslySetInnerHTML={{ __html: cleanedContent }}
         />
 
