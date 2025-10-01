@@ -69,8 +69,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 1000 }).catch(() => [])
-
+  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100, search: 'homepage_' }).catch(() => [])
+  console.log('Fetched media images:', mediaImages.length)
   // First, get the properties category
   const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
 
@@ -109,9 +109,9 @@ export default async function Home() {
 
   // Fetch hero carousel images from WordPress media
   const heroImages = [
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_1')),
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_2')),
-    mediaImages.find(img => img.title.rendered.toLowerCase().includes('hero_landing_3'))
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('homepage_hero_landing_1')),
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('homepage_hero_landing_2')),
+    mediaImages.find(img => img.title.rendered.toLowerCase().includes('homepage_hero_landing_3'))
   ].filter(Boolean) as typeof mediaImages // Remove any undefined images and assert type
 
   // Fallback if no hero images found
@@ -128,11 +128,11 @@ export default async function Home() {
   })) : [fallbackHeroImage]
 
   // Fetch fallback image for posts without featured image
-  const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('project_tile')) || null
+  const projectTileImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('homepage_project_tile')) || null
 
 
   // Fetch Ismahen image
-  const ismahenImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('ismahen')) || null
+  const ismahenImage = mediaImages.find(img => img.title.rendered.toLowerCase().includes('homepage_ismahen')) || null
 
   return (
     <div className="min-h-screen overflow-x-hidden">

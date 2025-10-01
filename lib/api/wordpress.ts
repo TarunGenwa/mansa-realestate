@@ -94,6 +94,7 @@ export const wpApi = {
       page?: number
       per_page?: number
       media_type?: 'image' | 'video' | 'audio' | 'application'
+      search?: string
     }): Promise<WPMedia[]> {
       const { data } = await api.get<WPMedia[]>(getApiUrl('/media'), { params })
       return data

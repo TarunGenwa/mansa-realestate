@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function InvestInDubaiPage() {
   // Fetch media images to get the investdubai image
-  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 1000 }).catch(() => [])
+  const mediaImages = await wpApi.media.getAll({ media_type: 'image', per_page: 100 }).catch(() => [])
 
   // Find the investdubai image
   const investDubaiImage = mediaImages.find(img =>
