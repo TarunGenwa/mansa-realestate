@@ -93,13 +93,13 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
 
   // Alternative regex for images with attributes in different order
   const altImageRegex = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/g
-  let altImageMatch
+  let altImageMatch: RegExpExecArray | null
   while ((altImageMatch = altImageRegex.exec(htmlContent)) !== null) {
     // Check if this image wasn't already captured
-    if (!content.images.some(img => img.src === altImageMatch[2])) {
+    if (!content.images.some(img => img.src === altImageMatch![2])) {
       content.images.push({
-        src: altImageMatch[2],
-        alt: altImageMatch[1] || undefined
+        src: altImageMatch![2],
+        alt: altImageMatch![1] || undefined
       })
     }
   }
