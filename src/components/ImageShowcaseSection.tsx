@@ -17,16 +17,18 @@ interface ImageShowcaseSectionProps {
 }
 
 export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSectionProps) {
-  // Filter images with GI_ prefix and organize by grid position
+  // Filter images with homepage_GI_ prefix and organize by grid position
   const gridImages = mediaImages
-    .filter(img => img.title.rendered.startsWith('GI_'))
+    .filter(img => img.title.rendered.toLowerCase().startsWith('homepage_gi_'))
     .map(img => {
       const title = img.title.rendered
-      // Parse GI_R_C format where R is row (4th char) and C is column (last char)
-      const parts = title.split('_')
-      if (parts.length >= 3) {
-        const row = parseInt(parts[1]) || 1
-        const col = parseInt(parts[2]) || 1
+      // Parse homepage_GI_R_C format where R is row and C is column
+      // Remove homepage_ prefix before parsing
+      const withoutPrefix = title.toLowerCase().replace('homepage_gi_', '')
+      const parts = withoutPrefix.split('_')
+      if (parts.length >= 2) {
+        const row = parseInt(parts[0]) || 1
+        const col = parseInt(parts[1]) || 1
         return { ...img, row, col }
       }
       return { ...img, row: 1, col: 1 }
@@ -38,7 +40,7 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
     })
 
   console.log('ImageShowcaseSection - All media images:', mediaImages)
-  console.log('ImageShowcaseSection - Filtered GI_ images:', gridImages)
+  console.log('ImageShowcaseSection - Filtered homepage_GI_ images:', gridImages)
   console.log('ImageShowcaseSection - Grid images details:', gridImages.map(img => ({
     title: img.title.rendered,
     row: img.row,
@@ -119,18 +121,18 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
             {/* Row 1 */}
             <div className="relative bg-gray-200 overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-gray-500">GI_1_1</p>
+                <p className="text-gray-500">homepage_GI_1_1</p>
               </div>
             </div>
             <div className="relative bg-gray-200 overflow-hidden lg:col-span-4 lg:row-span-2">
               <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-gray-500">GI_1_2 (spans 4 cols, 2 rows)</p>
+                <p className="text-gray-500">homepage_GI_1_2 (spans 4 cols, 2 rows)</p>
               </div>
             </div>
             {/* Row 3 - Example with 2 images, last one fills remaining space */}
             <div className="relative bg-gray-200 overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-gray-500">GI_3_1</p>
+                <p className="text-gray-500">homepage_GI_3_1</p>
               </div>
             </div>
             <div className="relative bg-gray-200 overflow-hidden lg:col-span-4">
@@ -142,7 +144,7 @@ export default function ImageShowcaseSection({ mediaImages }: ImageShowcaseSecti
                     fontWeight: 300
                   }}
                 >
-                  GI_3_2 (fills remaining cols)
+                  homepage_GI_3_2 (fills remaining cols)
                 </p>
               </div>
             </div>
