@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 import { wpApi } from '@/lib/api/wordpress'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
@@ -121,26 +122,49 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
   const subheadingMatch = post.content.rendered.match(/<p[^>]*>\s*SUBHEADING:\s*([^<]+)<\/p>|SUBHEADING:\s*([^\n<]+)/i)
   const subheading = subheadingMatch ? (subheadingMatch[1] || subheadingMatch[2])?.trim() : null
 
-  // Extract content heading
-  const contentHeadingMatch = post.content.rendered.match(/<p[^>]*>\s*CONTENT HEADING:\s*([^<]+)<\/p>|CONTENT HEADING:\s*([^\n<]+)/i)
-  const contentHeading = contentHeadingMatch ? (contentHeadingMatch[1] || contentHeadingMatch[2])?.trim() : null
-
-  // Replace all CONTENT STATS: blocks with rendered stat components in place
+  // Replace all special blocks in place
   let cleanedContent = post.content.rendered
     .replace(/<p[^>]*>\s*SUBHEADING:\s*[^<]+<\/p>|SUBHEADING:\s*[^\n<]+/i, '')
-    .replace(/<p[^>]*>\s*CONTENT HEADING:\s*[^<]+<\/p>|CONTENT HEADING:\s*[^\n<]+/i, '')
+
+  // Replace CONTENT HEADING SMALL: blocks first (more specific match)
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT HEADING SMALL:\s*([^<]+)<\/p>|CONTENT HEADING SMALL:\s*([^\n<]+)/gi, (_match, p1, p2) => {
+    const heading = (p1 || p2)?.trim()
+    return `<h3 class="font-semibold text-gray-800 mb-3 mt-6" style="font-size: 16px;">${heading}</h3>`
+  })
+
+  // Replace CONTENT HEADING: blocks with styled headings in place
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT HEADING:\s*([^<]+)<\/p>|CONTENT HEADING:\s*([^\n<]+)/gi, (_match, p1, p2) => {
+    const heading = (p1 || p2)?.trim()
+    return `<h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-4 mt-8">${heading}</h2>`
+  })
+
+  // Replace CONTENT SUBHEADING: blocks with styled subheadings in place
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT SUBHEADING:\s*([^<]+)<\/p>|CONTENT SUBHEADING:\s*([^\n<]+)/gi, (_match, p1, p2) => {
+    const subheading = (p1 || p2)?.trim()
+    return `<p class="text-lg text-gray-600 mb-6">${subheading}</p>`
+  })
 
   // Replace each CONTENT STATS: block with a custom marker for rendering
-  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT STATS:\s*<\/p>\s*<ul[^>]*>([\s\S]*?)<\/ul>/gi, (match, listContent) => {
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT STATS:\s*<\/p>\s*<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_match, listContent) => {
     const listItems = listContent.match(/<li[^>]*>([^<]+)<\/li>/gi)
     if (!listItems) return ''
 
     const stats = listItems.map((item: string) => item.replace(/<\/?li[^>]*>/gi, '').trim())
-    const statsHtml = stats.map((stat: string) =>
-      `<div class="bg-gray-100 px-4 py-2 inline-block mr-4 mb-2" style="border-radius: 2px;"><span class="text-gray-700 font-medium">${stat}</span></div>`
-    ).join('')
+    const statsHtml = stats.map((stat: string) => {
+      // Split on colon to separate heading from description
+      const parts = stat.split(':').map(p => p.trim())
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        const heading = parts[0]
+        const description = parts.slice(1).join(':').trim()
+        return `<div class="bg-gray-100 px-4 py-3 text-center" style="border-radius: 2px; min-width: 100px;">
+          <div class="text-gray-900 font-semibold mb-1">${heading}</div>
+          <div class="text-gray-600 text-sm">${description}</div>
+        </div>`
+      }
+      return `<div class="bg-gray-100 px-4 py-2 text-center" style="border-radius: 2px; min-width: 100px;"><span class="text-gray-700 font-medium">${stat}</span></div>`
+    }).join('')
 
-    return `<div class="flex flex-wrap gap-4 md:gap-6 my-6">${statsHtml}</div>`
+    return `<div class="flex flex-row gap-4 my-6">${statsHtml}</div>`
   })
 
   // Replace IMAGES GRID: blocks with grid layout - takes next 5 blocks after IMAGES GRID:
@@ -239,6 +263,33 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
             </p>
           )}
 
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <Link
+              href="/properties"
+              className="px-10 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-300"
+              style={{
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                fontWeight: 500,
+                fontSize: '16px'
+              }}
+            >
+              Explore
+            </Link>
+
+            <Link
+              href="/contact"
+              className="px-10 py-4 border-2 rounded-full border-black text-black hover:bg-black hover:text-white transition-all duration-300"
+              style={{
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                fontWeight: 500,
+                fontSize: '16px'
+              }}
+            >
+              Contact
+            </Link>
+          </div>
+
         </div>
 
         {post._embedded?.['wp:featuredmedia']?.[0] && (
@@ -252,12 +303,6 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             />
           </div>
-        )}
-
-        {contentHeading && (
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
-            {contentHeading}
-          </h2>
         )}
 
         <div
