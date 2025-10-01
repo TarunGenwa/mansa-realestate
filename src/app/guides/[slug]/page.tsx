@@ -118,37 +118,36 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
     notFound()
   }
 
+  // Extract subheading from content
+  const subheadingMatch = post.content.rendered.match(/<p[^>]*>\s*SUBHEADING:\s*([^<]+)<\/p>|SUBHEADING:\s*([^\n<]+)/i)
+  const subheading = subheadingMatch ? (subheadingMatch[1] || subheadingMatch[2])?.trim() : null
+
+  // Extract content heading
+  const contentHeadingMatch = post.content.rendered.match(/<p[^>]*>\s*CONTENT HEADING:\s*([^<]+)<\/p>|CONTENT HEADING:\s*([^\n<]+)/i)
+  const contentHeading = contentHeadingMatch ? (contentHeadingMatch[1] || contentHeadingMatch[2])?.trim() : null
+
+  // Replace all CONTENT STATS: blocks with rendered stat components in place
+  let cleanedContent = post.content.rendered
+    .replace(/<p[^>]*>\s*SUBHEADING:\s*[^<]+<\/p>|SUBHEADING:\s*[^\n<]+/i, '')
+    .replace(/<p[^>]*>\s*CONTENT HEADING:\s*[^<]+<\/p>|CONTENT HEADING:\s*[^\n<]+/i, '')
+
+  // Replace each CONTENT STATS: block with a custom marker for rendering
+  cleanedContent = cleanedContent.replace(/<p[^>]*>\s*CONTENT STATS:\s*<\/p>\s*<ul[^>]*>([\s\S]*?)<\/ul>/gi, (match, listContent) => {
+    const listItems = listContent.match(/<li[^>]*>([^<]+)<\/li>/gi)
+    if (!listItems) return ''
+
+    const stats = listItems.map((item: string) => item.replace(/<\/?li[^>]*>/gi, '').trim())
+    const statsHtml = stats.map((stat: string) =>
+      `<div class="bg-gray-100 px-4 py-2 rounded-lg inline-block mr-4 mb-2"><span class="text-gray-700 font-medium">${stat}</span></div>`
+    ).join('')
+
+    return `<div class="flex flex-wrap gap-4 md:gap-6 my-6">${statsHtml}</div>`
+  })
+
   return (
     <main className="min-h-screen pt-24 pb-16">
       <article className="max-w-4xl mx-auto px-6">
         <div className="mb-8">
-          <Link
-            href="/guides"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Retour aux guides
-          </Link>
-
-          <div className="flex items-center gap-4 mb-4">
-            {post._embedded?.['wp:term']?.[0]?.map((category: any) => (
-              <span
-                key={category.id}
-                className="text-sm font-medium text-blue-600 uppercase tracking-wider"
-              >
-                {category.name}
-              </span>
-            ))}
-            <time className="text-sm text-gray-500">
-              {new Date(post.date).toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-          </div>
 
           <h1
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
@@ -156,12 +155,12 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           />
 
-          {post._embedded?.author?.[0] && (
-            <div className="flex items-center gap-3 text-sm text-gray-600">
-              <span>Par</span>
-              <span className="font-medium">{post._embedded.author[0].name}</span>
-            </div>
+          {subheading && (
+            <p className="text-xl md:text-2xl text-gray-600 mb-4">
+              {subheading}
+            </p>
           )}
+
         </div>
 
         {post._embedded?.['wp:featuredmedia']?.[0] && (
@@ -177,6 +176,12 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
           </div>
         )}
 
+        {contentHeading && (
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
+            {contentHeading}
+          </h2>
+        )}
+
         <div
           className="prose prose-lg max-w-none
             prose-headings:font-bold prose-headings:text-gray-900
@@ -190,7 +195,7 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
             prose-img:rounded-lg prose-img:shadow-lg
             prose-blockquote:border-l-4 prose-blockquote:border-blue-600
             prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700"
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          dangerouslySetInnerHTML={{ __html: cleanedContent }}
         />
 
         <div className="mt-12 pt-8 border-t border-gray-200">
