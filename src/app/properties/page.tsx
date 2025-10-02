@@ -13,12 +13,8 @@ export default function PropertiesPage() {
   const [properties, setProperties] = useState<any[]>([])
   const [filteredProperties, setFilteredProperties] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedDeveloper, setSelectedDeveloper] = useState<string>('all')
-  const [developers, setDevelopers] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [consultationImage, setConsultationImage] = useState<string | null>(null)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Get images from MediaContext
   const fallbackImage = getImageByTitle('project_tile')
@@ -52,14 +48,6 @@ export default function PropertiesPage() {
           setConsultationImage(consultationMedia.value.source_url)
         }
 
-        // Extract unique developers from properties
-        const uniqueDevelopers = [...new Set(
-          fetchedProperties
-            .map(p => (p as any).acf?.developer)
-            .filter(Boolean)
-        )].sort()
-
-        setDevelopers(uniqueDevelopers)
         setProperties(fetchedProperties)
         setFilteredProperties(fetchedProperties)
         setLoading(false)
@@ -73,15 +61,8 @@ export default function PropertiesPage() {
   }, [])
 
   useEffect(() => {
-    // Filter properties based on search term and developer
+    // Filter properties based on search term only
     let filtered = properties
-
-    // Filter by developer
-    if (selectedDeveloper !== 'all') {
-      filtered = filtered.filter(property =>
-        (property as any).acf?.developer?.toLowerCase() === selectedDeveloper.toLowerCase()
-      )
-    }
 
     // Filter by search term
     if (searchTerm.trim() !== '') {
@@ -93,21 +74,8 @@ export default function PropertiesPage() {
     }
 
     setFilteredProperties(filtered)
-  }, [searchTerm, selectedDeveloper, properties])
+  }, [searchTerm, properties])
 
-  // Click outside handler for dropdown
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -185,68 +153,8 @@ export default function PropertiesPage() {
             </h1>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="w-full">
+            <form onSubmit={handleSearch} className="w-full max-w-[60%] mx-auto">
               <div className="relative flex bg-white rounded-full shadow-lg overflow-hidden">
-                {/* Custom Developer Dropdown */}
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center justify-between rounded-full m-2 px-6 py-5 text-white bg-black  text-lg focus:outline-none cursor-pointer border-r border-gray-200"
-                    style={{
-                      fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                      minWidth: '240px'
-                    }}
-                  >
-                    <span className="truncate">
-                      {selectedDeveloper === 'all' ? 'All Developers' : selectedDeveloper}
-                    </span>
-                    <svg
-                      className={`ml-3 w-5 h-5 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {dropdownOpen && (
-                    <div className="absolute z-50 top-full left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-100 max-h-64 overflow-y-auto">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedDeveloper('all')
-                          setDropdownOpen(false)
-                        }}
-                        className={`w-full text-left px-6 py-3 hover:bg-gray-50 transition-colors ${
-                          selectedDeveloper === 'all' ? 'bg-gray-50 font-semibold' : ''
-                        }`}
-                        style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                      >
-                        All Developers
-                      </button>
-                      {developers.map(developer => (
-                        <button
-                          key={developer}
-                          type="button"
-                          onClick={() => {
-                            setSelectedDeveloper(developer)
-                            setDropdownOpen(false)
-                          }}
-                          className={`w-full text-left px-6 py-3 hover:bg-gray-50 transition-colors ${
-                            selectedDeveloper === developer ? 'bg-gray-50 font-semibold' : ''
-                          }`}
-                          style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                        >
-                          {developer}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
                 {/* Search Input */}
                 <input
                   type="text"
@@ -290,7 +198,7 @@ export default function PropertiesPage() {
                 fontWeight: 800
               }}
             >
-              {selectedDeveloper !== 'all' ? `All Projects by ${selectedDeveloper}` : 'All Projects'}
+              All Projects
             </h2>
           </div>
 
