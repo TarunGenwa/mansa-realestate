@@ -36,7 +36,7 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+    <section className="py-20 px-4 sm:px-8 lg:px-[87px]">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-64">
         {/* Left side - Heading and subheading */}
         <div className="lg:sticky lg:top-8 lg:self-start">

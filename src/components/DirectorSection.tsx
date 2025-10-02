@@ -11,7 +11,7 @@ export default function DirectorSection() {
   const [imageLoaded, setImageLoaded] = useState(false)
 
   return (
-    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px', backgroundColor: '#fff' }}>
+    <section className="py-20 px-4 sm:px-8 lg:px-[87px] bg-white">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
         {/* Left Side - Director Image */}
         <div className="relative h-[500px] lg:h-[600px] overflow-hidden rounded-lg">

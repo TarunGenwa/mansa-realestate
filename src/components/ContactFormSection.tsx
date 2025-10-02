@@ -103,7 +103,7 @@ export default function ContactFormSection({ reverseOrder = false, contactImageU
   }
 
   return (
-    <section style={{ backgroundColor: 'transparent', paddingLeft: '87px', paddingRight: '87px' }} className="relative overflow-hidden px-20 my-8">
+    <section className="relative overflow-hidden px-4 sm:px-8 lg:px-[87px] my-8 bg-transparent">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 min-h-[600px]">
         {/* Contact Form */}
         <div className={`py-8 lg:py-12 bg-[#EDECE3] px-6 lg:px-12 flex items-center ${reverseOrder ? 'lg:order-2' : 'lg:order-1'}`}>

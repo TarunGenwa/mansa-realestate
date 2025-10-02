@@ -35,7 +35,7 @@ export default function PartnersSection() {
   ]
 
   return (
-    <section className="py-16 bg-white" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+    <section className="py-16 bg-white px-4 sm:px-8 lg:px-[87px]">
       <div className="text-center">
 
         <p className='text-h4 text-mont-bold text-capitalize mb-8' >

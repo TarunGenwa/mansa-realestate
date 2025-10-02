@@ -23,11 +23,11 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 pt-6">
-      <div className="w-full px-4 sm:px-6 lg:px-12">
+    <nav className="absolute top-0 left-0 right-0 z-50 pt-2 sm:pt-6">
+      <div className="w-full px-2 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
           {/* Logo Section */}
-          <div className="flex items-center gap-2 sm:gap-4 ml-2 sm:ml-4">
+          <div className="flex items-center gap-2 sm:gap-4 ml-0 sm:ml-4">
             <Link href="/" className="flex items-center">
               <Image
                 src={logoSrc}
@@ -102,18 +102,18 @@ export default function Navigation() {
 
         {/* Mobile Navigation Menu */}
         <div
-          className={`lg:hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          } overflow-hidden`}
+          className={`lg:hidden fixed inset-0 top-[100px] transition-all duration-300 ease-in-out ${
+            isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
         >
-          <div className={`pt-4 pb-6 space-y-4 ${
-            isLightBackground ? 'bg-white/95' : 'bg-black/95'
-          } backdrop-blur-sm rounded-lg mt-2 shadow-lg`}>
+          <div className={`h-full flex flex-col justify-center px-2 space-y-6 ${
+            isLightBackground ? 'bg-white' : 'bg-black'
+          }`}>
             {navigationLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block px-4 py-3 text-body text-mont-regular transition-colors ${linkColor}`}
+                className={`block px-2 py-2 text-xl text-mont-regular text-center transition-colors ${linkColor}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.text}

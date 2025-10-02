@@ -31,7 +31,7 @@ export default function ImageShowcaseSection() {
   }
 
   return (
-    <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+    <section className="py-20 px-4 sm:px-8 lg:px-[87px]">
       <div>
         {/* Heading */}
         <div className="w-[40%] mb-16">

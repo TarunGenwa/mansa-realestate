@@ -98,7 +98,7 @@ export default async function Home() {
       <HomeHeroCarousel />
 
       {/* Text Section */}
-      <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+      <section className="py-16 px-4 sm:px-8 lg:px-[87px]">
         <div className="flex justify-between items-center">
           <div className="w-[45%]">
             <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 500, fontSize: '48px', lineHeight: '1.2', textAlign: 'left' }}>
