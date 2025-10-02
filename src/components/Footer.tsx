@@ -1,11 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { wpData } from '@/lib/data/wordpress-loader'
 
 export default function Footer() {
   const [email, setEmail] = useState('')
+  const [guides, setGuides] = useState<any[]>([])
+  const [developers, setDevelopers] = useState<any[]>([])
+
+  useEffect(() => {
+    // Load guides and developers from static data
+    setGuides(wpData.guides.getAll())
+    setDevelopers(wpData.developers.getAll())
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -14,26 +23,14 @@ export default function Footer() {
     setEmail('')
   }
 
-  const footerLinks = {
-    company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Our Team', href: '/team' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Press', href: '/press' }
-    ],
-    services: [
-      { name: 'Properties', href: '/properties' },
-      { name: 'Developers', href: '/developers' },
-      { name: 'Investments', href: '/investments' },
-      { name: 'Consulting', href: '/consulting' }
-    ],
-    support: [
-      { name: 'Contact', href: '/contact' },
-      { name: 'FAQ', href: '/faq' },
-      { name: 'Privacy Policy', href: '/privacy-policy' },
-      { name: 'Terms of Service', href: '/terms' }
-    ]
-  }
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'Properties', href: '/properties' },
+    { name: 'Developers', href: '/developers' },
+    { name: 'Guides', href: '/guides' },
+    { name: 'Invest in Dubai', href: '/invest-in-dubai' },
+    { name: 'Contact', href: '/contact' }
+  ]
 
   const socialLinks = [
     { name: 'Facebook', href: 'https://facebook.com', icon: 'f' },
@@ -93,8 +90,8 @@ export default function Footer() {
 
         {/* Middle Section - Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Company Links */}
-          <div>
+          {/* Navigation Links */}
+          <div className="border border-gray-700 p-6 rounded-lg">
             <h3
               className="text-sm uppercase tracking-wider mb-4 text-gray-400"
               style={{
@@ -102,10 +99,10 @@ export default function Footer() {
                 fontWeight: 500
               }}
             >
-              Company
+              Navigation
             </h3>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -123,8 +120,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services Links */}
-          <div>
+          {/* Guides Links */}
+          <div className="border border-gray-700 p-6 rounded-lg">
             <h3
               className="text-sm uppercase tracking-wider mb-4 text-gray-400"
               style={{
@@ -132,13 +129,13 @@ export default function Footer() {
                 fontWeight: 500
               }}
             >
-              Services
+              Guides
             </h3>
             <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.name}>
+              {guides.map((guide) => (
+                <li key={guide.id}>
                   <Link
-                    href={link.href}
+                    href={`/guides/${guide.slug}`}
                     className="text-gray-300 hover:text-white transition-colors"
                     style={{
                       fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -146,15 +143,15 @@ export default function Footer() {
                       fontSize: '14px'
                     }}
                   >
-                    {link.name}
+                    {guide.title.rendered}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Support Links */}
-          <div>
+          {/* Developers Links */}
+          <div className="border border-gray-700 p-6 rounded-lg">
             <h3
               className="text-sm uppercase tracking-wider mb-4 text-gray-400"
               style={{
@@ -162,13 +159,13 @@ export default function Footer() {
                 fontWeight: 500
               }}
             >
-              Support
+              Developers
             </h3>
             <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
+              {developers.map((developer) => (
+                <li key={developer.id}>
                   <Link
-                    href={link.href}
+                    href={`/developers/${developer.slug}`}
                     className="text-gray-300 hover:text-white transition-colors"
                     style={{
                       fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
@@ -176,7 +173,7 @@ export default function Footer() {
                       fontSize: '14px'
                     }}
                   >
-                    {link.name}
+                    {developer.title.rendered}
                   </Link>
                 </li>
               ))}
