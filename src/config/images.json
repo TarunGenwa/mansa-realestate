@@ -52,35 +52,55 @@
       "grid": [
         {
           "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
+          "title": "Grid Image 1-1",
           "position": { "row": 1, "col": 1 },
+          "span": { "cols": 1, "rows": 1 },
           "description": "Grid image row 1, column 1"
         },
         {
-          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
-          "position": { "row": 1, "col": 2 },
-          "span": { "cols": 4, "rows": 2 },
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_2_1.jpg?updatedAt=1759401799736",
+          "title": "Grid Image 1-2",
+          "position": { "row": 2, "col": 1 },
+          "span": { "cols": 1, "rows": 1 },
+          "description": "Grid image row 1, column 2 - spans 4 columns and 2 rows"
+        },
+         {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_3_1.jpg?updatedAt=1759401799469",
+          "title": "Grid Image 1-2",
+          "position": { "row": 3, "col": 1 },
+          "span": { "cols": 1, "rows": 1 },
           "description": "Grid image row 1, column 2 - spans 4 columns and 2 rows"
         },
         {
-          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
-          "position": { "row": 3, "col": 1 },
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_2.jpg?updatedAt=1759401800161",
+          "title": "Grid Image 3-1",
+          "position": { "row": 1, "col": 2 },
+          "span": { "cols": "remaining", "rows": 2 },
+          "description": "Grid image row 3, column 1"
+        },
+         {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_3_3.jpg?updatedAt=1759401799453",
+          "title": "Grid Image 3-1",
+          "position": { "row": 3, "col": 2 },
+          "span": { "cols": 1, "rows": 1 },
           "description": "Grid image row 3, column 1"
         },
         {
-          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
-          "position": { "row": 3, "col": 2 },
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_3_2.jpg?updatedAt=1759401799552",
+          "title": "Grid Image 3-2",
+          "position": { "row": 3, "col": 3 },
           "span": { "cols": "remaining" },
           "description": "Grid image row 3, column 2 - fills remaining columns"
         }
       ]
     },
     "director": {
-      "url": "https://ik.imagekit.io/mansa/core_ismahen",
+      "url": "https://ik.imagekit.io/mansa/Home%20page/Ismahen.jpg?updatedAt=1759401742776",
       "title": "Ismahen Lesongeur",
       "description": "Director portrait image"
     },
     "contactForm": {
-      "url": "https://ik.imagekit.io/mansa/core_contactus_section",
+      "url": "https://ik.imagekit.io/mansa/Core/contact.jpg?updatedAt=1759408137906",
       "title": "Contact Us Section",
       "description": "Background image for contact form section"
     },
@@ -92,27 +112,34 @@
       }
     }
   },
+  "properties": {
+    "hero": {
+      "url": "https://ik.imagekit.io/mansa/Core/allproperties_banner.jpg?updatedAt=1759408032707",
+      "title": "All Properties Banner",
+      "description": "Hero banner for all properties page"
+    }
+  },
   "contact": {
     "hero": {
-      "url": "https://ik.imagekit.io/mansa/allproperties_banner",
+      "url": "https://ik.imagekit.io/mansa/Core/allproperties_banner.jpg?updatedAt=1759408032707",
       "title": "Contact Page Hero",
       "description": "Hero banner for contact page"
     }
   },
   "investDubai": {
     "main": {
-      "url": "https://ik.imagekit.io/mansa/investdubai",
+      "url": "https://ik.imagekit.io/mansa/Core/investdubai.png?updatedAt=1759408221625",
       "title": "Invest Dubai Main Image",
       "description": "Main image for Invest in Dubai page"
     },
     "gallery": [
       {
-        "url": "https://ik.imagekit.io/mansa/ig_1_2",
+        "url": "https://ik.imagekit.io/mansa/Core/GI_2_1-scaled.jpg?updatedAt=1759407937550",
         "title": "Invest Gallery 1-2",
         "description": "Gallery image 1-2"
       },
       {
-        "url": "https://ik.imagekit.io/mansa/ig_1_3",
+        "url": "https://ik.imagekit.io/mansa/Core/GI_1_3.png?updatedAt=1759407937824",
         "title": "Invest Gallery 1-3",
         "description": "Gallery image 1-3"
       }

@@ -7,26 +7,14 @@ import { useState } from 'react'
 export default function ImageShowcaseSection() {
   const { mediaImages } = useMedia()
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
-  // Filter images with core_GI_ prefix and organize by grid position
+  // Filter images with "Grid Image" prefix (from ImageKit)
   const gridImages = mediaImages
-    .filter(img => img.title.rendered.toLowerCase().startsWith('core_gi_'))
-    .map(img => {
-      const title = img.title.rendered
-      // Parse core_GI_R_C format where R is row and C is column
-      // Remove core_ prefix before parsing
-      const withoutPrefix = title.toLowerCase().replace('core_gi_', '')
-      const parts = withoutPrefix.split('_')
-      if (parts.length >= 2) {
-        const row = parseInt(parts[0]) || 1
-        const col = parseInt(parts[1]) || 1
-        return { ...img, row, col }
-      }
-      return { ...img, row: 1, col: 1 }
-    })
+    .filter(img => img.title.rendered.toLowerCase().startsWith('grid image'))
+    .filter(img => img.row && img.col) // Ensure they have position data
     .sort((a, b) => {
       // Sort by row first, then by column
-      if (a.row !== b.row) return a.row - b.row
-      return a.col - b.col
+      if (a.row !== b.row) return a.row! - b.row!
+      return a.col! - b.col!
     })
 
   console.log('ImageShowcaseSection - All media images:', mediaImages)
@@ -59,28 +47,39 @@ export default function ImageShowcaseSection() {
         {/* Image Grid - 5 columns, 3 rows */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 auto-rows-[280px]">
           {gridImages.map((image) => {
-            // Special cases for specific positions
-            const isRow1Col2 = image.row === 1 && image.col === 2  // GI_1_2 - spans cols 2-5 and rows 1-2
+            // Get span info from the image data
+            const hasColSpan = image.span?.cols
+            const hasRowSpan = image.span?.rows
 
-            // Find if this is the last image in row 3
-            const row3Images = gridImages.filter(img => img.row === 3)
-            const isLastInRow3 = image.row === 3 && row3Images[row3Images.length - 1]?.id === image.id
+            // Calculate grid styles based on span data
+            let gridColumnStyle = `${image.col}`
+            let gridRowStyle = `${image.row}`
+            let colSpanClass = ''
+            let rowSpanClass = ''
 
-            // GI_1_1 spans 1 column, 1 row (normal)
-            // GI_1_2 spans columns 2-5 (4 columns) and rows 1-2 (2 rows)
-            // Last image in row 3 spans from its column to the end
-            const colSpan = isRow1Col2 ? 'lg:col-span-4' : ''
-            const rowSpan = isRow1Col2 ? 'lg:row-span-2' : ''
+            if (hasColSpan) {
+              if (image.span.cols === 'remaining') {
+                gridColumnStyle = `${image.col} / -1`
+              } else if (typeof image.span.cols === 'number') {
+                colSpanClass = `lg:col-span-${image.span.cols}`
+                gridColumnStyle = `${image.col} / span ${image.span.cols}`
+              }
+            }
+
+            if (hasRowSpan && typeof image.span.rows === 'number') {
+              rowSpanClass = `lg:row-span-${image.span.rows}`
+              gridRowStyle = `${image.row} / span ${image.span.rows}`
+            }
 
             const isLoaded = loadedImages.has(image.id)
 
             return (
               <div
                 key={image.id}
-                className={`relative overflow-hidden group cursor-pointer ${colSpan} ${rowSpan}`}
+                className={`relative overflow-hidden group cursor-pointer ${colSpanClass} ${rowSpanClass}`}
                 style={{
-                  gridColumn: isRow1Col2 ? '2 / -1' : isLastInRow3 ? `${image.col} / -1` : `${image.col}`,
-                  gridRow: isRow1Col2 ? '1 / 3' : `${image.row}`
+                  gridColumn: gridColumnStyle,
+                  gridRow: gridRowStyle
                 }}
               >
                 {/* Loading placeholder */}

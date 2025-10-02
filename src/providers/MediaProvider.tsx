@@ -14,6 +14,12 @@ interface MediaImage {
   caption: {
     rendered: string
   }
+  row?: number
+  col?: number
+  span?: {
+    cols?: number | string
+    rows?: number
+  }
 }
 
 interface MediaContextType {
@@ -51,7 +57,10 @@ export function MediaProvider({ children }: { children: ReactNode }) {
             },
             caption: {
               rendered: obj.description || ''
-            }
+            },
+            row: obj.position?.row,
+            col: obj.position?.col,
+            span: obj.span
           })
         }
 

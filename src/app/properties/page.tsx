@@ -17,9 +17,9 @@ export default function PropertiesPage() {
   const [consultationImage, setConsultationImage] = useState<string | null>(null)
 
   // Get images from MediaContext
-  const fallbackImage = getImageByTitle('project_tile')
-  const heroBannerImage = getImageByTitle('allproperties_banner')
-  const contactImage = getImageByTitle('contactus_section')
+  const fallbackImage = getImageByTitle('Project Tile Fallback')
+  const heroBannerImage = getImageByTitle('All Properties Banner')
+  const contactImage = getImageByTitle('Contact Us Section')
 
   useEffect(() => {
     async function fetchData() {
