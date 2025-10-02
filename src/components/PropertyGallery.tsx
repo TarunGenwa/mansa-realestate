@@ -12,9 +12,27 @@ interface PropertyGalleryProps {
 
 export default function PropertyGallery({ images }: PropertyGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(0)
+
+  const imagesPerPage = 8 // 2 rows x 4 columns
+  const totalPages = Math.ceil(images.length / imagesPerPage)
+
+  const getCurrentPageImages = () => {
+    const start = currentPage * imagesPerPage
+    const end = start + imagesPerPage
+    return images.slice(start, end)
+  }
+
+  const goToNextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages)
+  }
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages)
+  }
 
   const openLightbox = (index: number) => {
-    setSelectedImageIndex(index)
+    setSelectedImageIndex(currentPage * imagesPerPage + index)
     // Prevent body scroll when lightbox is open
     document.body.style.overflow = 'hidden'
   }
@@ -48,34 +66,67 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
 
   return (
     <>
-      <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
-          <h2
-            className="text-3xl font-semibold mb-8"
-            style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-          >
-            Gallery
-          </h2>
+      <div className="relative">
+        {/* Gallery Grid - 2 rows x 4 columns */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {getCurrentPageImages().map((image, index) => (
+            <div
+              key={index}
+              onClick={() => openLightbox(index)}
+              className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt || `Gallery Image ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+            </div>
+          ))}
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {images.map((image, index) => (
-              <div
+        {/* Navigation Arrows */}
+        {totalPages > 1 && (
+          <>
+            <button
+              onClick={goToPreviousPage}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Previous page"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            <button
+              onClick={goToNextPage}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Next page"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Page Indicator */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-6 gap-2">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
                 key={index}
-                onClick={() => openLightbox(index)}
-                className="relative h-64 lg:h-80 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt || `Gallery Image ${index + 1}`}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-              </div>
+                onClick={() => setCurrentPage(index)}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentPage ? 'bg-black' : 'bg-gray-300'
+                }`}
+                aria-label={`Go to page ${index + 1}`}
+              />
             ))}
           </div>
-        </div>
-      </section>
+        )}
+      </div>
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && (

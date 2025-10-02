@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 import PropertyGallery from '../../../components/PropertyGallery'
+import SimpleCarousel from '../../../components/SimpleCarousel'
 
 // Enable ISR - revalidate every 30 minutes for properties
 export const revalidate = 1800
@@ -73,7 +74,17 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   // Parse the property content
   const parsedContent = parsePropertyContentSimple(property.content.rendered)
-  console.log('Parsed property content:', parsedContent)
+
+  // Fetch other properties for "Similar Properties" section
+  const fetchedProperties = await wpApi.posts.getAll({
+    categories: [propertiesCategory.id],
+    per_page: 11,
+    _embed: true
+  }).catch(() => [])
+
+  // Filter out current property
+  const allProperties = fetchedProperties.filter(p => p.id !== property.id).slice(0, 10)
+
   // Debug logging for parsed content
   console.log('Property Slug:', propertySlug)
   console.log('Post ID:', property.id)
@@ -310,19 +321,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       {/* Gallery Section */}
       {parsedContent.gallery && parsedContent.gallery.length > 0 && (
         <section className="pb-12 px-8 lg:px-16">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {parsedContent.gallery.map((image, index) => (
-              <div key={index} className="relative aspect-square">
-                <Image
-                  src={image.src}
-                  alt={image.alt || `Gallery image ${index + 1}`}
-                  fill
-                  className="object-cover rounded-lg"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-              </div>
-            ))}
-          </div>
+          <PropertyGallery images={parsedContent.gallery} />
         </section>
       )}
 
@@ -339,6 +338,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             />
           </div>
         </section>
+      )}
+
+      {/* Similar Properties Section */}
+      {allProperties.length > 0 && (
+        <div>
+          <h2 className="text-[20px] font-semibold mb-8 px-8 lg:px-16">SIMILAR PROPERTIES</h2>
+          <SimpleCarousel posts={allProperties} />
+        </div>
       )}
     </div>
   )
