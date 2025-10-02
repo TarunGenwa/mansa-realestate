@@ -12,8 +12,6 @@ export default function GuidesPage() {
   const [posts, setPosts] = useState<WPPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [heroImage, setHeroImage] = useState<string | null>(null)
-  const [consultationImage, setConsultationImage] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchGuidesCategory = async () => {
@@ -37,30 +35,6 @@ export default function GuidesPage() {
       } catch (err) {
         console.error('Failed to fetch guides category:', err)
         return null
-      }
-    }
-
-    const fetchHeroImage = async () => {
-      try {
-        // Search for the hero image by slug
-        const heroMedia = await wpApi.media.getBySlug('guides-hero')
-        if (heroMedia) {
-          setHeroImage(heroMedia.source_url)
-        }
-      } catch (err) {
-        console.error('Failed to fetch hero image:', err)
-      }
-    }
-
-    const fetchConsultationImage = async () => {
-      try {
-        // Search for the consultation background image by slug
-        const consultationMedia = await wpApi.media.getBySlug('schedule-consultation')
-        if (consultationMedia) {
-          setConsultationImage(consultationMedia.source_url)
-        }
-      } catch (err) {
-        console.error('Failed to fetch consultation image:', err)
       }
     }
 
@@ -91,8 +65,6 @@ export default function GuidesPage() {
       }
     }
 
-    fetchHeroImage()
-    fetchConsultationImage()
     fetchPosts()
   }, [])
 
@@ -123,19 +95,6 @@ export default function GuidesPage() {
       <SEOHead seoData={seoData} />
 
       <main className="min-h-screen pt-32">
-        {/* Hero Section */}
-        {heroImage && (
-          <div className="relative w-[90%] mx-auto rounded-md h-[280px] mb-8">
-            <Image
-              src={heroImage}
-              alt="Guides et Actualités"
-              fill
-              className="object-cover rounded-md"
-              priority
-            />
-          </div>
-        )}
-
         {/* All Guides Heading */}
         <div className="w-[90%] mx-auto mb-12">
           <h1 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
@@ -219,45 +178,6 @@ export default function GuidesPage() {
           )}
         </div>
 
-        {/* Schedule a Consultation Section */}
-        {consultationImage && (
-          <section className="mt-20 relative w-full h-[700px] overflow-hidden">
-            <Image
-              src={consultationImage}
-              alt="Schedule a consultation"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/20">
-              <div className="relative h-full flex items-center">
-                <div className="w-[90%] mx-auto">
-                  <div className="bg-white rounded-lg p-8 max-w-md shadow-xl">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                      Schedule a free consultation
-                    </h2>
-                    <p className="text-gray-600 mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                      We craft inspiring spaces that blend cutting-edge design with enduring functionality, turning your vision into reality.
-                    </p>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black font-medium rounded-full hover:bg-black hover:text-white transition-all duration-300"
-                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                    >
-                      Get Started
-                      <Image
-                        src="/top-right-arrow.svg"
-                        alt="Arrow"
-                        width={40}
-                        height={40}
-                        className="ml-4"
-                      />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
       </main>
     </>
   )

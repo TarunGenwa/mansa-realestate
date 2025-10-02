@@ -78,7 +78,6 @@ export async function generateMetadata({ params }: DeveloperPageProps): Promise<
 
 export default async function DeveloperPage({ params }: DeveloperPageProps) {
   const { developerSlug } = await params
-  const consultationMedia = await wpApi.media.getBySlug('schedule-consultation')
   // Get developers category
   const developersCategory = await wpApi.categories.getBySlug('developers').catch(() => null)
   if (!developersCategory) {
@@ -249,45 +248,6 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
         />
       )}
 
-      {/* Schedule a Consultation Section */}
-        {consultationMedia?.source_url && (
-          <section className="mt-20 relative w-full h-[700px] overflow-hidden">
-            <Image
-              src={consultationMedia.source_url}
-              alt="Schedule a consultation"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/20">
-              <div className="relative h-full flex items-center">
-                <div className="w-[90%] mx-auto">
-                  <div className="bg-white rounded-lg p-8 max-w-md shadow-xl">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                      Schedule a free consultation
-                    </h2>
-                    <p className="text-gray-600 mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                      We craft inspiring spaces that blend cutting-edge design with enduring functionality, turning your vision into reality.
-                    </p>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black font-medium rounded-full hover:bg-black hover:text-white transition-all duration-300"
-                      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                    >
-                      Get Started
-                      <Image
-                        src="/top-right-arrow.svg"
-                        alt="Arrow"
-                        width={40}
-                        height={40}
-                        className="ml-4"
-                      />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
 
     </div>

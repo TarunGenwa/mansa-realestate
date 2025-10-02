@@ -1,7 +1,5 @@
-import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
-import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 // Enable ISR - revalidate every 24 hours for privacy policy
 export const revalidate = 86400
@@ -11,37 +9,10 @@ export const metadata: Metadata = {
 }
 
 export default async function PrivacyPolicyPage() {
-  // Fetch media images to get the guides hero image
-
-  const heroImage = await wpApi.media.getBySlug('guides-hero') || ''
-
-
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative" style={{ paddingLeft: '87px', paddingRight: '87px', paddingTop: '140px', paddingBottom: '60px' }}>
-        <div className="flex flex-col items-center">
-       
-
-          {/* Image */}
-          <div className="w-full relative">
-           {heroImage ? (
-                     <div className="relative w-[90%] mx-auto rounded-md h-[280px] mb-8">
-                       <Image
-                         src={heroImage.source_url}
-                         alt="Guides et Actualités"
-                         fill
-                         className="object-cover rounded-md"
-                         priority
-                       />
-                     </div>
-            ) : (
-              <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-xl">Privacy Policy Image</span>
-              </div>
-            )}
-          </div>
-        </div>
       </section>
 
       {/* Privacy Policy Content */}

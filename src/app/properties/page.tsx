@@ -14,7 +14,6 @@ export default function PropertiesPage() {
   const [filteredProperties, setFilteredProperties] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
-  const [consultationImage, setConsultationImage] = useState<string | null>(null)
 
   // Get images from MediaContext
   const fallbackImage = getImageByTitle('Project Tile Fallback')
@@ -24,28 +23,17 @@ export default function PropertiesPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Make all API calls in parallel for better performance
-        const [
-          propertiesCategory,
-          consultationMedia
-        ] = await Promise.allSettled([
-          wpApi.categories.getBySlug('properties'),
-          wpApi.media.getBySlug('schedule-consultation')
-        ])
+        // Fetch properties category
+        const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
 
         // Get properties only if category exists
         let fetchedProperties: any[] = []
-        if (propertiesCategory.status === 'fulfilled' && propertiesCategory.value) {
+        if (propertiesCategory) {
           fetchedProperties = await wpApi.posts.getAll({
             per_page: 50,
-            categories: [propertiesCategory.value.id],
+            categories: [propertiesCategory.id],
             _embed: true
           }).catch(() => [])
-        }
-
-        // Set consultation image if successful
-        if (consultationMedia.status === 'fulfilled' && consultationMedia.value) {
-          setConsultationImage(consultationMedia.value.source_url)
         }
 
         setProperties(fetchedProperties)
@@ -291,45 +279,6 @@ export default function PropertiesPage() {
       {/* Contact Form Section */}
       <ContactFormSection reverseOrder={true} contactImageUrl={contactImage?.source_url || undefined} />
 
-      {/* Schedule a Consultation Section */}
-      {consultationImage && (
-        <section className="mt-20 relative w-full h-[700px] overflow-hidden">
-          <Image
-            src={consultationImage}
-            alt="Schedule a consultation"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black/20">
-            <div className="relative h-full flex items-center">
-              <div className="w-[90%] mx-auto">
-                <div className="bg-white rounded-lg p-8 max-w-md shadow-xl">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                    Schedule a free consultation
-                  </h2>
-                  <p className="text-gray-600 mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-                    We craft inspiring spaces that blend cutting-edge design with enduring functionality, turning your vision into reality.
-                  </p>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black font-medium rounded-full hover:bg-black hover:text-white transition-all duration-300"
-                    style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-                  >
-                    Get Started
-                    <Image
-                      src="/top-right-arrow.svg"
-                      alt="Arrow"
-                      width={40}
-                      height={40}
-                      className="ml-4"
-                    />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   )
 }
