@@ -57,7 +57,7 @@ export default function ImageShowcaseSection() {
             let colSpanClass = ''
             let rowSpanClass = ''
 
-            if (hasColSpan) {
+            if (hasColSpan && image.span) {
               if (image.span.cols === 'remaining') {
                 gridColumnStyle = `${image.col} / -1`
               } else if (typeof image.span.cols === 'number') {
@@ -66,7 +66,7 @@ export default function ImageShowcaseSection() {
               }
             }
 
-            if (hasRowSpan && typeof image.span.rows === 'number') {
+            if (hasRowSpan && image.span && typeof image.span.rows === 'number') {
               rowSpanClass = `lg:row-span-${image.span.rows}`
               gridRowStyle = `${image.row} / span ${image.span.rows}`
             }
