@@ -1,4 +1,18 @@
 export interface PropertyContent {
+  title?: string
+  subtitle?: string
+  logo?: {
+    src: string
+    alt?: string
+  }
+  heroLeftImage?: {
+    src: string
+    alt?: string
+  }
+  heroRightImage?: {
+    src: string
+    alt?: string
+  }
   description: string[]
   details: {
     type?: string
@@ -32,19 +46,15 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
     rawHtml: htmlContent
   }
 
-  // Simple regex-based parsing that works everywhere
-  // Extract paragraph content using global flag without 's' flag
-  const paragraphRegex = /<p[^>]*>([\s\S]*?)<\/p>/g
-  let paragraphMatch
-  while ((paragraphMatch = paragraphRegex.exec(htmlContent)) !== null) {
-    // Check if paragraph contains an image
-    if (paragraphMatch[1].includes('<img')) {
-      // Skip paragraphs that only contain images
-      continue
-    }
+  // Extract all blocks (paragraphs and figures) in order
+  const blocks: Array<{text: string, html: string}> = []
 
-    // Remove HTML tags and decode entities
-    const text = paragraphMatch[1]
+  // Match both <p> and <figure> tags
+  const blockRegex = /<(p|figure)[^>]*>([\s\S]*?)<\/\1>/g
+  let blockMatch
+  while ((blockMatch = blockRegex.exec(htmlContent)) !== null) {
+    const html = blockMatch[2]
+    const text = html
       .replace(/<[^>]*>/g, '')
       .replace(/&#8217;/g, "'")
       .replace(/&amp;/g, '&')
@@ -52,55 +62,48 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
       .replace(/&gt;/g, '>')
       .trim()
 
-    if (text && text.length > 0) {
-      // Check if it's coordinates
-      if (text.match(/\d+\.\d+°\s*[NS],?\s*\d+\.\d+°\s*[EW]/)) {
-        content.details.location = text
-      } else {
-        content.description.push(text)
-      }
+    // Include blocks with text OR images
+    if (text.length > 0 || html.includes('<img')) {
+      blocks.push({ text, html })
     }
   }
 
-  // Extract list items using global flag without 's' flag
-  const listRegex = /<li[^>]*>([\s\S]*?)<\/li>/g
-  let listMatch
-  while ((listMatch = listRegex.exec(htmlContent)) !== null) {
-    const text = listMatch[1]
-      .replace(/<[^>]*>/g, '')
-      .replace(/&#8217;/g, "'")
-      .replace(/&amp;/g, '&')
-      .trim()
+  // First block is subtitle
+  if (blocks.length > 0 && blocks[0]) {
+    content.subtitle = blocks[0].text
+  }
 
-    if (text.includes(':')) {
-      const [key, value] = text.split(':').map(s => s.trim())
-      if (key && value) {
-        const normalizedKey = normalizeKey(key)
-        content.details[normalizedKey] = value
+  // Look for DEVELOPER_LOGO marker and extract logo from next block
+  for (let i = 0; i < blocks.length; i++) {
+    console.log(`Block ${i}:`, blocks[i].text.substring(0, 50))
+    if (blocks[i].text.includes('DEVELOPER_LOGO')) {
+      console.log('Found DEVELOPER_LOGO at index:', i)
+      console.log('Next block:', blocks[i + 1])
+      // Next block should have the logo image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        console.log('Next block has image')
+        // Try to match src first, then alt
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        // If not found, try alt first pattern
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch) {
+            content.logo = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+            console.log('Extracted logo (alt first):', content.logo)
+          }
+        } else {
+          content.logo = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+          console.log('Extracted logo (src first):', content.logo)
+        }
       }
-    }
-  }
-
-  // Extract images from the content
-  const imageRegex = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/g
-  let imageMatch
-  while ((imageMatch = imageRegex.exec(htmlContent)) !== null) {
-    content.images.push({
-      src: imageMatch[1],
-      alt: imageMatch[2] || undefined
-    })
-  }
-
-  // Alternative regex for images with attributes in different order
-  const altImageRegex = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/g
-  let altImageMatch: RegExpExecArray | null
-  while ((altImageMatch = altImageRegex.exec(htmlContent)) !== null) {
-    // Check if this image wasn't already captured
-    if (!content.images.some(img => img.src === altImageMatch![2])) {
-      content.images.push({
-        src: altImageMatch![2],
-        alt: altImageMatch![1] || undefined
-      })
+      break
     }
   }
 
