@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { wpApi } from '@/lib/api/wordpress'
+import { createContext, useContext, ReactNode } from 'react'
+import { getImageUrlByTitle, getImageConfig } from '@/src/lib/utils/imageResolver'
+import imageConfig from '@/src/config/images.json'
 
 interface MediaImage {
   id: number
@@ -25,29 +26,49 @@ interface MediaContextType {
 const MediaContext = createContext<MediaContextType | undefined>(undefined)
 
 export function MediaProvider({ children }: { children: ReactNode }) {
-  const [mediaImages, setMediaImages] = useState<MediaImage[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  // Convert images.json to MediaImage format
+  const buildMediaImages = (): MediaImage[] => {
+    const images: MediaImage[] = []
+    let id = 1
 
-  useEffect(() => {
-    const fetchMedia = async () => {
-      try {
-        // Fetch all images including those with core_ prefix
-        const images = await wpApi.media.getAll({
-          media_type: 'image',
-          per_page: 100,
-          search: 'core_'
+    const extractImages = (obj: any): void => {
+      // Handle arrays
+      if (Array.isArray(obj)) {
+        obj.forEach(item => extractImages(item))
+        return
+      }
+
+      // Handle objects
+      if (typeof obj === 'object' && obj !== null) {
+        // If this object has url and title, it's an image entry
+        if (obj.url && obj.title) {
+          images.push({
+            id: id++,
+            source_url: obj.url,
+            alt_text: obj.description || obj.title,
+            title: {
+              rendered: obj.title
+            },
+            caption: {
+              rendered: obj.description || ''
+            }
+          })
+        }
+
+        // Recursively process nested objects/arrays
+        Object.values(obj).forEach(value => {
+          if (typeof value === 'object' && value !== null) {
+            extractImages(value)
+          }
         })
-        setMediaImages(images)
-        console.log('MediaProvider: Fetched', images.length, 'images')
-      } catch (error) {
-        console.error('Error fetching media images:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 
-    fetchMedia()
-  }, [])
+    extractImages(imageConfig)
+    return images
+  }
+
+  const mediaImages = buildMediaImages()
 
   const getImageByTitle = (titleIncludes: string): MediaImage | undefined => {
     return mediaImages.find(img =>
@@ -62,7 +83,7 @@ export function MediaProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <MediaContext.Provider value={{ mediaImages, isLoading, getImageByTitle, getImagesByTitle }}>
+    <MediaContext.Provider value={{ mediaImages, isLoading: false, getImageByTitle, getImagesByTitle }}>
       {children}
     </MediaContext.Provider>
   )

@@ -73,7 +73,7 @@ interface HomeCarouselsProps {
 
 export default function HomeCarousels({ properties, guides }: HomeCarouselsProps) {
   const { getImageByTitle } = useMedia()
-  const projectTileImage = getImageByTitle('core_project_tile')
+  const projectTileImage = getImageByTitle('Project Tile Fallback')
 
   return (
     <>

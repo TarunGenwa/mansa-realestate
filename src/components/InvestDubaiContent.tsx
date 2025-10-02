@@ -6,9 +6,9 @@ import { useMedia } from '@/src/providers/MediaProvider'
 export default function InvestDubaiContent() {
   const { getImageByTitle } = useMedia()
 
-  const investDubaiImage = getImageByTitle('investdubai')
-  const ig12Image = getImageByTitle('ig_1_2')
-  const ig13Image = getImageByTitle('ig_1_3')
+  const investDubaiImage = getImageByTitle('Invest Dubai Main Image')
+  const ig12Image = getImageByTitle('Invest Gallery 1-2')
+  const ig13Image = getImageByTitle('Invest Gallery 1-3')
 
   return (
     <>

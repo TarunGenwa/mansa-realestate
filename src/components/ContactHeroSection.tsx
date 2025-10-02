@@ -6,7 +6,7 @@ import { useMedia } from '@/src/providers/MediaProvider'
 
 export default function ContactHeroSection() {
   const { getImageByTitle } = useMedia()
-  const heroImage = getImageByTitle('allproperties_banner')
+  const heroImage = getImageByTitle('Contact Page Hero')
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

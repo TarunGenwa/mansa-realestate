@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 export default function DirectorSection() {
   const { getImageByTitle } = useMedia()
-  const directorImage = getImageByTitle('core_ismahen')
+  const directorImage = getImageByTitle('Ismahen Lesongeur')
   const [imageLoaded, setImageLoaded] = useState(false)
 
   return (

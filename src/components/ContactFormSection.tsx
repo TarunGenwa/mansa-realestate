@@ -39,7 +39,7 @@ export default function ContactFormSection({ reverseOrder = false, contactImageU
       return
     }
 
-    const contactUsImage = getImageByTitle('core_contactus_section')
+    const contactUsImage = getImageByTitle('Contact Us Section')
     console.log('Fetched contact us image:', contactUsImage)
     if (contactUsImage) {
       setContactImage({

@@ -43,13 +43,19 @@ export default function HorizontalScrollCarousel({ projectTileImage }: Horizonta
               className="relative flex-shrink-0 rounded-sm overflow-hidden group cursor-pointer"
               style={{ width: '360px', height: '577px' }}
             >
-              <Image
-                src={projectTileImage.source_url}
-                alt={`Project ${index}`}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
-                sizes="360px"
-              />
+              {projectTileImage?.source_url ? (
+                <Image
+                  src={projectTileImage.source_url}
+                  alt={`Project ${index}`}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  sizes="360px"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500">Project Image</span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h3 className="text-white text-xl font-semibold">Projet {index}</h3>

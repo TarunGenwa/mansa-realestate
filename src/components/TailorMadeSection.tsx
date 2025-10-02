@@ -17,19 +17,8 @@ interface TailorMadeTab {
 }
 
 export default function TailorMadeSection() {
-  const { mediaImages } = useMedia()
+  const { getImageByTitle } = useMedia()
   const [imageLoaded, setImageLoaded] = useState(false)
-
-  // Find the sur-measure images
-  const surMeasureImages = []
-  for (let i = 1; i <= 5; i++) {
-    const image = mediaImages.find(img =>
-      img.title.rendered.toLowerCase().includes(`sur-mesure-${i}`)
-    )
-    if (image) {
-      surMeasureImages.push(image)
-    }
-  }
 
   // Tab content data
   const tabs: TailorMadeTab[] = [
@@ -39,8 +28,8 @@ export default function TailorMadeSection() {
       contentHead: <p className="text-h2 text-mont-light text-black">Découvrez  <span className="text-h2 text-play-black-italic">l’architecture</span> visionnaire de Dubaï, aujourd’hui au prix de demain</p>,
       contentSubHead: "Accédez aux lancements exclusifs, plans optimisés et conditions développeur",
       image: {
-        source_url: surMeasureImages[0]?.source_url || '',
-        alt_text: surMeasureImages[0]?.alt_text
+        source_url: getImageByTitle('Sur Plan')?.source_url || '',
+        alt_text: getImageByTitle('Sur Plan')?.alt_text
       }
     },
     
@@ -50,8 +39,8 @@ export default function TailorMadeSection() {
       contentHead: <p className="text-h2 text-mont-light text-black">Le meilleur du  <span className="text-h2 text-play-black-italic">marché <br></br> secondaire</span>  à Dubaï, prêt<br></br> à vivre sans compromis</p>,
       contentSubHead: "Biens vérifiés,  historique clair, négociation maîtrisée",      
       image: {
-        source_url: surMeasureImages[1]?.source_url || '',
-        alt_text: surMeasureImages[1]?.alt_text
+        source_url: getImageByTitle('Marché secondaire')?.source_url || '',
+        alt_text: getImageByTitle('Marché secondaire')?.alt_text
       }
     },
     
@@ -61,8 +50,8 @@ export default function TailorMadeSection() {
       contentHead: <p className="text-h2 text-mont-light text-black">Des appartements  aux <br></br> <span className="text-h2 text-play-black-italic"> vues iconiques,</span>  au cœur du <br></br> rythme de <span className="text-h2 text-play-black-italic"> Dubaï</span> </p>,
       contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
       image: {
-        source_url: surMeasureImages[2]?.source_url || '',
-        alt_text: surMeasureImages[2]?.alt_text
+        source_url: getImageByTitle('Appartement à vendre')?.source_url || '',
+        alt_text: getImageByTitle('Appartement à vendre')?.alt_text
       }
     },
     {
@@ -71,8 +60,8 @@ export default function TailorMadeSection() {
       contentHead: <p className="text-h2 text-black text-mont-light">Louez   <span className="text-h2 text-play-black-italic">l’expérience</span> <br></br> Dubaï : adresse,  <br></br>services, lumière </p>,
       contentSubHead: "Du studio design au penthouse,  sélection sur-mesure",      
       image: {
-        source_url: surMeasureImages[3]?.source_url || '',
-        alt_text: surMeasureImages[3]?.alt_text
+        source_url: getImageByTitle('Location')?.source_url || '',
+        alt_text: getImageByTitle('Location')?.alt_text
       }
     },
     {
@@ -81,8 +70,8 @@ export default function TailorMadeSection() {
       contentHead: <p className="text-h2 text-black text-mont-light">Votre villa de    <span className="text-h2 text-play-black-italic">caractère</span> entre mer, désert et skyline</p>,
       contentSubHead: "Emirates Hills, Palm, District One : conseil  indépendant & off-market",      
       image: {
-        source_url: surMeasureImages[4]?.source_url || '',
-        alt_text: surMeasureImages[4]?.alt_text
+        source_url: getImageByTitle('Achat Villa')?.source_url || '',
+        alt_text: getImageByTitle('Achat Villa')?.alt_text
       }
     }
 
@@ -116,21 +105,23 @@ export default function TailorMadeSection() {
           {/* Full Width Image with Overlay Tabs */}
           <div className="relative h-[435px] lg:h-[435px] rounded-lg overflow-hidden">
             {/* Loading placeholder */}
-            {!imageLoaded && (
+            {(!currentTab.image.source_url || !imageLoaded) && (
               <div className="absolute inset-0 bg-gray-200 animate-pulse z-0"></div>
             )}
 
             {/* Background Image */}
-            <Image
-              src={currentTab.image.source_url}
-              alt={currentTab.image.alt_text || currentTab.title}
-              fill
-              className="object-cover transition-all duration-700 ease-in-out"
-              sizes="100vw"
-              priority
-              style={{ filter: 'blur(8px)' }}
-              onLoad={() => setImageLoaded(true)}
-            />
+            {currentTab.image.source_url && (
+              <Image
+                src={currentTab.image.source_url}
+                alt={currentTab.image.alt_text || currentTab.title}
+                fill
+                className="object-cover transition-all duration-700 ease-in-out"
+                sizes="100vw"
+                priority
+                style={{ filter: 'blur(8px)' }}
+                onLoad={() => setImageLoaded(true)}
+              />
+            )}
 
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/30">

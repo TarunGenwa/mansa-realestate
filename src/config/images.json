@@ -1,0 +1,121 @@
+{
+  "homepage": {
+    "hero": {
+      "carousel": [
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/hero_landing_1?updatedAt=1759402122212",
+          "title": "Hero Landing 1",
+          "description": "First hero carousel image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/hero_landing_2?updatedAt=1759402140002",
+          "title": "Hero Landing 2",
+          "description": "Second hero carousel image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/hero_landing_3?updatedAt=1759402157860",
+          "title": "Hero Landing 3",
+          "description": "Third hero carousel image"
+        }
+      ]
+    },
+    "tailorMade": {
+      "tabs": [
+        {
+          "url": "https://ik.imagekit.io/mansa/Sur%20Mesure/sur-mesure-1.png?updatedAt=1759405768049",
+          "title": "Sur Plan",
+          "description": "Sur Plan background image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Sur%20Mesure/sur-mesure-2.png?updatedAt=1759405768244",
+          "title": "Marché secondaire",
+          "description": "Marché secondaire background image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Sur%20Mesure/sur-mesure-3.png?updatedAt=1759405768042",
+          "title": "Appartement à vendre",
+          "description": "Appartement à vendre background image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Sur%20Mesure/sur-mesure-4.png?updatedAt=1759405768109",
+          "title": "Location",
+          "description": "Location background image"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Sur%20Mesure/sur-mesure-5.png?updatedAt=1759405768279",
+          "title": "Achat Villa",
+          "description": "Achat Villa background image"
+        }
+      ]
+    },
+    "imageShowcase": {
+      "grid": [
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
+          "position": { "row": 1, "col": 1 },
+          "description": "Grid image row 1, column 1"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
+          "position": { "row": 1, "col": 2 },
+          "span": { "cols": 4, "rows": 2 },
+          "description": "Grid image row 1, column 2 - spans 4 columns and 2 rows"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
+          "position": { "row": 3, "col": 1 },
+          "description": "Grid image row 3, column 1"
+        },
+        {
+          "url": "https://ik.imagekit.io/mansa/Home%20page/GI_1_1.jpg?updatedAt=1759401799263",
+          "position": { "row": 3, "col": 2 },
+          "span": { "cols": "remaining" },
+          "description": "Grid image row 3, column 2 - fills remaining columns"
+        }
+      ]
+    },
+    "director": {
+      "url": "https://ik.imagekit.io/mansa/core_ismahen",
+      "title": "Ismahen Lesongeur",
+      "description": "Director portrait image"
+    },
+    "contactForm": {
+      "url": "https://ik.imagekit.io/mansa/core_contactus_section",
+      "title": "Contact Us Section",
+      "description": "Background image for contact form section"
+    },
+    "carousels": {
+      "fallback": {
+        "url": "https://ik.imagekit.io/mansa/core_project_tile",
+        "title": "Project Tile Fallback",
+        "description": "Fallback image for property and guide carousels"
+      }
+    }
+  },
+  "contact": {
+    "hero": {
+      "url": "https://ik.imagekit.io/mansa/allproperties_banner",
+      "title": "Contact Page Hero",
+      "description": "Hero banner for contact page"
+    }
+  },
+  "investDubai": {
+    "main": {
+      "url": "https://ik.imagekit.io/mansa/investdubai",
+      "title": "Invest Dubai Main Image",
+      "description": "Main image for Invest in Dubai page"
+    },
+    "gallery": [
+      {
+        "url": "https://ik.imagekit.io/mansa/ig_1_2",
+        "title": "Invest Gallery 1-2",
+        "description": "Gallery image 1-2"
+      },
+      {
+        "url": "https://ik.imagekit.io/mansa/ig_1_3",
+        "title": "Invest Gallery 1-3",
+        "description": "Gallery image 1-3"
+      }
+    ]
+  }
+}
