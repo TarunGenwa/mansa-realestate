@@ -1,4 +1,4 @@
-import { wpApi } from '@/lib/api/wordpress'
+import { wpData } from '@/lib/data/wordpress-loader'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,23 +12,9 @@ export const metadata: Metadata = {
 }
 
 export default async function DevelopersPage() {
-  // Get developers category
-  const developersCategory = await wpApi.categories.getBySlug('developers').catch(() => null)
+  // Load developers from static data
+  const developers = wpData.developers.getAll()
 
-  let developers: any[] = []
-
-  if (developersCategory) {
-    // Fetch all posts in the developers category
-    developers = await wpApi.posts.getAll({
-      categories: [developersCategory.id],
-      per_page: 100,
-      _embed: true,
-      orderby: 'title',
-      order: 'asc'
-    }).catch(() => [])
-  }
-
-  console.log('Developers Category:', developersCategory)
   console.log('Developers found:', developers.length)
 
   return (
