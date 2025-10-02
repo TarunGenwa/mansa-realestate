@@ -1,6 +1,7 @@
 import { wpApi } from '@/lib/api/wordpress'
 import { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 import PropertyGallery from '../../../components/PropertyGallery'
@@ -99,14 +100,28 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
           {/* Developer Logo - Right Aligned */}
           {parsedContent.logo && (
-            <div className="ml-8 flex-shrink-0 border border-gray-300 p-4">
-              <Image
-                src={parsedContent.logo.src}
-                alt={parsedContent.logo.alt || 'Developer Logo'}
-                width={120}
-                height={120}
-                className="object-contain"
-              />
+            <div className="ml-8 flex-shrink-0">
+              {parsedContent.developerLink ? (
+                <Link href={parsedContent.developerLink} className="block border border-gray-300 p-4">
+                  <Image
+                    src={parsedContent.logo.src}
+                    alt={parsedContent.logo.alt || 'Developer Logo'}
+                    width={120}
+                    height={120}
+                    className="object-contain"
+                  />
+                </Link>
+              ) : (
+                <div className="border border-gray-300 p-4">
+                  <Image
+                    src={parsedContent.logo.src}
+                    alt={parsedContent.logo.alt || 'Developer Logo'}
+                    width={120}
+                    height={120}
+                    className="object-contain"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -143,6 +158,38 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 />
               </div>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* Overview Section */}
+      {parsedContent.overviewText && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* APERCU Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">APERÇU</h2>
+            </div>
+
+            {/* Overview Text and Image - Right Side */}
+            <div className="lg:col-span-9">
+              <p className="text-lg text-gray-700 mb-8">
+                {parsedContent.overviewText}
+              </p>
+
+              {/* Overview Image */}
+              {parsedContent.overviewImage && (
+                <div className="relative w-full h-64 lg:h-96">
+                  <Image
+                    src={parsedContent.overviewImage.src}
+                    alt={parsedContent.overviewImage.alt || 'Overview'}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 75vw"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </section>
       )}

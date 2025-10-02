@@ -5,11 +5,17 @@ export interface PropertyContent {
     src: string
     alt?: string
   }
+  developerLink?: string
   heroLeftImage?: {
     src: string
     alt?: string
   }
   heroRightImage?: {
+    src: string
+    alt?: string
+  }
+  overviewText?: string
+  overviewImage?: {
     src: string
     alt?: string
   }
@@ -103,6 +109,12 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
           console.log('Extracted logo (src first):', content.logo)
         }
       }
+
+      // Block after logo image should have the developer link
+      if (blocks[i + 2]) {
+        content.developerLink = blocks[i + 2].text
+        console.log('Extracted developer link:', content.developerLink)
+      }
       break
     }
   }
@@ -158,6 +170,47 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
           }
         }
         console.log('Extracted right hero image:', content.heroRightImage)
+      }
+      break
+    }
+  }
+
+  // Look for OVERVIEW marker and extract overview text from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('OVERVIEW')) {
+      console.log('Found OVERVIEW at index:', i)
+      // Next block should have the overview text
+      if (blocks[i + 1]) {
+        content.overviewText = blocks[i + 1].text
+        console.log('Extracted overview text:', content.overviewText)
+      }
+      break
+    }
+  }
+
+  // Look for OVERVIEW_IMAGE marker and extract overview image from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('OVERVIEW_IMAGE')) {
+      console.log('Found OVERVIEW_IMAGE at index:', i)
+      // Next block should have the overview image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch) {
+            content.overviewImage = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+          }
+        } else {
+          content.overviewImage = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+        }
+        console.log('Extracted overview image:', content.overviewImage)
       }
       break
     }
