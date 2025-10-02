@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import DeveloperPropertiesSection from '../../../components/DeveloperPropertiesSection'
+import { parseDeveloperContent } from '../../../lib/utils/parseDeveloperContent'
 
 // Enable ISR - revalidate every 1 hour for developers
 export const revalidate = 3600
@@ -123,10 +124,14 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
     })
   }
 
+  // Parse the developer content
+  const parsedContent = parseDeveloperContent(developer.content.rendered)
+
   // Log for debugging
   console.log('Developer Slug:', developerSlug)
   console.log('Developer Post:', developer)
   console.log('Featured Image:', featuredImage)
+  console.log('Parsed Content:', parsedContent)
 
   return (
     <div className="min-h-screen pt-24">
@@ -212,22 +217,36 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
         </section>
       )}
 
-      {/* Developer Content */}
-      <section className="py-12" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              {/* Render WordPress content */}
-              <div
-                className="developer-content"
-                dangerouslySetInnerHTML={{ __html: developer.content.rendered }} />
+      {/* Overview Section */}
+      {parsedContent.overviewText && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* OVERVIEW Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">OVERVIEW</h2>
             </div>
 
+            {/* Overview Text - Right Side */}
+            <div className="lg:col-span-9">
+              <p className="text-lg text-gray-700 mb-8">
+                {parsedContent.overviewText}
+              </p>
+
+              {/* Overview List */}
+              {parsedContent.overviewList && parsedContent.overviewList.length > 0 && (
+                <ul className="divide-y divide-gray-200">
+                  {parsedContent.overviewList.map((item, index) => (
+                    <li key={index} className="py-4 flex justify-between items-start">
+                      <span className="font-semibold text-lg text-gray-700">{item.heading}</span>
+                      <span className="text-lg text-gray-700 text-right ml-8">{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Developer Properties Carousel */}
       <DeveloperPropertiesSection
