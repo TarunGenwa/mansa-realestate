@@ -1,109 +1,41 @@
 'use client'
 
-import { wpApi } from '@/lib/api/wordpress'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import ContactFormSection from '@/src/components/ContactFormSection'
 import { useMedia } from '@/src/providers/MediaProvider'
+import { wpData } from '@/lib/data/wordpress-loader'
 
 export default function PropertiesPage() {
   const { getImageByTitle } = useMedia()
 
-  const [properties, setProperties] = useState<any[]>([])
-  const [filteredProperties, setFilteredProperties] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [loading, setLoading] = useState(true)
 
   // Get images from MediaContext
   const fallbackImage = getImageByTitle('Project Tile Fallback')
   const heroBannerImage = getImageByTitle('All Properties Banner')
   const contactImage = getImageByTitle('Contact Us Section')
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // Fetch properties category
-        const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
+  // Load properties from static data
+  const properties = wpData.properties.getAll()
 
-        // Get properties only if category exists
-        let fetchedProperties: any[] = []
-        if (propertiesCategory) {
-          fetchedProperties = await wpApi.posts.getAll({
-            per_page: 10,
-            categories: [propertiesCategory.id],
-            _embed: true
-          }).catch(() => [])
-        }
-
-        setProperties(fetchedProperties)
-        setFilteredProperties(fetchedProperties)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        setLoading(false)
-      }
+  // Filter properties based on search term
+  const filteredProperties = useMemo(() => {
+    if (searchTerm.trim() === '') {
+      return properties
     }
 
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    // Filter properties based on search term only
-    let filtered = properties
-
-    // Filter by search term
-    if (searchTerm.trim() !== '') {
-      filtered = filtered.filter(property =>
-        property.title.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.excerpt.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (property as any).acf?.location?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    setFilteredProperties(filtered)
+    return properties.filter(property =>
+      property.title.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.excerpt.rendered.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (property as any).acf?.location?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   }, [searchTerm, properties])
 
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // Search is handled by useEffect
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen">
-        {/* Hero Section Skeleton */}
-        <section className="relative mt-24 h-screen bg-gray-200 animate-pulse">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center w-[90%] mx-auto">
-              <div className="h-16 bg-gray-300 rounded mb-8 w-96 mx-auto"></div>
-              <div className="h-16 bg-gray-300 rounded w-full max-w-4xl mx-auto"></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Properties Grid Skeleton */}
-        <section className="py-20">
-          <div className="w-[90%] mx-auto">
-            <div className="h-12 bg-gray-200 rounded mb-12 w-64 mx-auto animate-pulse"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[...Array(6)].map((_, index) => (
-                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-lg animate-pulse">
-                  <div className="h-80 bg-gray-200"></div>
-                  <div className="p-8">
-                    <div className="h-6 bg-gray-200 rounded mb-4 w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-4 w-2/3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    )
   }
 
   return (

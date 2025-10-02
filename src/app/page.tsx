@@ -1,4 +1,4 @@
-import { wpApi } from '@/lib/api/wordpress'
+import { wpData } from '@/lib/data/wordpress-loader'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
 import { Metadata } from 'next'
 import FAQSection from '@/src/components/FAQSection'
@@ -14,22 +14,15 @@ import HomeCarousels from '@/src/components/HomeCarousels'
 export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
-  const homePage = await wpApi.pages.getBySlug('home').catch(() => null)
+  const homePage = wpData.pages.getBySlug('home')
 
   if (homePage) {
-    const rankMathSEO = await wpApi.rankmath.getSEOByPostId(homePage.id, 'page')
-
-    let seoData
-    if (rankMathSEO) {
-      seoData = parseRankMathSEO(rankMathSEO)
-    } else if (homePage.yoast_head_json) {
-      seoData = parseYoastSEO(homePage.yoast_head_json)
-    } else {
-      seoData = parseRankMathSEO(null, {
-        title: homePage.title.rendered,
-        description: homePage.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),
-      })
-    }
+    // For static data, we won't have RankMath SEO dynamically
+    // Use basic SEO from page data
+    const seoData = parseRankMathSEO(null, {
+      title: homePage.title.rendered,
+      description: homePage.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || 'Welcome to Mansa',
+    })
 
     return {
       title: seoData.title,
@@ -68,29 +61,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // First, get the properties category
-  const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
-
-  // Fetch posts from properties category only for carousel
-  const properties = propertiesCategory
-    ? await wpApi.posts.getAll({
-        per_page: 10,
-        categories: [propertiesCategory.id],
-        _embed: true
-      }).catch(() => [])
-    : []
-
-  // Get the guides category
-  const guidesCategory = await wpApi.categories.getBySlug('guides').catch(() => null)
-
-  // Fetch posts from guides category for carousel
-  const guides = guidesCategory
-    ? await wpApi.posts.getAll({
-        per_page: 10,
-        categories: [guidesCategory.id],
-        _embed: true
-      }).catch(() => [])
-    : []
+  // Load properties and guides from static data
+  const properties = wpData.properties.getAll().slice(0, 10)
+  const guides = wpData.guides.getAll().slice(0, 10)
 
   return (
     <div className="min-h-screen overflow-x-hidden">

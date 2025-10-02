@@ -1,98 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { wpApi } from '@/lib/api/wordpress'
 import { WPPost } from '@/lib/types/wordpress'
 import SEOHead from '@/components/seo/SEOHead'
 import { parseRankMathSEO } from '@/lib/seo/utils'
 import { useMedia } from '@/src/providers/MediaProvider'
+import { wpData } from '@/lib/data/wordpress-loader'
 
 export default function GuidesPage() {
   const { getImageByTitle } = useMedia()
-  const [posts, setPosts] = useState<WPPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   // Get hero banner image from MediaContext
   const heroBannerImage = getImageByTitle('Guides Hero')
 
-  useEffect(() => {
-    // const fetchGuidesCategory = async () => {
-    //   try {
-    //     console.log('Fetching categories...')
-    //     const categories = await wpApi.categories.getAll({ per_page: 10 })
-    //     console.log('All categories:', categories)
-
-    //     const guidesCat = categories.find(cat =>
-    //       cat.slug === 'guides' ||
-    //       cat.name.toLowerCase().includes('guides')
-    //     )
-
-    //     console.log('Found guides category:', guidesCat)
-
-    //     if (guidesCat) {
-    //       return guidesCat.id
-    //     }
-
-    //     return null
-    //   } catch (err) {
-    //     console.error('Failed to fetch guides category:', err)
-    //     return null
-    //   }
-    // }
-
-    const fetchPosts = async () => {
-      try {
-        const categoryId = 5;
-        if (!categoryId) {
-          // If no guides category found, set empty posts
-          console.log('No guides category found')
-          setPosts([])
-        } else {
-          const params: any = {
-            per_page: 5,
-            _embed: true,
-            categories: [categoryId] // Only fetch posts with guides category
-          }
-
-          const data = await wpApi.posts.getAll(params)
-          console.log('Fetched posts:', data)
-          setPosts(data)
-        }
-      } catch (err) {
-        setError('Impossible de charger les guides')
-        console.error('Error fetching posts:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPosts()
-  }, [])
+  // Load posts from static data
+  const posts = wpData.guides.getAll()
 
   const seoData = parseRankMathSEO(null, {
     title: 'Guides et Actualités - Mansa Real Estate',
     description: 'Découvrez nos guides complets et les dernières actualités sur l\'investissement immobilier à Dubaï',
     canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/guides`,
   })
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center pt-24">
-        <div className="text-lg">Chargement des guides...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center pt-24">
-        <div className="text-lg text-red-600">{error}</div>
-      </div>
-    )
-  }
 
   return (
     <>

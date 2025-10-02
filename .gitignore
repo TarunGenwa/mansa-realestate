@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# WordPress static data (generated at build time)
+src/data/wordpress-data.json
+
 # Docker
 wp-content/
 docker-compose.override.yml
