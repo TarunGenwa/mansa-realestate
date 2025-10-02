@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Metadata } from 'next'
 import { wpData } from '@/lib/data/wordpress-loader'
 import { getImageUrlByTitle } from '@/src/lib/utils/imageResolver'
+import ContactFormSection from '@/src/components/ContactFormSection'
 
 export const metadata: Metadata = {
   title: 'Guides et Actualités - Mansa Real Estate',
@@ -13,8 +14,9 @@ export default function GuidesPage() {
   // Load posts from static data
   const posts = wpData.guides.getAll()
 
-  // Get hero banner image from static config
+  // Get images from static config
   const heroBannerImageUrl = getImageUrlByTitle('Guides Hero')
+  const contactImageUrl = getImageUrlByTitle('Contact Us Section')
 
   return (
     <>
@@ -117,6 +119,9 @@ export default function GuidesPage() {
         </div>
 
       </main>
+
+      {/* Contact Form Section */}
+      <ContactFormSection reverseOrder={true} contactImageUrl={contactImageUrl || undefined} />
     </>
   )
 }

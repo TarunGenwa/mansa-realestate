@@ -16,6 +16,7 @@ interface SimpleCarouselProps {
     slug: string
     type?: string
     developer?: number[]
+    _featuredImage?: string  // Custom featured image URL from featured-posts
     acf?: {
       developer_id?: number
       price?: string
@@ -75,8 +76,9 @@ export default function SimpleCarousel({ posts, fallbackImage }: SimpleCarouselP
             }}
           >
             {posts.map((post) => {
+              // Use custom featured image if available, otherwise use embedded media
               const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]
-              const imageUrl = featuredImage?.source_url || fallbackImage?.source_url || '/placeholder.jpg'
+              const imageUrl = post._featuredImage || featuredImage?.source_url || fallbackImage?.source_url || '/placeholder.jpg'
               const imageAlt = featuredImage?.alt_text || post.title.rendered
 
               // Strip HTML tags from excerpt

@@ -1,5 +1,6 @@
 import { wpData } from '@/lib/data/wordpress-loader'
 import { parseRankMathSEO, parseYoastSEO } from '@/lib/seo/utils'
+import { parseFeaturedPosts } from '@/lib/utils/parseFeaturedPosts'
 import { Metadata } from 'next'
 import FAQSection from '@/src/components/FAQSection'
 import ContactFormSection from '@/src/components/ContactFormSection'
@@ -61,8 +62,34 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // Load properties and guides from static data
-  const properties = wpData.properties.getAll().slice(0, 10)
+  // Get featured posts configuration
+  const featuredPostsData = wpData.posts.getBySlug('featured-posts')
+  let featuredProperties: any[] = []
+
+  if (featuredPostsData) {
+    // Parse the featured posts content
+    const featuredList = parseFeaturedPosts(featuredPostsData.content.rendered)
+
+    // Get the actual property data for each featured slug and add custom image
+    featuredProperties = featuredList
+      .map(featured => {
+        const property = wpData.properties.getBySlug(featured.slug)
+        if (property) {
+          return {
+            ...property,
+            _featuredImage: featured.imageUrl // Add custom featured image
+          }
+        }
+        return null
+      })
+      .filter(Boolean) // Remove null entries
+  }
+
+  // Fallback to regular properties if no featured posts found
+  const properties = featuredProperties.length > 0
+    ? featuredProperties
+    : wpData.properties.getAll().slice(0, 10)
+
   const guides = wpData.guides.getAll().slice(0, 10)
 
   return (
