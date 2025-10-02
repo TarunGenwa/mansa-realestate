@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getApiUrl, getRankMathApiUrl } from '@/lib/wordpress/config'
 import type {
   WPPost,
@@ -12,11 +11,38 @@ import type {
   WPProperty
 } from '@/lib/types/wordpress'
 
-const api = axios.create({
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+// Helper function to build URL with query params
+function buildUrl(baseUrl: string, params?: Record<string, any>): string {
+  if (!params) return baseUrl
+
+  const url = new URL(baseUrl)
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        value.forEach(v => url.searchParams.append(key, String(v)))
+      } else {
+        url.searchParams.append(key, String(value))
+      }
+    }
+  })
+  return url.toString()
+}
+
+// Helper function for fetch with 1 hour revalidation
+async function fetchWithRevalidation<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    next: { revalidate: 3600 }, // 1 hour in seconds
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+
+  return response.json()
+}
 
 export const wpApi = {
   posts: {
@@ -30,22 +56,19 @@ export const wpApi = {
       order?: 'asc' | 'desc'
       _embed?: boolean
     }): Promise<WPPost[]> {
-      const { data } = await api.get<WPPost[]>(getApiUrl('/posts'), { params })
-      return data
+      const url = buildUrl(getApiUrl('/posts'), params)
+      return fetchWithRevalidation<WPPost[]>(url)
     },
 
     async getBySlug(slug: string): Promise<WPPost | null> {
-      const { data } = await api.get<WPPost[]>(getApiUrl('/posts'), {
-        params: { slug, _embed: true }
-      })
+      const url = buildUrl(getApiUrl('/posts'), { slug, _embed: true })
+      const data = await fetchWithRevalidation<WPPost[]>(url)
       return data[0] || null
     },
 
     async getById(id: number): Promise<WPPost> {
-      const { data } = await api.get<WPPost>(getApiUrl(`/posts/${id}`), {
-        params: { _embed: true }
-      })
-      return data
+      const url = buildUrl(getApiUrl(`/posts/${id}`), { _embed: true })
+      return fetchWithRevalidation<WPPost>(url)
     },
   },
 
@@ -58,22 +81,19 @@ export const wpApi = {
       orderby?: string
       order?: 'asc' | 'desc'
     }): Promise<WPPage[]> {
-      const { data } = await api.get<WPPage[]>(getApiUrl('/pages'), { params })
-      return data
+      const url = buildUrl(getApiUrl('/pages'), params)
+      return fetchWithRevalidation<WPPage[]>(url)
     },
 
     async getBySlug(slug: string): Promise<WPPage | null> {
-      const { data } = await api.get<WPPage[]>(getApiUrl('/pages'), {
-        params: { slug, _embed: true }
-      })
+      const url = buildUrl(getApiUrl('/pages'), { slug, _embed: true })
+      const data = await fetchWithRevalidation<WPPage[]>(url)
       return data[0] || null
     },
 
     async getById(id: number): Promise<WPPage> {
-      const { data } = await api.get<WPPage>(getApiUrl(`/pages/${id}`), {
-        params: { _embed: true }
-      })
-      return data
+      const url = buildUrl(getApiUrl(`/pages/${id}`), { _embed: true })
+      return fetchWithRevalidation<WPPage>(url)
     },
   },
 
@@ -86,19 +106,18 @@ export const wpApi = {
       orderby?: string
       order?: 'asc' | 'desc'
     }): Promise<WPCategory[]> {
-      const { data } = await api.get<WPCategory[]>(getApiUrl('/categories'), { params })
-      return data
+      const url = buildUrl(getApiUrl('/categories'), params)
+      return fetchWithRevalidation<WPCategory[]>(url)
     },
 
     async getById(id: number): Promise<WPCategory> {
-      const { data } = await api.get<WPCategory>(getApiUrl(`/categories/${id}`))
-      return data
+      const url = getApiUrl(`/categories/${id}`)
+      return fetchWithRevalidation<WPCategory>(url)
     },
 
     async getBySlug(slug: string): Promise<WPCategory | null> {
-      const { data } = await api.get<WPCategory[]>(getApiUrl('/categories'), {
-        params: { slug }
-      })
+      const url = buildUrl(getApiUrl('/categories'), { slug })
+      const data = await fetchWithRevalidation<WPCategory[]>(url)
       return data[0] || null
     },
   },
@@ -111,19 +130,18 @@ export const wpApi = {
       orderby?: string
       order?: 'asc' | 'desc'
     }): Promise<WPTag[]> {
-      const { data } = await api.get<WPTag[]>(getApiUrl('/tags'), { params })
-      return data
+      const url = buildUrl(getApiUrl('/tags'), params)
+      return fetchWithRevalidation<WPTag[]>(url)
     },
 
     async getById(id: number): Promise<WPTag> {
-      const { data } = await api.get<WPTag>(getApiUrl(`/tags/${id}`))
-      return data
+      const url = getApiUrl(`/tags/${id}`)
+      return fetchWithRevalidation<WPTag>(url)
     },
 
     async getBySlug(slug: string): Promise<WPTag | null> {
-      const { data } = await api.get<WPTag[]>(getApiUrl('/tags'), {
-        params: { slug }
-      })
+      const url = buildUrl(getApiUrl('/tags'), { slug })
+      const data = await fetchWithRevalidation<WPTag[]>(url)
       return data[0] || null
     },
   },
@@ -136,19 +154,18 @@ export const wpApi = {
       orderby?: string
       order?: 'asc' | 'desc'
     }): Promise<WPUser[]> {
-      const { data } = await api.get<WPUser[]>(getApiUrl('/users'), { params })
-      return data
+      const url = buildUrl(getApiUrl('/users'), params)
+      return fetchWithRevalidation<WPUser[]>(url)
     },
 
     async getById(id: number): Promise<WPUser> {
-      const { data } = await api.get<WPUser>(getApiUrl(`/users/${id}`))
-      return data
+      const url = getApiUrl(`/users/${id}`)
+      return fetchWithRevalidation<WPUser>(url)
     },
 
     async getBySlug(slug: string): Promise<WPUser | null> {
-      const { data } = await api.get<WPUser[]>(getApiUrl('/users'), {
-        params: { slug }
-      })
+      const url = buildUrl(getApiUrl('/users'), { slug })
+      const data = await fetchWithRevalidation<WPUser[]>(url)
       return data[0] || null
     },
   },
@@ -156,9 +173,8 @@ export const wpApi = {
   rankmath: {
     async getSEOByUrl(url: string): Promise<RankMathSEO | null> {
       try {
-        const { data } = await api.get(getRankMathApiUrl('/getHead'), {
-          params: { url }
-        })
+        const fetchUrl = buildUrl(getRankMathApiUrl('/getHead'), { url })
+        const data = await fetchWithRevalidation<{ head: RankMathSEO }>(fetchUrl)
         return data.head || null
       } catch (error) {
         console.error('Error fetching RankMath SEO data:', error)
@@ -168,7 +184,8 @@ export const wpApi = {
 
     async getSEOByPostId(postId: number, postType: 'post' | 'page' = 'post'): Promise<RankMathSEO | null> {
       try {
-        const { data } = await api.get(getRankMathApiUrl(`/${postType}/${postId}/meta`))
+        const fetchUrl = getRankMathApiUrl(`/${postType}/${postId}/meta`)
+        const data = await fetchWithRevalidation<RankMathSEO>(fetchUrl)
         return data || null
       } catch (error) {
         console.error('Error fetching RankMath SEO data:', error)
@@ -187,8 +204,8 @@ export const wpApi = {
       _embed?: boolean
     }): Promise<WPDeveloper[]> {
       try {
-        const { data } = await api.get<WPDeveloper[]>(getApiUrl('/developers'), { params })
-        return data
+        const url = buildUrl(getApiUrl('/developers'), params)
+        return fetchWithRevalidation<WPDeveloper[]>(url)
       } catch (error) {
         console.error('Error fetching developers:', error)
         return []
@@ -197,9 +214,8 @@ export const wpApi = {
 
     async getBySlug(slug: string): Promise<WPDeveloper | null> {
       try {
-        const { data } = await api.get<WPDeveloper[]>(getApiUrl('/developers'), {
-          params: { slug, _embed: true }
-        })
+        const url = buildUrl(getApiUrl('/developers'), { slug, _embed: true })
+        const data = await fetchWithRevalidation<WPDeveloper[]>(url)
         return data[0] || null
       } catch (error) {
         console.error('Error fetching developer:', error)
@@ -209,10 +225,8 @@ export const wpApi = {
 
     async getById(id: number): Promise<WPDeveloper | null> {
       try {
-        const { data } = await api.get<WPDeveloper>(getApiUrl(`/developers/${id}`), {
-          params: { _embed: true }
-        })
-        return data
+        const url = buildUrl(getApiUrl(`/developers/${id}`), { _embed: true })
+        return fetchWithRevalidation<WPDeveloper>(url)
       } catch (error) {
         console.error('Error fetching developer:', error)
         return null
@@ -233,8 +247,8 @@ export const wpApi = {
       _embed?: boolean
     }): Promise<WPProperty[]> {
       try {
-        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), { params })
-        return data
+        const url = buildUrl(getApiUrl('/properties'), params)
+        return fetchWithRevalidation<WPProperty[]>(url)
       } catch (error) {
         console.error('Error fetching properties:', error)
         return []
@@ -247,14 +261,12 @@ export const wpApi = {
       _embed?: boolean
     }): Promise<WPProperty[]> {
       try {
-        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), {
-          params: {
-            developer: developerId,
-            _embed: true,
-            ...params
-          }
+        const url = buildUrl(getApiUrl('/properties'), {
+          developer: developerId,
+          _embed: true,
+          ...params
         })
-        return data
+        return fetchWithRevalidation<WPProperty[]>(url)
       } catch (error) {
         console.error('Error fetching properties by developer:', error)
         return []
@@ -263,9 +275,8 @@ export const wpApi = {
 
     async getBySlug(slug: string): Promise<WPProperty | null> {
       try {
-        const { data } = await api.get<WPProperty[]>(getApiUrl('/properties'), {
-          params: { slug, _embed: true }
-        })
+        const url = buildUrl(getApiUrl('/properties'), { slug, _embed: true })
+        const data = await fetchWithRevalidation<WPProperty[]>(url)
         return data[0] || null
       } catch (error) {
         console.error('Error fetching property:', error)
@@ -275,10 +286,8 @@ export const wpApi = {
 
     async getById(id: number): Promise<WPProperty | null> {
       try {
-        const { data } = await api.get<WPProperty>(getApiUrl(`/properties/${id}`), {
-          params: { _embed: true }
-        })
-        return data
+        const url = buildUrl(getApiUrl(`/properties/${id}`), { _embed: true })
+        return fetchWithRevalidation<WPProperty>(url)
       } catch (error) {
         console.error('Error fetching property:', error)
         return null

@@ -7,11 +7,16 @@ import { wpApi } from '@/lib/api/wordpress'
 import { WPPost } from '@/lib/types/wordpress'
 import SEOHead from '@/components/seo/SEOHead'
 import { parseRankMathSEO } from '@/lib/seo/utils'
+import { useMedia } from '@/src/providers/MediaProvider'
 
 export default function GuidesPage() {
+  const { getImageByTitle } = useMedia()
   const [posts, setPosts] = useState<WPPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Get hero banner image from MediaContext
+  const heroBannerImage = getImageByTitle('Guides Hero')
 
   useEffect(() => {
     const fetchGuidesCategory = async () => {
@@ -95,6 +100,19 @@ export default function GuidesPage() {
       <SEOHead seoData={seoData} />
 
       <main className="min-h-screen pt-32">
+        {/* Hero Section */}
+        {heroBannerImage && (
+          <div className="relative w-[90%] mx-auto rounded-md h-[280px] mb-8">
+            <Image
+              src={heroBannerImage.source_url}
+              alt={heroBannerImage.alt_text || "Guides et Actualités"}
+              fill
+              className="object-cover rounded-md"
+              priority
+            />
+          </div>
+        )}
+
         {/* All Guides Heading */}
         <div className="w-[90%] mx-auto mb-12">
           <h1 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
