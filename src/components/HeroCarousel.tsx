@@ -16,6 +16,7 @@ interface HeroCarouselProps {
 
 export default function HeroCarousel({ images }: HeroCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(new Array(images.length).fill(false))
 
   // Auto-play carousel
   useEffect(() => {
@@ -32,8 +33,31 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
     setCurrentIndex(index)
   }
 
+  const handleImageLoad = (index: number) => {
+    setImagesLoaded(prev => {
+      const newState = [...prev]
+      newState[index] = true
+      return newState
+    })
+  }
+
+  const isCurrentImageLoaded = imagesLoaded[currentIndex]
+
   return (
     <div className="relative h-screen m-2" style={{ width: 'calc(100% - 16px)' }}>
+      {/* Loading Placeholder */}
+      {!isCurrentImageLoaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse">
+          <div className="absolute inset-0 flex items-start justify-center pt-32" style={{ background: 'linear-gradient(180deg, #224D56 2.19%, rgba(0, 0, 0, 0) 82.03%)' }}>
+            <div className="text-center text-white px-4 mt-16">
+              <div className="h-12 w-64 bg-white/20 rounded mb-4 mx-auto"></div>
+              <div className="h-16 w-96 bg-white/20 rounded mb-8 mx-auto"></div>
+              <div className="h-12 w-48 bg-white/30 rounded-full mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Images */}
       {images.map((image, index) => (
         <div
@@ -51,6 +75,7 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             className="object-cover object-center"
             sizes="100vw"
+            onLoad={() => handleImageLoad(index)}
           />
         </div>
       ))}

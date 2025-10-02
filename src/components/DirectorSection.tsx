@@ -3,23 +3,33 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMedia } from '@/src/providers/MediaProvider'
+import { useState } from 'react'
 
 export default function DirectorSection() {
   const { getImageByTitle } = useMedia()
   const directorImage = getImageByTitle('core_ismahen')
+  const [imageLoaded, setImageLoaded] = useState(false)
+
   return (
     <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px', backgroundColor: '#fff' }}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
         {/* Left Side - Director Image */}
         <div className="relative h-[500px] lg:h-[600px] overflow-hidden rounded-lg">
           {directorImage ? (
-            <Image
-              src={directorImage.source_url}
-              alt={directorImage.alt_text || "Ismahen Lesongeur"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
+            <>
+              {/* Loading placeholder */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+              )}
+              <Image
+                src={directorImage.source_url}
+                alt={directorImage.alt_text || "Ismahen Lesongeur"}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                onLoad={() => setImageLoaded(true)}
+              />
+            </>
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-500">Director Image</span>

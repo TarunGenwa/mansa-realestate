@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import DeveloperPropertiesSection from '../../../components/DeveloperPropertiesSection'
+import GuidesCarousel from '../../../components/GuidesCarousel'
 import { parseDeveloperContent } from '../../../lib/utils/parseDeveloperContent'
 
 // Enable ISR - revalidate every 1 hour for developers
@@ -101,28 +101,17 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
   // Get featured image
   const featuredImage = developer._embedded?.['wp:featuredmedia']?.[0]
 
-  // Fetch properties by this developer
-  // First get properties category
-  const propertiesCategory = await wpApi.categories.getBySlug('properties').catch(() => null)
-  let developerProperties: any[] = []
+  // Get the guides category
+  const guidesCategory = await wpApi.categories.getBySlug('guides').catch(() => null)
 
-  if (propertiesCategory) {
-    // Fetch all properties
-    const allProperties = await wpApi.posts.getAll({
-      categories: [propertiesCategory.id],
-      per_page: 100,
-      _embed: true
-    }).catch(() => [])
-
-    // Filter properties that mention this developer in their content or title
-    // This is a simple approach - you might want to use ACF fields or custom taxonomies for better association
-    const developerTitle = developer.title.rendered.replace(/<[^>]*>/g, '').toLowerCase()
-    developerProperties = allProperties.filter((property: any) => {
-      const propertyContent = property.content.rendered.toLowerCase()
-      const propertyTitle = property.title.rendered.toLowerCase()
-      return propertyContent.includes(developerTitle) || propertyTitle.includes(developerTitle)
-    })
-  }
+  // Fetch posts from guides category for carousel
+  const guides = guidesCategory
+    ? await wpApi.posts.getAll({
+        per_page: 10,
+        categories: [guidesCategory.id],
+        _embed: true
+      }).catch(() => [])
+    : []
 
   // Parse the developer content
   const parsedContent = parseDeveloperContent(developer.content.rendered)
@@ -248,11 +237,17 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
         </section>
       )}
 
-      {/* Developer Properties Carousel */}
-      <DeveloperPropertiesSection
-        developerName={developer.title.rendered.replace(/<[^>]*>/g, '')}
-        properties={developerProperties}
-      />
+      {/* Guides Carousel */}
+      {guides.length > 0 && (
+        <GuidesCarousel
+          posts={guides}
+          customHeading={
+            <>
+              Retrouvez nos <span className='text-h3 text-play-black-italic'>nos guides d'experts</span>
+            </>
+          }
+        />
+      )}
 
       {/* Schedule a Consultation Section */}
         {consultationMedia?.source_url && (

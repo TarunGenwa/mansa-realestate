@@ -18,6 +18,7 @@ interface TailorMadeTab {
 
 export default function TailorMadeSection() {
   const { mediaImages } = useMedia()
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   // Find the sur-measure images
   const surMeasureImages = []
@@ -91,6 +92,11 @@ export default function TailorMadeSection() {
   const [activeTab, setActiveTab] = useState(1)
   const currentTab = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
+  // Reset image loaded state when tab changes
+  React.useEffect(() => {
+    setImageLoaded(false)
+  }, [activeTab])
+
   return (
     <section className="py-20 bg-white" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
       <div>
@@ -101,14 +107,19 @@ export default function TailorMadeSection() {
               >
                 SUR MESURE
               </p>
-           
+
             <p className='text-h3 text-mont-regular mt-2 mb-6'>
-             L’immobilier de <span className='text-h3 text-play-black-italic'>Dubaï,</span> <br></br> à votre mesure
+             L'immobilier de <span className='text-h3 text-play-black-italic'>Dubaï,</span> <br></br> à votre mesure
             </p>
           </div>
 
           {/* Full Width Image with Overlay Tabs */}
           <div className="relative h-[435px] lg:h-[435px] rounded-lg overflow-hidden">
+            {/* Loading placeholder */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gray-200 animate-pulse z-0"></div>
+            )}
+
             {/* Background Image */}
             <Image
               src={currentTab.image.source_url}
@@ -118,6 +129,7 @@ export default function TailorMadeSection() {
               sizes="100vw"
               priority
               style={{ filter: 'blur(8px)' }}
+              onLoad={() => setImageLoaded(true)}
             />
 
             {/* Dark Overlay */}

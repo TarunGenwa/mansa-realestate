@@ -29,9 +29,10 @@ interface GuidesCarouselProps {
     source_url: string
     alt_text?: string
   }
+  customHeading?: React.ReactNode
 }
 
-export default function GuidesCarousel({ posts, fallbackImage }: GuidesCarouselProps) {
+export default function GuidesCarousel({ posts, fallbackImage, customHeading }: GuidesCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -62,14 +63,20 @@ export default function GuidesCarousel({ posts, fallbackImage }: GuidesCarouselP
       <div>
         {/* Section Header - Similar to ImageShowcaseSection */}
         <div className="mb-12">
-          <p className='text-body text-mont-regular'>
-            INVESTISSEMENT ET GUIDES
-          </p>
+          {!customHeading && (
+            <p className='text-body text-mont-regular'>
+              INVESTISSEMENT ET GUIDES
+            </p>
+          )}
           <p className='text-h3 text-mont-regular mt-2'>
-             Investir et  <span className='text-h3 text-play-black-italic'>Vivre à Dubaï,</span>  <br></br> nos guides d’experts 
+             {customHeading || (
+               <>
+                 Investir et  <span className='text-h3 text-play-black-italic'>Vivre à Dubaï,</span>  <br></br> nos guides d'experts
+               </>
+             )}
           </p>
 
-         
+
         </div>
 
         {/* Carousel Container */}

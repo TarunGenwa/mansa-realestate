@@ -2,9 +2,11 @@
 
 import Image from 'next/image'
 import { useMedia } from '@/src/providers/MediaProvider'
+import { useState } from 'react'
 
 export default function ImageShowcaseSection() {
   const { mediaImages } = useMedia()
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
   // Filter images with core_GI_ prefix and organize by grid position
   const gridImages = mediaImages
     .filter(img => img.title.rendered.toLowerCase().startsWith('core_gi_'))
@@ -36,6 +38,10 @@ export default function ImageShowcaseSection() {
     source_url: img.source_url
   })))
 
+  const handleImageLoad = (imageId: number) => {
+    setLoadedImages(prev => new Set([...prev, imageId]))
+  }
+
   return (
     <section className="py-20" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
       <div>
@@ -66,6 +72,8 @@ export default function ImageShowcaseSection() {
             const colSpan = isRow1Col2 ? 'lg:col-span-4' : ''
             const rowSpan = isRow1Col2 ? 'lg:row-span-2' : ''
 
+            const isLoaded = loadedImages.has(image.id)
+
             return (
               <div
                 key={image.id}
@@ -75,12 +83,18 @@ export default function ImageShowcaseSection() {
                   gridRow: isRow1Col2 ? '1 / 3' : `${image.row}`
                 }}
               >
+                {/* Loading placeholder */}
+                {!isLoaded && (
+                  <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+                )}
+
                 <Image
                   src={image.source_url}
                   alt={image.alt_text || image.title.rendered}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  onLoad={() => handleImageLoad(image.id)}
                 />
 
                 {/* Overlay on hover */}
