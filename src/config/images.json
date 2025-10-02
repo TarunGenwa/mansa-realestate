@@ -144,5 +144,12 @@
         "description": "Gallery image 1-3"
       }
     ]
+  },
+  "guides": {
+    "hero": {
+      "url": "https://ik.imagekit.io/mansa/Core/guides-hero.png?updatedAt=1759407937438",
+      "title": "Guides Hero",
+      "description": "Hero banner for guides page"
+    }
   }
 }

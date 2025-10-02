@@ -30,7 +30,7 @@ export default function PropertiesPage() {
         let fetchedProperties: any[] = []
         if (propertiesCategory) {
           fetchedProperties = await wpApi.posts.getAll({
-            per_page: 50,
+            per_page: 10,
             categories: [propertiesCategory.id],
             _embed: true
           }).catch(() => [])

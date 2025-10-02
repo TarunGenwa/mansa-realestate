@@ -19,34 +19,33 @@ export default function GuidesPage() {
   const heroBannerImage = getImageByTitle('Guides Hero')
 
   useEffect(() => {
-    const fetchGuidesCategory = async () => {
-      try {
-        console.log('Fetching categories...')
-        const categories = await wpApi.categories.getAll({ per_page: 100 })
-        console.log('All categories:', categories)
+    // const fetchGuidesCategory = async () => {
+    //   try {
+    //     console.log('Fetching categories...')
+    //     const categories = await wpApi.categories.getAll({ per_page: 10 })
+    //     console.log('All categories:', categories)
 
-        const guidesCat = categories.find(cat =>
-          cat.slug === 'guides' ||
-          cat.name.toLowerCase().includes('guides')
-        )
+    //     const guidesCat = categories.find(cat =>
+    //       cat.slug === 'guides' ||
+    //       cat.name.toLowerCase().includes('guides')
+    //     )
 
-        console.log('Found guides category:', guidesCat)
+    //     console.log('Found guides category:', guidesCat)
 
-        if (guidesCat) {
-          return guidesCat.id
-        }
+    //     if (guidesCat) {
+    //       return guidesCat.id
+    //     }
 
-        return null
-      } catch (err) {
-        console.error('Failed to fetch guides category:', err)
-        return null
-      }
-    }
+    //     return null
+    //   } catch (err) {
+    //     console.error('Failed to fetch guides category:', err)
+    //     return null
+    //   }
+    // }
 
     const fetchPosts = async () => {
       try {
-        const categoryId = await fetchGuidesCategory()
-
+        const categoryId = 5;
         if (!categoryId) {
           // If no guides category found, set empty posts
           console.log('No guides category found')
