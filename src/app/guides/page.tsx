@@ -1,39 +1,31 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
-import { WPPost } from '@/lib/types/wordpress'
-import SEOHead from '@/components/seo/SEOHead'
-import { parseRankMathSEO } from '@/lib/seo/utils'
-import { useMedia } from '@/src/providers/MediaProvider'
+import { Metadata } from 'next'
 import { wpData } from '@/lib/data/wordpress-loader'
+import { getImageUrlByTitle } from '@/src/lib/utils/imageResolver'
+
+export const metadata: Metadata = {
+  title: 'Guides et Actualités - Mansa Real Estate',
+  description: 'Découvrez nos guides complets et les dernières actualités sur l\'investissement immobilier à Dubaï',
+}
 
 export default function GuidesPage() {
-  const { getImageByTitle } = useMedia()
-
-  // Get hero banner image from MediaContext
-  const heroBannerImage = getImageByTitle('Guides Hero')
-
   // Load posts from static data
   const posts = wpData.guides.getAll()
 
-  const seoData = parseRankMathSEO(null, {
-    title: 'Guides et Actualités - Mansa Real Estate',
-    description: 'Découvrez nos guides complets et les dernières actualités sur l\'investissement immobilier à Dubaï',
-    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/guides`,
-  })
+  // Get hero banner image from static config
+  const heroBannerImageUrl = getImageUrlByTitle('Guides Hero')
 
   return (
     <>
-      <SEOHead seoData={seoData} />
 
       <main className="min-h-screen pt-32">
         {/* Hero Section */}
-        {heroBannerImage && (
+        {heroBannerImageUrl && (
           <div className="relative w-[90%] mx-auto rounded-md h-[280px] mb-8">
             <Image
-              src={heroBannerImage.source_url}
-              alt={heroBannerImage.alt_text || "Guides et Actualités"}
+              src={heroBannerImageUrl}
+              alt="Guides et Actualités"
               fill
               className="object-cover rounded-md"
               priority

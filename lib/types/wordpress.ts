@@ -32,6 +32,7 @@ export interface WPPost {
   meta: any[]
   categories: number[]
   tags: number[]
+  acf?: any
   yoast_head?: string
   yoast_head_json?: YoastHeadJson
   _embedded?: {
