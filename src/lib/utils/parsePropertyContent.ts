@@ -107,5 +107,61 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
     }
   }
 
+  // Look for HERO_LEFT_IMAGE marker and extract left hero image from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('HERO_LEFT_IMAGE')) {
+      console.log('Found HERO_LEFT_IMAGE at index:', i)
+      // Next block should have the left hero image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch) {
+            content.heroLeftImage = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+          }
+        } else {
+          content.heroLeftImage = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+        }
+        console.log('Extracted left hero image:', content.heroLeftImage)
+      }
+      break
+    }
+  }
+
+  // Look for HERO_RIGHT_IMAGE marker and extract right hero image from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('HERO_RIGHT_IMAGE')) {
+      console.log('Found HERO_RIGHT_IMAGE at index:', i)
+      // Next block should have the right hero image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch) {
+            content.heroRightImage = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+          }
+        } else {
+          content.heroRightImage = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+        }
+        console.log('Extracted right hero image:', content.heroRightImage)
+      }
+      break
+    }
+  }
+
   return content
 }

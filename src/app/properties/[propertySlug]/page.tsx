@@ -111,6 +111,41 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           )}
         </div>
       </section>
+
+      {/* Hero Images - Side by Side */}
+      {(parsedContent.heroLeftImage || parsedContent.heroRightImage) && (
+        <section className="pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Left Hero Image */}
+            {parsedContent.heroLeftImage && (
+              <div className="relative h-96 lg:h-[600px]">
+                <Image
+                  src={parsedContent.heroLeftImage.src}
+                  alt={parsedContent.heroLeftImage.alt || 'Hero Left'}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            )}
+
+            {/* Right Hero Image */}
+            {parsedContent.heroRightImage && (
+              <div className="relative h-96 lg:h-[600px]">
+                <Image
+                  src={parsedContent.heroRightImage.src}
+                  alt={parsedContent.heroRightImage.alt || 'Hero Right'}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
