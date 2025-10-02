@@ -30,6 +30,14 @@ export interface PropertyContent {
       alt?: string
     }
   }
+  gallery?: Array<{
+    src: string
+    alt?: string
+  }>
+  locationMap?: {
+    src: string
+    alt?: string
+  }
   description: string[]
   details: {
     type?: string
@@ -372,6 +380,77 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
           }
         }
         console.log('Extracted brochure link preview:', content.brochurePdf?.linkPreview)
+      }
+      break
+    }
+  }
+
+  // Look for GALLERY marker and extract images from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('GALLERY:')) {
+      console.log('Found GALLERY: at index:', i)
+      // Look for gallery in the rawHtml after this point
+      // WordPress galleries contain multiple <figure> tags with images
+      const galleryImages: Array<{ src: string, alt?: string }> = []
+
+      // Find the start and end positions
+      const galleryStart = htmlContent.indexOf('GALLERY:')
+      const locationMapPos = htmlContent.indexOf('LOCATION_MAP:')
+
+      // Extract content between GALLERY: and LOCATION_MAP: (or end of content)
+      const galleryContent = locationMapPos > galleryStart
+        ? htmlContent.substring(galleryStart, locationMapPos)
+        : htmlContent.substring(galleryStart)
+
+      // Extract all images using regex - look for img tags
+      const imgRegex = /<img[^>]+>/gi
+      let imgMatch
+      while ((imgMatch = imgRegex.exec(galleryContent)) !== null) {
+        const imgTag = imgMatch[0]
+
+        // Extract src and alt from the img tag
+        const srcMatch = /src="([^"]+)"/i.exec(imgTag)
+        const altMatch = /alt="([^"]*)"/i.exec(imgTag)
+
+        if (srcMatch) {
+          galleryImages.push({
+            src: srcMatch[1],
+            alt: altMatch ? altMatch[1] : undefined
+          })
+        }
+      }
+
+      if (galleryImages.length > 0) {
+        content.gallery = galleryImages
+        console.log('Extracted gallery images:', galleryImages.length, 'images')
+      }
+      break
+    }
+  }
+
+  // Look for LOCATION_MAP marker and extract map image from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('LOCATION_MAP:')) {
+      console.log('Found LOCATION_MAP: at index:', i)
+      // Next block should have the location map image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch) {
+            content.locationMap = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+          }
+        } else {
+          content.locationMap = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+        }
+        console.log('Extracted location map:', content.locationMap)
       }
       break
     }

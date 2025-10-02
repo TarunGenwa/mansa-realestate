@@ -282,14 +282,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   href={parsedContent.brochurePdf.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-8"
+                  className="ml-8 w-[30%]"
                 >
                   <Image
                     src={parsedContent.brochurePdf.linkPreview.src}
                     alt={parsedContent.brochurePdf.linkPreview.alt || 'Brochure Preview'}
-                    width={100}
-                    height={100}
-                    className="object-contain hover:opacity-80 transition-opacity"
+                    width={300}
+                    height={300}
+                    className="object-contain hover:opacity-80 transition-opacity w-full"
                   />
                 </Link>
               ) : (
@@ -303,6 +303,40 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 </Link>
               )}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Gallery Section */}
+      {parsedContent.gallery && parsedContent.gallery.length > 0 && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {parsedContent.gallery.map((image, index) => (
+              <div key={index} className="relative aspect-square">
+                <Image
+                  src={image.src}
+                  alt={image.alt || `Gallery image ${index + 1}`}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Location Map Section */}
+      {parsedContent.locationMap && (
+        <section className="pb-12">
+          <div className="relative w-full h-96 lg:h-[500px]">
+            <Image
+              src={parsedContent.locationMap.src}
+              alt={parsedContent.locationMap.alt || 'Location Map'}
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
           </div>
         </section>
       )}
