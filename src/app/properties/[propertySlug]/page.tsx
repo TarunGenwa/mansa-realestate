@@ -193,6 +193,119 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
         </section>
       )}
+
+      {/* Typologies Section */}
+      {parsedContent.typologies && parsedContent.typologies.length > 0 && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* TYPOLOGIES Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">TYPOLOGIES</h2>
+            </div>
+
+            {/* Typologies List - Right Side */}
+            <div className="lg:col-span-9">
+              <ul className="space-y-2 text-right">
+                {parsedContent.typologies.map((item, index) => (
+                  <li key={index} className="text-lg text-gray-700">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Offer & Price Section */}
+      {parsedContent.offerPrice && parsedContent.offerPrice.length > 0 && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* OFFRE & PRIX Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">OFFRE & PRIX</h2>
+            </div>
+
+            {/* Offer & Price List - Right Side */}
+            <div className="lg:col-span-9">
+              <ul className="divide-y divide-gray-200">
+                {parsedContent.offerPrice.map((item, index) => (
+                  <li key={index} className="py-4 flex justify-between items-start">
+                    <span className="font-semibold text-lg text-gray-700">{item.heading}</span>
+                    <span className="text-lg text-gray-700 text-right ml-8">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Life & Community Section */}
+      {parsedContent.lifeCommunity && parsedContent.lifeCommunity.length > 0 && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* VIE & COMMUNAUTÉ Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">VIE & COMMUNAUTÉ</h2>
+            </div>
+
+            {/* Life & Community List - Right Side */}
+            <div className="lg:col-span-9">
+              <ul className="divide-y divide-gray-200">
+                {parsedContent.lifeCommunity.map((item, index) => (
+                  <li key={index} className="py-4 flex justify-between items-start">
+                    <span className="font-semibold text-lg text-gray-700">{item.heading}</span>
+                    <span className="text-lg text-gray-700 text-right ml-8">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Brochure PDF Section */}
+      {parsedContent.brochurePdf && (
+        <section className="pb-12 px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* BROCHURE PDF Heading - Left Side */}
+            <div className="lg:col-span-3">
+              <h2 className="text-[20px] font-semibold">BROCHURE PDF</h2>
+            </div>
+
+            {/* Brochure Text and Link - Right Side */}
+            <div className="lg:col-span-9 flex justify-between items-center">
+              <span className="text-lg text-gray-700">{parsedContent.brochurePdf.text}</span>
+              {parsedContent.brochurePdf.linkPreview ? (
+                <Link
+                  href={parsedContent.brochurePdf.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-8"
+                >
+                  <Image
+                    src={parsedContent.brochurePdf.linkPreview.src}
+                    alt={parsedContent.brochurePdf.linkPreview.alt || 'Brochure Preview'}
+                    width={100}
+                    height={100}
+                    className="object-contain hover:opacity-80 transition-opacity"
+                  />
+                </Link>
+              ) : (
+                <Link
+                  href={parsedContent.brochurePdf.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg text-blue-600 hover:text-blue-800 underline ml-8"
+                >
+                  Télécharger
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

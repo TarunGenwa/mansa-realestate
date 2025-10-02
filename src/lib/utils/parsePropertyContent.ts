@@ -19,6 +19,17 @@ export interface PropertyContent {
     src: string
     alt?: string
   }
+  typologies?: string[]
+  offerPrice?: Array<{ heading: string, text: string }>
+  lifeCommunity?: Array<{ heading: string, text: string }>
+  brochurePdf?: {
+    text: string
+    link: string
+    linkPreview?: {
+      src: string
+      alt?: string
+    }
+  }
   description: string[]
   details: {
     type?: string
@@ -52,11 +63,11 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
     rawHtml: htmlContent
   }
 
-  // Extract all blocks (paragraphs and figures) in order
+  // Extract all blocks (paragraphs, figures, and lists) in order
   const blocks: Array<{text: string, html: string}> = []
 
-  // Match both <p> and <figure> tags
-  const blockRegex = /<(p|figure)[^>]*>([\s\S]*?)<\/\1>/g
+  // Match <p>, <figure>, <ul>, and <ol> tags
+  const blockRegex = /<(p|figure|ul|ol)[^>]*>([\s\S]*?)<\/\1>/g
   let blockMatch
   while ((blockMatch = blockRegex.exec(htmlContent)) !== null) {
     const html = blockMatch[2]
@@ -211,6 +222,156 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
           }
         }
         console.log('Extracted overview image:', content.overviewImage)
+      }
+      break
+    }
+  }
+
+  // Look for TYPOLOGIES marker and extract list from next block
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('TYPOLOGIES')) {
+      console.log('Found TYPOLOGIES at index:', i)
+      // Next block should have a list (ul/ol)
+      if (blocks[i + 1]) {
+        const listItems: string[] = []
+        const listRegex = /<li[^>]*>([\s\S]*?)<\/li>/g
+        let listMatch
+        while ((listMatch = listRegex.exec(blocks[i + 1].html)) !== null) {
+          const text = listMatch[1]
+            .replace(/<[^>]*>/g, '')
+            .replace(/&#8217;/g, "'")
+            .replace(/&amp;/g, '&')
+            .trim()
+          if (text) {
+            listItems.push(text)
+          }
+        }
+        if (listItems.length > 0) {
+          content.typologies = listItems
+          console.log('Extracted typologies:', content.typologies)
+        }
+      }
+      break
+    }
+  }
+
+  // Look for OFFRE_&_PRIX marker and extract list with heading:text format
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('OFFRE_&_PRIX')) {
+      console.log('Found OFFRE_&_PRIX at index:', i)
+      // Next block should have a list (ul/ol)
+      if (blocks[i + 1]) {
+        const listItems: Array<{ heading: string, text: string }> = []
+        const listRegex = /<li[^>]*>([\s\S]*?)<\/li>/g
+        let listMatch
+        while ((listMatch = listRegex.exec(blocks[i + 1].html)) !== null) {
+          const text = listMatch[1]
+            .replace(/<[^>]*>/g, '')
+            .replace(/&#8217;/g, "'")
+            .replace(/&amp;/g, '&')
+            .trim()
+          if (text && text.includes(':')) {
+            const [heading, ...rest] = text.split(':')
+            listItems.push({
+              heading: heading.trim(),
+              text: rest.join(':').trim()
+            })
+          }
+        }
+        if (listItems.length > 0) {
+          content.offerPrice = listItems
+          console.log('Extracted offer & price:', content.offerPrice)
+        }
+      }
+      break
+    }
+  }
+
+  // Look for VIE_&_COMMUNAUTE marker and extract list with heading:text format
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('VIE_&_COMMUNAUTE')) {
+      console.log('Found VIE_&_COMMUNAUTE at index:', i)
+      // Next block should have a list (ul/ol)
+      if (blocks[i + 1]) {
+        const listItems: Array<{ heading: string, text: string }> = []
+        const listRegex = /<li[^>]*>([\s\S]*?)<\/li>/g
+        let listMatch
+        while ((listMatch = listRegex.exec(blocks[i + 1].html)) !== null) {
+          const text = listMatch[1]
+            .replace(/<[^>]*>/g, '')
+            .replace(/&#8217;/g, "'")
+            .replace(/&amp;/g, '&')
+            .trim()
+          if (text && text.includes(':')) {
+            const [heading, ...rest] = text.split(':')
+            listItems.push({
+              heading: heading.trim(),
+              text: rest.join(':').trim()
+            })
+          }
+        }
+        if (listItems.length > 0) {
+          content.lifeCommunity = listItems
+          console.log('Extracted life & community:', content.lifeCommunity)
+        }
+      }
+      break
+    }
+  }
+
+  // Look for BROCHURE_PDF marker and extract text
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('BROCHURE_PDF')) {
+      console.log('Found BROCHURE_PDF at index:', i)
+      // Next block should have the text
+      if (blocks[i + 1]) {
+        const text = blocks[i + 1].text
+        content.brochurePdf = {
+          text: text,
+          link: '' // Will be populated by BROCHURE_LINK
+        }
+        console.log('Extracted brochure PDF text:', content.brochurePdf)
+      }
+      break
+    }
+  }
+
+  // Look for BROCHURE_LINK marker and extract the link
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('BROCHURE_LINK:')) {
+      console.log('Found BROCHURE_LINK: at index:', i)
+      // Next block should have the link
+      if (blocks[i + 1] && content.brochurePdf) {
+        content.brochurePdf.link = blocks[i + 1].text
+        console.log('Extracted brochure link:', content.brochurePdf.link)
+      }
+      break
+    }
+  }
+
+  // Look for BROCHURE_LINK_PREVIEW marker and extract preview image
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].text.includes('BROCHURE_LINK_PREVIEW')) {
+      console.log('Found BROCHURE_LINK_PREVIEW at index:', i)
+      // Next block should have the preview image
+      if (blocks[i + 1] && blocks[i + 1].html.includes('<img')) {
+        let imgMatch = /<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>/i.exec(blocks[i + 1].html)
+
+        if (!imgMatch) {
+          imgMatch = /<img[^>]+alt="([^"]*)"[^>]*src="([^"]+)"[^>]*>/i.exec(blocks[i + 1].html)
+          if (imgMatch && content.brochurePdf) {
+            content.brochurePdf.linkPreview = {
+              src: imgMatch[2],
+              alt: imgMatch[1] || undefined
+            }
+          }
+        } else if (content.brochurePdf) {
+          content.brochurePdf.linkPreview = {
+            src: imgMatch[1],
+            alt: imgMatch[2] || undefined
+          }
+        }
+        console.log('Extracted brochure link preview:', content.brochurePdf?.linkPreview)
       }
       break
     }
