@@ -71,8 +71,8 @@ export default function FAQSection() {
                   <Image
                     src={openIndex === index ? "/top-right-arrow.svg" : "/bottom-right-arrow.svg"}
                     alt=""
-                    width={24}
-                    height={24}
+                    width={32}
+                    height={32}
                     className="transition-all duration-200"
                   />
                 </div>
