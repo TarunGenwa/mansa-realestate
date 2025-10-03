@@ -74,16 +74,16 @@ export default function GuidesPage() {
                       </div>
 
                       {/* Content Container */}
-                      <div className="p-6 flex flex-col flex-1">
-                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
+                      <div className="p-6 flex flex-col flex-1 overflow-hidden">
+                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors break-words">
                           {post.title.rendered}
                         </h3>
-                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4">
+                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4 break-words">
                           {cleanExcerpt}
                         </p>
 
                         {/* Meta Information */}
-                        <div className="flex items-center gap-2 mt-auto">
+                        <div className="flex items-center gap-2 mt-auto overflow-hidden">
                           <Image
                             src="/mansa-insights.svg"
                             alt="Mansa Insights"
@@ -91,11 +91,11 @@ export default function GuidesPage() {
                             height={36}
                             className="object-contain flex-shrink-0"
                           />
-                          <div className="flex flex-col">
-                            <span className="text-base text-mont-regular text-gray-600">
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-base text-mont-regular text-gray-600 truncate">
                               Mansa Insights
                             </span>
-                            <span className="text-base text-mont-regular text-gray-500">
+                            <span className="text-base text-mont-regular text-gray-500 truncate">
                               2025
                             </span>
                           </div>
@@ -134,16 +134,16 @@ export default function GuidesPage() {
                       </div>
 
                       {/* Content Container */}
-                      <div className="p-6 flex flex-col flex-1">
-                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
+                      <div className="p-6 flex flex-col flex-1 overflow-hidden">
+                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors break-words">
                           {post.title.rendered}
                         </h3>
-                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4">
+                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4 break-words">
                           {cleanExcerpt}
                         </p>
 
                         {/* Meta Information */}
-                        <div className="flex items-center gap-2 mt-auto">
+                        <div className="flex items-center gap-2 mt-auto overflow-hidden">
                           <Image
                             src="/mansa-insights.svg"
                             alt="Mansa Insights"
@@ -151,11 +151,11 @@ export default function GuidesPage() {
                             height={36}
                             className="object-contain flex-shrink-0"
                           />
-                          <div className="flex flex-col">
-                            <span className="text-base text-mont-regular text-gray-600">
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-base text-mont-regular text-gray-600 truncate">
                               Mansa Insights
                             </span>
-                            <span className="text-base text-mont-regular text-gray-500">
+                            <span className="text-base text-mont-regular text-gray-500 truncate">
                               2025
                             </span>
                           </div>
