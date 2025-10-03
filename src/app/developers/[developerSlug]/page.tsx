@@ -179,7 +179,7 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
         <section className="pb-12" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
           <div className="max-w-7xl mx-auto">
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl mb-6"
+              className="text-4xl text-center md:text-5xl lg:text-6xl mb-6"
               style={{
                 fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                 fontWeight: 700,
@@ -188,19 +188,7 @@ export default async function DeveloperPage({ params }: DeveloperPageProps) {
               dangerouslySetInnerHTML={{ __html: developer.title.rendered }}
             />
 
-            {developer.excerpt.rendered && (
-              <div
-                className="text-lg md:text-xl text-gray-600 max-w-3xl"
-                style={{
-                  fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-                  fontWeight: 400,
-                  lineHeight: '1.6'
-                }}
-                dangerouslySetInnerHTML={{
-                  __html: developer.excerpt.rendered.replace(/<[^>]*>/g, '')
-                }}
-              />
-            )}
+
           </div>
         </section>
       )}

@@ -385,38 +385,47 @@ export function parsePropertyContentSimple(htmlContent: string): PropertyContent
     }
   }
 
-  // Look for GALLERY marker and extract images from next block
+  // Look for GALLERY marker and extract image links from following block
   for (let i = 0; i < blocks.length; i++) {
     if (blocks[i].text.includes('GALLERY:')) {
       console.log('Found GALLERY: at index:', i)
-      // Look for gallery in the rawHtml after this point
-      // WordPress galleries contain multiple <figure> tags with images
       const galleryImages: Array<{ src: string, alt?: string }> = []
 
-      // Find the start and end positions
-      const galleryStart = htmlContent.indexOf('GALLERY:')
-      const locationMapPos = htmlContent.indexOf('LOCATION_MAP:')
+      // Next block should contain a list of image URLs
+      if (blocks[i + 1]) {
+        const blockText = blocks[i + 1].text
+        const blockHtml = blocks[i + 1].html
 
-      // Extract content between GALLERY: and LOCATION_MAP: (or end of content)
-      const galleryContent = locationMapPos > galleryStart
-        ? htmlContent.substring(galleryStart, locationMapPos)
-        : htmlContent.substring(galleryStart)
+        // Extract all URLs from the block (both from list items and plain text)
+        // First try to extract from list items
+        const listRegex = /<li[^>]*>([\s\S]*?)<\/li>/g
+        let listMatch
+        while ((listMatch = listRegex.exec(blockHtml)) !== null) {
+          const itemText = listMatch[1]
+            .replace(/<[^>]*>/g, '')
+            .replace(/&#8217;/g, "'")
+            .replace(/&amp;/g, '&')
+            .trim()
 
-      // Extract all images using regex - look for img tags
-      const imgRegex = /<img[^>]+>/gi
-      let imgMatch
-      while ((imgMatch = imgRegex.exec(galleryContent)) !== null) {
-        const imgTag = imgMatch[0]
+          const urlMatch = itemText.match(/https?:\/\/[^\s<>"]+/i)
+          if (urlMatch) {
+            galleryImages.push({
+              src: urlMatch[0].trim(),
+              alt: undefined
+            })
+          }
+        }
 
-        // Extract src and alt from the img tag
-        const srcMatch = /src="([^"]+)"/i.exec(imgTag)
-        const altMatch = /alt="([^"]*)"/i.exec(imgTag)
-
-        if (srcMatch) {
-          galleryImages.push({
-            src: srcMatch[1],
-            alt: altMatch ? altMatch[1] : undefined
-          })
+        // If no list items found, try extracting all URLs from the text
+        if (galleryImages.length === 0) {
+          const urlRegex = /https?:\/\/[^\s<>"]+/gi
+          let urlMatch
+          while ((urlMatch = urlRegex.exec(blockText)) !== null) {
+            galleryImages.push({
+              src: urlMatch[0].trim(),
+              alt: undefined
+            })
+          }
         }
       }
 

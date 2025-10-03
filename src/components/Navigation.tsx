@@ -17,6 +17,7 @@ export default function Navigation() {
 
   const navigationLinks = [
     { href: '/properties', text: 'Propriétés' },
+    { href: '/developers', text: 'Promoteurs' },
     { href: '/invest-in-dubai', text: 'Investir à Dubaï' },
     { href: '/guides', text: 'Actualités et Guides' },
     { href: '/contact', text: 'Contact' }
