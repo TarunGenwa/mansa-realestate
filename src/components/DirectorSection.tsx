@@ -54,7 +54,7 @@ export default function DirectorSection() {
 
           {/* Description */}
           <div>
-            <p className="text-body-sm text-mont-regular text-gray-700 leading-relaxed">
+            <p className="text-mont-regular text-gray-700 leading-relaxed" style={{ fontSize: '18px' }}>
               Présents depuis plus de 15 ans à Dubaï et Abu Dhabi, nous avons bâti notre réputation sur l&apos;art d&apos;accompagner les projets les plus ambitieux. Chaque transaction est pour nous une aventure humaine, où la confiance se construit autant que la pierre.
             </p>
           </div>
@@ -87,10 +87,10 @@ export default function DirectorSection() {
           </div>
 
           {/* Contact Button */}
-          <div className="pt-4 flex justify-center lg:justify-start">
+          <div className="pt-0 flex justify-center lg:justify-start">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-between px-8 py-3 text-white bg-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 min-w-[200px]"
+              className="inline-flex items-center justify-between px-8 py-3 text-black bg-transparent border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 min-w-[200px] group"
             >
               <span className="flex-1 text-center text-mont-regular">Contact</span>
               <Image
@@ -98,7 +98,7 @@ export default function DirectorSection() {
                 alt=""
                 width={32}
                 height={32}
-                className="ml-4"
+                className="ml-4 invert group-hover:invert-0 transition-all duration-300"
               />
             </Link>
           </div>

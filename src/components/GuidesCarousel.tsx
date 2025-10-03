@@ -59,8 +59,8 @@ export default function GuidesCarousel({ posts, fallbackImage, customHeading }: 
   }
 
   return (
-    <section className="py-20 bg-white px-4 md:px-8 lg:px-[87px]">
-      <div>
+    <section className="py-20 bg-white">
+      <div className="pl-4 md:pl-8 lg:pl-[87px]">
         {/* Section Header - Similar to ImageShowcaseSection */}
         <div className="mb-12">
           {!customHeading && (
