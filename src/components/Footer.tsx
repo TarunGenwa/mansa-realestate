@@ -33,10 +33,10 @@ export default function Footer() {
   ]
 
   const socialLinks = [
-    { name: 'Facebook', href: 'https://facebook.com', icon: 'f' },
-    { name: 'Twitter', href: 'https://twitter.com', icon: 'X' },
-    { name: 'LinkedIn', href: 'https://linkedin.com', icon: 'in' },
-    { name: 'Instagram', href: 'https://instagram.com', icon: 'ig' }
+    { name: 'Facebook', href: 'https://www.facebook.com/61573802309476/', icon: 'f' },
+    { name: 'Instagram', href: 'https://www.instagram.com/p/DOh96H_jKyG/?igsh=MWp3emk0YTU4eXN5aw==', icon: 'ig' },
+    { name: 'LinkedIn', href: 'https://ae.linkedin.com/company/mansa-realestate', icon: 'in' },
+    { name: 'TikTok', href: 'https://vm.tiktok.com/ZNdthmvCo/', icon: 'tt' }
   ]
 
   return (

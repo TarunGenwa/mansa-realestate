@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { parsePropertyContentSimple } from '../../../lib/utils/parsePropertyContent'
 import PropertyGallery from '../../../components/PropertyGallery'
-import SimpleCarousel from '../../../components/SimpleCarousel'
+import SimilarPropertiesCarousel from '../../../components/SimilarPropertiesCarousel'
 
 // Enable ISR - revalidate every 30 minutes for properties
 export const revalidate = 1800
@@ -342,10 +342,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
       {/* Similar Properties Section */}
       {allProperties.length > 0 && (
-        <div>
-          <h2 className="text-[20px] font-semibold mb-8 px-8 lg:px-16">SIMILAR PROPERTIES</h2>
-          <SimpleCarousel posts={allProperties} />
-        </div>
+        <SimilarPropertiesCarousel properties={allProperties} />
       )}
     </div>
   )
