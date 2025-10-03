@@ -9,7 +9,8 @@ import DirectorSection from '@/src/components/DirectorSection'
 import HomeHeroCarousel from '@/src/components/HomeHeroCarousel'
 import TailorMadeSection from '@/src/components/TailorMadeSection'
 import PartnersSection from '@/src/components/PartnersSection'
-import HomeCarousels from '@/src/components/HomeCarousels'
+import SimpleCarousel from '@/src/components/SimpleCarousel'
+import GuidesCarousel from '@/src/components/GuidesCarousel'
 
 // Enable ISR - revalidate every 1 hour (3600 seconds)
 export const revalidate = 3600
@@ -118,8 +119,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Carousels */}
-      <HomeCarousels properties={properties} guides={guides} />
+      {/* Properties Carousel */}
+      {properties.length > 0 && <SimpleCarousel posts={properties} />}
 
       {/* Tailor Made Section */}
       <TailorMadeSection />
@@ -129,6 +130,9 @@ export default async function Home() {
 
       {/* Image Showcase Section */}
       <ImageShowcaseSection />
+
+      {/* Guides Carousel */}
+      {guides.length > 0 && <GuidesCarousel posts={guides} />}
 
       {/* Director Introduction Section */}
       <DirectorSection />
