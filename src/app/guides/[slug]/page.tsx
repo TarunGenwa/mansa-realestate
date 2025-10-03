@@ -248,13 +248,13 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
                 `
               } else {
                 return `
-                  <div class="flex w-full flex-col justify-between" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
-                    <div class="p-8">
+                  <div class="flex w-full max-h-[300px] justify-between flex-col p-4" style="background-color: #ECE8DD; height: 300px; border-radius: 2px;">
+                    <div class="">
                       <h3 class="text-mono-bold" style="font-size: 96px; color: #000;">
                         ${item.bigNumber}
                       </h3>
                     </div>
-                    <div class="p-4">
+                    <div class="">
                       <p class="text-mono-regular mb-2" style="font-size: 16px; color: #000;">
                         ${item.smallHeading}
                       </p>
