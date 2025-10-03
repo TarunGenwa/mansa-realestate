@@ -110,7 +110,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="w-[45%]">
-            <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 200, fontSize: '24px', lineHeight: '1.4', textAlign: 'right' }}>
+            <p style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', fontWeight: 200, fontSize: '24px', lineHeight: '1.8', textAlign: 'right' }}>
               Avec 15 ans d'expertise dans l'immobilier aux Émirats arabes unis, Dubaï et Abu Dhabi demeurent les destinations les plus convoitées.
               <br></br> <span className='bold'>___________</span>
             </p>

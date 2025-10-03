@@ -54,7 +54,7 @@ export default function Navigation() {
                   src="/abu-dhabi-logo.svg"
                   alt="Abu Dhabi"
                   width={100}
-                  height={100}
+                  height={120}
                   priority
                   className='ml-4'
                 />
