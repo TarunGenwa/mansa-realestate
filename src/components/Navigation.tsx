@@ -45,16 +45,16 @@ export default function Navigation() {
                 <Image
                   src="/dubai-logo.svg"
                   alt="Dubai"
-                  width={60}
-                  height={80}
+                  width={80}
+                  height={100}
                   priority
                   className='ml-4'
                 />
                 <Image
                   src="/abu-dhabi-logo.svg"
                   alt="Abu Dhabi"
-                  width={80}
-                  height={80}
+                  width={100}
+                  height={100}
                   priority
                   className='ml-4'
                 />
@@ -68,7 +68,8 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`${linkColor} transition text-body text-mont-regular`}
+                className={`${linkColor} transition-all duration-200 text-mont-regular hover:scale-110`}
+                style={{ fontSize: '18px' }}
               >
                 {link.text}
               </Link>
