@@ -34,7 +34,7 @@ export default function ContactHeroSection() {
     setSubmitStatus({ type: null, message: '' })
 
     try {
-      const response = await fetch('https://formcarry.com/s/PhkoOyLIwjN', {
+      const response = await fetch('https://formcarry.com/s/6Eu-mRBVy7b', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
