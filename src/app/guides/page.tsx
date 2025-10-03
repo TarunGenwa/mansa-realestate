@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 }
 
 export default function GuidesPage() {
-  // Load posts from static data
-  const posts = wpData.guides.getAll()
+  // Load posts from static data and reverse the order
+  const posts = wpData.guides.getAll().reverse()
 
   // Get images from static config
   const heroBannerImageUrl = getImageUrlByTitle('Guides Hero')
@@ -43,65 +43,128 @@ export default function GuidesPage() {
         </div>
 
         <div className="w-[90%] mx-auto">
-          {/* All guides in a grid of 5 */}
+          {/* All guides - first row 2 cards, second row 3 cards */}
           {posts.length > 0 && (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {posts.slice(0, 5).map((post) => {
-                const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]
-                const imageUrl = featuredImage?.source_url || '/placeholder.jpg'
-                const imageAlt = featuredImage?.alt_text || post.title.rendered
+            <div className="space-y-6">
+              {/* First row - 2 cards */}
+              <div className="grid gap-6 md:grid-cols-2">
+                {posts.slice(0, 2).map((post) => {
+                  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]
+                  const imageUrl = featuredImage?.source_url || '/placeholder.jpg'
+                  const imageAlt = featuredImage?.alt_text || post.title.rendered
 
-                // Strip HTML tags from excerpt
-                const cleanExcerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+                  // Strip HTML tags from excerpt
+                  const cleanExcerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
 
-                return (
-                  <Link
-                    key={post.id}
-                    href={`/guides/${post.slug}`}
-                    className="rounded-lg overflow-hidden group cursor-pointer flex flex-col bg-[#EDECE3] shadow-sm hover:shadow-lg transition-all duration-300"
-                  >
-                    {/* Image Container */}
-                    <div className="relative h-60">
-                      <Image
-                        src={imageUrl}
-                        alt={imageAlt}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 360px"
-                      />
-                    </div>
-
-                    {/* Content Container */}
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
-                        {post.title.rendered}
-                      </h3>
-                      <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4">
-                        {cleanExcerpt}
-                      </p>
-
-                      {/* Meta Information */}
-                      <div className="flex items-start gap-2 mt-auto">
+                  return (
+                    <Link
+                      key={post.id}
+                      href={`/guides/${post.slug}`}
+                      className="rounded-lg overflow-hidden group cursor-pointer flex flex-col bg-[#EDECE3] shadow-sm hover:shadow-lg transition-all duration-300"
+                    >
+                      {/* Image Container */}
+                      <div className="relative h-60">
                         <Image
-                          src="/mansa-insights.svg"
-                          alt="Mansa Insights"
-                          width={20}
-                          height={20}
-                          className="object-contain flex-shrink-0"
+                          src={imageUrl}
+                          alt={imageAlt}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        <div className="flex flex-col">
-                          <span className="text-xs text-mont-regular text-gray-600">
-                            Mansa Insights
-                          </span>
-                          <span className="text-xs text-mont-regular text-gray-500">
-                            2025
-                          </span>
+                      </div>
+
+                      {/* Content Container */}
+                      <div className="p-6 flex flex-col flex-1">
+                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
+                          {post.title.rendered}
+                        </h3>
+                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4">
+                          {cleanExcerpt}
+                        </p>
+
+                        {/* Meta Information */}
+                        <div className="flex items-center gap-2 mt-auto">
+                          <Image
+                            src="/mansa-insights.svg"
+                            alt="Mansa Insights"
+                            width={36}
+                            height={36}
+                            className="object-contain flex-shrink-0"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-base text-mont-regular text-gray-600">
+                              Mansa Insights
+                            </span>
+                            <span className="text-base text-mont-regular text-gray-500">
+                              2025
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                )
-              })}
+                    </Link>
+                  )
+                })}
+              </div>
+
+              {/* Second row - 3 cards */}
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {posts.slice(2, 5).map((post) => {
+                  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]
+                  const imageUrl = featuredImage?.source_url || '/placeholder.jpg'
+                  const imageAlt = featuredImage?.alt_text || post.title.rendered
+
+                  // Strip HTML tags from excerpt
+                  const cleanExcerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+
+                  return (
+                    <Link
+                      key={post.id}
+                      href={`/guides/${post.slug}`}
+                      className="rounded-lg overflow-hidden group cursor-pointer flex flex-col bg-[#EDECE3] shadow-sm hover:shadow-lg transition-all duration-300"
+                    >
+                      {/* Image Container */}
+                      <div className="relative h-60">
+                        <Image
+                          src={imageUrl}
+                          alt={imageAlt}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </div>
+
+                      {/* Content Container */}
+                      <div className="p-6 flex flex-col flex-1">
+                        <h3 className="text-xl text-mont-semibold mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors">
+                          {post.title.rendered}
+                        </h3>
+                        <p className="text-gray-600 text-sm text-mont-regular line-clamp-3 mb-4">
+                          {cleanExcerpt}
+                        </p>
+
+                        {/* Meta Information */}
+                        <div className="flex items-center gap-2 mt-auto">
+                          <Image
+                            src="/mansa-insights.svg"
+                            alt="Mansa Insights"
+                            width={36}
+                            height={36}
+                            className="object-contain flex-shrink-0"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-base text-mont-regular text-gray-600">
+                              Mansa Insights
+                            </span>
+                            <span className="text-base text-mont-regular text-gray-500">
+                              2025
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
           )}
 

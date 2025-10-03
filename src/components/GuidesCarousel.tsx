@@ -62,21 +62,35 @@ export default function GuidesCarousel({ posts, fallbackImage, customHeading }: 
     <section className="py-20 bg-white">
       <div className="pl-4 md:pl-8 lg:pl-[87px]">
         {/* Section Header - Similar to ImageShowcaseSection */}
-        <div className="mb-12">
-          {!customHeading && (
-            <p className='text-body text-mont-regular'>
-              INVESTISSEMENT ET GUIDES
+        <div className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between pr-4 md:pr-8 lg:pr-[87px]">
+          <div>
+            {!customHeading && (
+              <p className='text-body text-mont-regular'>
+                INVESTISSEMENT ET GUIDES
+              </p>
+            )}
+            <p className='text-h3 text-mont-regular mt-2'>
+               {customHeading || (
+                 <>
+                   Investir et  <span className='text-h3 text-play-black-italic'>Vivre à Dubaï,</span>  <br></br> nos guides d'experts
+                 </>
+               )}
             </p>
-          )}
-          <p className='text-h3 text-mont-regular mt-2'>
-             {customHeading || (
-               <>
-                 Investir et  <span className='text-h3 text-play-black-italic'>Vivre à Dubaï,</span>  <br></br> nos guides d'experts
-               </>
-             )}
-          </p>
+          </div>
 
-
+          <Link
+            href="/guides"
+            className="mt-6 lg:mt-0 inline-flex items-center gap-3 px-8 py-3 text-white bg-black border-2 border-black rounded-full hover:bg-transparent hover:text-black transition-all duration-300 group"
+          >
+            <span className="text-mont-regular">Découvrir</span>
+            <Image
+              src="/right-arrow-white.svg"
+              alt=""
+              width={32}
+              height={32}
+              className="group-hover:invert transition-all duration-300"
+            />
+          </Link>
         </div>
 
         {/* Carousel Container */}

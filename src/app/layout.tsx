@@ -3,6 +3,7 @@ import { Montserrat, Playfair_Display } from "next/font/google";
 import Navigation from "@/src/components/Navigation";
 import Footer from "@/src/components/Footer";
 import LenisProvider from "@/src/components/LenisProvider";
+import ScrollToTop from "@/src/components/ScrollToTop";
 import { MediaProvider } from "@/src/providers/MediaProvider";
 import "./globals.css";
 
@@ -35,6 +36,7 @@ export default function RootLayout({
       >
         <MediaProvider>
           <LenisProvider>
+            <ScrollToTop />
             <Navigation />
             {children}
             <Footer />
