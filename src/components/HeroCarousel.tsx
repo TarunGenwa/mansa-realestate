@@ -94,6 +94,17 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
               <span className="italic" style={{ fontWeight: 200 }}>réalité</span>
             </span>
           </h1>
+          <p
+            className="mt-6 uppercase tracking-wide"
+            style={{
+              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+              fontWeight: 300,
+              fontSize: '20px',
+              letterSpacing: '0.05em'
+            }}
+          >
+            L'IMMOBILIER D'EXCEPTION AUX ÉMIRATS ARABES UNIS
+          </p>
           <Link href="/contact" className="inline-flex items-center justify-between mt-8 px-8 py-3 text-white border-2 border-white rounded-full transition-all duration-300 min-w-[200px]">
             <span className="flex-1 text-center">Contact</span>
             <Image src="/right-arrow-white.svg" alt="" width={32} height={32} className="ml-4 transition-all duration-300" />

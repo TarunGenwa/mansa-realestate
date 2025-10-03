@@ -38,7 +38,7 @@ export default function DirectorSection() {
         </div>
 
         {/* Right Side - Text Content */}
-        <div className="space-y-6 w-4/5 mx-auto lg:mx-0">
+        <div className="space-y-6 w-full px-4 lg:w-4/5 lg:mx-0 text-center lg:text-left">
           {/* Name */}
           <div>
             <div className="leading-tight">
@@ -60,7 +60,7 @@ export default function DirectorSection() {
           </div>
 
           {/* Signature Placeholder */}
-          <div className="py-4">
+          <div className="py-4 flex justify-center lg:justify-start">
             <div className="h-16 w-48">
               {/* Placeholder for signature image */}
               <Image
@@ -74,7 +74,7 @@ export default function DirectorSection() {
           </div>
 
           {/* Qualities */}
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex gap-4 flex-wrap justify-center lg:justify-start">
             <button className="px-6 py-2 text-body text-mont-regular border-2 border-black rounded-full bg-transparent hover:bg-gray-100 transition-colors">
               Vision
             </button>
@@ -87,7 +87,7 @@ export default function DirectorSection() {
           </div>
 
           {/* Contact Button */}
-          <div className="pt-4">
+          <div className="pt-4 flex justify-center lg:justify-start">
             <Link
               href="/contact"
               className="inline-flex items-center justify-between px-8 py-3 text-white bg-black border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 min-w-[200px]"

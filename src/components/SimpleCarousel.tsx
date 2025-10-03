@@ -64,7 +64,7 @@ export default function SimpleCarousel({ posts, fallbackImage }: SimpleCarouselP
   }
 
   return (
-    <section className="py-16" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+    <section className="py-16 px-4 md:px-8 lg:px-[87px]">
       <div className="relative">
         {/* Carousel Container */}
         <div className="overflow-hidden">

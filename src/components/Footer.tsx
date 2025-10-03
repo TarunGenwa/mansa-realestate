@@ -40,7 +40,7 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-black text-white" style={{ paddingLeft: '87px', paddingRight: '87px' }}>
+    <footer className="bg-black text-white px-4 md:px-8 lg:px-[87px]">
       <div className="py-16">
         {/* Top Section - Newsletter */}
         <div className="mb-16">

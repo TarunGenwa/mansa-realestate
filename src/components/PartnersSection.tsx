@@ -42,9 +42,9 @@ export default function PartnersSection() {
           NOS PARTENAIRES           
         </p>
 
-        <div className="flex justify-center items-center gap-16">
-          {partners.map((partner) => (
-            <div key={partner.name} className="flex items-center justify-center">
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 max-w-4xl mx-auto">
+          {partners.map((partner, index) => (
+            <div key={`${partner.name}-${index}`} className="flex items-center justify-center">
               <Image
                 src={partner.logo}
                 alt={partner.name}

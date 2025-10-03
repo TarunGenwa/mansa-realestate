@@ -37,7 +37,7 @@ export default function FAQSection() {
 
   return (
     <section className="py-20 px-4 sm:px-8 lg:px-[87px]">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-64">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-64">
         {/* Left side - Heading and subheading */}
         <div className="lg:sticky lg:top-8 lg:self-start">
           <h2 className="text-h2 text-mont-medium mb-6">
